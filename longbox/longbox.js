@@ -1,6 +1,6 @@
 // const mysql = require('mysql');
 
-// Database connection setup (commented out)
+// Database connection setup 
 /*
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 });
 */
 
-// Function to add a card to the database (commented out)
+// Function to add a card to the database \
 /*
 function addCard(collectorsNumber, cardName, color, manaCost, price) {
     const query = 'INSERT INTO cards (collectorsNumber, name, color, manaCost, price) VALUES (?, ?, ?, ?, ?)';
@@ -24,7 +24,7 @@ function addCard(collectorsNumber, cardName, color, manaCost, price) {
 }
 */
 
-// Function to retrieve and sort cards (commented out)
+// Function to retrieve and sort cards
 /*
 function getSortedCards(sortBy) {
     const query = `SELECT * FROM cards ORDER BY ${sortBy}`;
@@ -47,15 +47,11 @@ console.log("3. Duplicate certain cards into files");
 console.log("4. Edit card files");
 console.log("5. Delete card files");
 
-// Placeholder for user input handling
-// Here you would capture user input, possibly using a library like 'prompt' or 'inquirer'
-// Based on the input, you would call the appropriate functions
-
-// Example function calls (commented out as they depend on the database)
+// Example function call
 // addCard('123', 'Black Lotus', 'Black', '3', '20000');
 // getSortedCards('name');
 
-// Remember to open and close your database connection appropriately
+// Remember to open and close database connection
 /*
 connection.connect(err => {
     if (err) {
@@ -64,7 +60,7 @@ connection.connect(err => {
     }
     console.log('Connected to database with ID ' + connection.threadId);
 
-    // Call your database interaction functions here
+    // Call  database interaction functions here
 });
 
 // Close the connection when done
