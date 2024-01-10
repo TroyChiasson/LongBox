@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    background-color: #E5A4CB;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-align: center;
+}
+
+#addCardSection, #cardListSection {
+    margin: 10px; /* margin for spacing */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type=text], button {
+    margin: 10px 0; /* margin for spacing */
+    padding: 10px;
+    width: 200px;
+}
+
+button {
+    background-color: #E5A4CB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e580bd;
+}
+
+#cardTable th {
+    padding: 10px 20px; 
+}
