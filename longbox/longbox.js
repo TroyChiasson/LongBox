@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /*const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'yourUsername',      
-    password: 'yourPassword',  
+    user: 'username',      
+    password: 'password',  
     database: 'TestDB'         
 });
 */
@@ -32,7 +32,7 @@ app.post('/addcard', (req, res) => {
             return;
         }
         console.log(`Card added: ${cardName}`);
-        res.redirect('/'); // Redirect back to the main page after adding a card
+        res.redirect('/'); // Redirect back to the main page after adding card
     });
 });
 
@@ -40,7 +40,7 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-// Example GUI interactions (placeholders, not functional code)
+// Ex: GUI interactions (placeholders, not functional code)
 console.log("Welcome to the Magic: The Gathering Card Organizer");
 console.log("Options:");
 console.log("1. Add a new card");
@@ -49,9 +49,20 @@ console.log("3. Duplicate certain cards into files");
 console.log("4. Edit card files");
 console.log("5. Delete card files");
 
-// Uncomment and use these functions to interact with the database
-// For example:
 // addCard('123', 'Black Lotus', 'Black', '3', '20000');
 // getSortedCards('name');
 
 console.log("Please set up your database and uncomment the relevant sections to enable full functionality.");
+
+function validateCollectorNumber() {
+    const collectorsNumberInput = document.getElementById('collectorsNumber');
+    const collectorsNumber = collectorsNumberInput.value;
+
+    // Check to make sure input is only numbers
+    const validInput = /^[0-9]+$/.test(collectorsNumber);
+
+    if (!validInput) {
+        alert("Please enter a valid Collector's Number with only numbers.");
+        collectorsNumberInput.value = ''; // Clear  input
+    }
+}
