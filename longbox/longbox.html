@@ -5,19 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTG Card Organizer</title>
     <link rel="stylesheet" href="longbox.css">
+    <style>
+        @font-face {
+            font-family: 'Magic';
+            src: url('magic.TTF') format('truetype');
+        }
+
+        body {
+            font-family: 'Magic', sans-serif; 
+        }
+
+        h1 {
+            font-family: 'Magic', sans-serif; 
+        }
+    </style>
 </head>
 <body>
     <h1>Longbox</h1>
     
     <div id="addCardSection">
         <h2>Add a New Card</h2>
-        <input type="text" id="cardName" placeholder="Card Name">
-        <input type="text" id="collectorsNumber" placeholder="Collector's Number">
-        <input type="text" id="color" placeholder="Color">
-        <input type="text" id="manaCost" placeholder="Mana Cost">
-        <input type="text" id="price" placeholder="Price">
-        <button onclick="addCard()">Add Card</button>
+        <form id="addCardForm" action="/addcard" method="post">
+            <input type="number" name="collectorsNumber" placeholder="Collector's Number" required>
+            <input type="text" name="cardName" placeholder="Card Name" pattern="[A-Za-z0-9\s]+">
+            <input type="text" name="color" placeholder="Color" pattern="[A-Za-z]+">
+            <input type="text" name="manaCost" placeholder="Mana Cost" pattern="[A-Za-z0-9\s]+">
+            <input type="text" name="price" placeholder="Price" pattern="[0-9$]+">
+            <button type="submit">Add Card</button>
+        </form>
     </div>
+    
 
     <div id="cardListSection">
         <h2>Card List</h2>

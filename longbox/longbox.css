@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Magic', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -39,4 +39,17 @@ button:hover {
 
 #cardTable th {
     padding: 10px 20px; 
+}
+
+@font-face {
+    font-family: 'Magic';
+    src: url('magic.TTF') format('truetype');
+}
+
+body {
+    font-family: 'Magic', sans-serif;
+}
+
+h1 {
+    font-family: 'Magic', sans-serif;
 }
