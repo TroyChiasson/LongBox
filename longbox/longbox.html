@@ -26,7 +26,7 @@
     <div id="addCardSection">
         <h2>Add a New Card</h2>
         <form id="addCardForm" action="/addcard" method="post">
-            <input type="number" name="collectorsNumber" placeholder="Collector's Number" required>
+            <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector's Number" required>
             <input type="text" name="cardName" placeholder="Card Name" pattern="[A-Za-z0-9\s]+">
             <input type="text" name="color" placeholder="Color" pattern="[A-Za-z]+">
             <input type="text" name="manaCost" placeholder="Mana Cost" pattern="[A-Za-z0-9\s]+">
