@@ -1,5 +1,19 @@
 # ScrollRack Documentation
 
+- [Introduction](#introduction)
+- [longbox.js](#longboxjs)
+  - [Express Server Setup](#express-server-setup)
+  - [Server Start](#server-start)
+  - [`validateCollectorNumber` Function](#validatecollectornumber-function)
+  - [`addCard` Function](#addcard-function)
+- [longbox.html](#longboxhtml)
+  - [HTML Structure](#html-structure)
+  - [Font Definition](#font-definition)
+  - [Page Content](#page-content)
+- [longbox.css](#longboxcss)
+  - [Styling](#styling)
+  - [Font Definition](#font-definition-css)
+
 ## Introduction
 
 ScrollRack is a web application for organizing Magic: The Gathering cards.
@@ -45,5 +59,3 @@ This section defines the CSS styles for the web page. It styles the body, headin
 ### Font Definition
 
 Repeats the definition of the 'Magic' font using the `@font-face` rule. This ensures consistent font usage throughout the page.
-
-This documentation provides detailed descriptions of each code section and its components, making it easier to understand the purpose and functionality of the ScrollRack web application.
