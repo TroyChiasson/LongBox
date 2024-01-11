@@ -18,6 +18,12 @@
         h1 {
             font-family: 'Magic', sans-serif; 
         }
+
+        /* Adjust the width of the color dropdown */
+        select#color {
+            width: 200px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -27,15 +33,20 @@
         <h2>Add a New Card</h2>
         <form id="addCardForm" action="/addcard" method="post">
             <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector's Number" required>
-            <input type="text" name="cardName" placeholder="Card Name" pattern="[A-Za-z0-9\s]+">
-            <input type="text" name="color" placeholder="Color" pattern="[A-Za-z]+">
-            <input type="text" name="manaCost" placeholder="Mana Cost" pattern="[A-Za-z0-9\s]+">
-            <input type="text" name="price" placeholder="Price" pattern="[0-9$]+">
-            <button type="submit">Add Card</button>
+            <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
+            <select id="color" name="color">
+                <option value="black">Black</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="red">Red</option>
+                <option value="white">White</option>
+                <option value="colorless">Colorless</option>
+            </select>
+            <input type="text" id="manaCost" name="manaCost" placeholder="Mana Cost" required>
+            <button type="button" onclick="validateCollectorNumber(); addCard()">Add Card</button>
         </form>
     </div>
     
-
     <div id="cardListSection">
         <h2>Card List</h2>
         <table id="cardTable">
