@@ -1,36 +1,44 @@
 const mysql = require('mysql');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-// Database connection setup
-const connection = mysql.createConnection({
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/*const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'yourUsername',      // Replace with your MySQL username
-    password: 'yourPassword',  // Replace with your MySQL password
-    database: 'TestDB'         // Replace with your database name (schema)
+    user: 'yourUsername',      
+    password: 'yourPassword',  
+    database: 'TestDB'         
+});
+*/
+connection.connect(err => {
+    if (err) {
+        console.error('Error connecting to the database: ' + err.stack);
+        return;
+    }
+    console.log('Connected to database with ID ' + connection.threadId);
 });
 
-// Function to add a card to the database
-function addCard(collectorsNumber, cardName, color, manaCost, price) {
+app.post('/addcard', (req, res) => {
+    const { collectorsNumber, cardName, color, manaCost, price } = req.body;
     const query = 'INSERT INTO cards (collectorsNumber, name, color, manaCost, price) VALUES (?, ?, ?, ?, ?)';
+    
     connection.query(query, [collectorsNumber, cardName, color, manaCost, price], (err, results) => {
         if (err) {
             console.error(err);
             return;
         }
         console.log(`Card added: ${cardName}`);
+        res.redirect('/'); // Redirect back to the main page after adding a card
     });
-}
+});
 
-// Function to retrieve and sort cards
-function getSortedCards(sortBy) {
-    const query = `SELECT * FROM cards ORDER BY ${sortBy}`;
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        console.log('Sorted Cards:', results);
-    });
-}
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
 
 // Example GUI interactions (placeholders, not functional code)
 console.log("Welcome to the Magic: The Gathering Card Organizer");
@@ -45,20 +53,5 @@ console.log("5. Delete card files");
 // For example:
 // addCard('123', 'Black Lotus', 'Black', '3', '20000');
 // getSortedCards('name');
-
-// Remember to open and close the database connection
-connection.connect(err => {
-    if (err) {
-        console.error('Error connecting to the database: ' + err.stack);
-        return;
-    }
-    console.log('Connected to database with ID ' + connection.threadId);
-
-    // Call database interaction functions here
-    // For testing, you can uncomment the example function calls above.
-
-    // Close the connection when done
-    // connection.end();
-});
 
 console.log("Please set up your database and uncomment the relevant sections to enable full functionality.");
