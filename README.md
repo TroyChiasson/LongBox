@@ -13,6 +13,8 @@
 - [longbox.css](#longboxcss)
   - [Styling](#styling)
   - [Font Definition](#font-definition-css)
+- [Card Recognition](#card-recognition)
+- [Scryfall API](#scryfall-api)
 - [Machine Design](#machine-design)
   - [Framework](#framework)
 - [Arduino Controls](#arduino-controls)
@@ -20,7 +22,7 @@
     - [Controlling Motors](#controlling-motors)
 - [Database Design](#database-design)
     - [Schema](#schema)
-- [Scryfall API](#scryfall-api)
+
 
 ## Introduction
 
@@ -68,6 +70,18 @@ This section defines the CSS styles for the web page. It styles the body, headin
 
 Repeats the definition of the 'Magic' font using the `@font-face` rule. This ensures consistent font usage throughout the page.
 
+## Card Recognition
+Using Python and the openCV library, a camera is used to view the world in which a card is placed in its field of view.
+There were difficulties finding good ways to implement the actual recognition of a card, so to this point (the first retro) the user can click a button when a card is in view and there is an attempt to scrape the text from the card that is visible. This information would then be parsed for useful text to be fed to the Scryfall API.
+
+## Scryfall API
+
+Using the API avaiable on Scryfall.com, we are able to search for cards by different characteristics.
+
+Here is a search for a card by its exact name, Mana Crypt.
+
+![image](https://github.com/TroyChiasson/LongBox/assets/45201515/d62c9bbb-e63d-42b4-9833-d58f77681988)
+
 ## Machine Design
 
 ### Framework
@@ -86,17 +100,6 @@ Use `digitalRead` on the arduino and `Serial` on the computer to be able to send
 ## Database Design
 
 ### Schema
-
-## Scryfall API
-
-Using the API avaiable on Scryfall.com, we are able to search for cards by different characteristics.
-
-Here I searched for a card by its exact name, Mana Crypt.
-
-![image](https://github.com/TroyChiasson/LongBox/assets/45201515/d62c9bbb-e63d-42b4-9833-d58f77681988)
-
-
-
 
 
 
