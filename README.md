@@ -68,6 +68,7 @@ Repeats the definition of the 'Magic' font using the `@font-face` rule. This ens
 ## Machine Design
 
 ### Framework
+![Dashboard](backRear.png)
 
 ## Arduino Controls
 
