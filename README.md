@@ -18,6 +18,8 @@
 - [Arduino Controls](#arduino-controls)
     - [Libraries](#libraries)
     - [Controlling Motors](#controlling-motors)
+- [Database Design](#database-design)
+    - [Schema](#schema)
 
 ## Introduction
 
@@ -79,6 +81,12 @@ Use `digitalRead` on the arduino and `Serial` on the computer to be able to send
 ### Libraries
 
 ### Controlling motors
+
+## Database Design
+
+### Schema
+
+
 
 
 
