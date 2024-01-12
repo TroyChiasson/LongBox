@@ -14,16 +14,16 @@
 - [longbox.css](#longboxcss)
   - [Styling](#styling)
   - [Font Definition](#font-definition-css)
-- [Card Recognition](#card-recognition)
+- [Database Design](#database-design)
+  - [Schema](#schema)
+  - [Views](#views)
 - [Scryfall API](#scryfall-api)
+- [Card Recognition](#card-recognition)
 - [Machine Design](#machine-design)
   - [Framework](#framework)
 - [Arduino Controls](#arduino-controls)
     - [Libraries](#libraries)
     - [Controlling Motors](#controlling-motors)
-- [Database Design](#database-design)
-    - [Schema](#schema)
-
 
 ## Introduction
 
@@ -80,9 +80,24 @@ Contains the main content of the web page, including the title, the form for add
 
 Defines the CSS styles for the web page. Styles the body, headings, form elements, buttons, and table headers, giving the page a coherent and visually appealing design.
 
-## Card Recognition
-Using Python and the openCV library, a camera is used to view a card placed in its field of view.
-There were difficulties finding good ways to implement the actual recognition of a card, so to this point (the first retro) the user can click a button when a card is in view and there is an attempt to scrape the text from the card that is visible. This information would then be parsed for useful text to be fed to the Scryfall API.
+## Database Design
+
+The application and website both utilize a MySQL database that contains two tables.
+
+### Schema
+
+One table contain the list of all the user's cards (`user_cards`), which has primary keys `set_name` `collector_code` that are also foreign keys in the `api_dump` table. The `api_dump` table contains one entry for each datapoint in the Scryfall API (~450k objects).
+
+![EER](https://github.com/TroyChiasson/LongBox/assets/80844548/7ab379c8-ad8a-42a1-a037-32d87f88aa2d)
+
+### Views
+
+There are two basic views for each table that simply displays all entries within.
+
+![API_Datapoints](https://github.com/TroyChiasson/LongBox/assets/80844548/b5cd0d2a-2c9c-4840-bb4c-568a9328a514)
+
+![User's Cards](https://github.com/TroyChiasson/LongBox/assets/80844548/506b8174-e96e-4270-b582-3dceb76ceab2)
+
 
 ## Scryfall API
 
@@ -91,6 +106,10 @@ Using the API avaiable on Scryfall.com, we are able to search for cards by diffe
 Here is a search for a card by its exact name, Mana Crypt.
 
 ![image](https://github.com/TroyChiasson/LongBox/assets/45201515/d62c9bbb-e63d-42b4-9833-d58f77681988)
+
+## Card Recognition
+Using Python and the openCV library, a camera is used to view the world in which a card is placed in its field of view.
+There were difficulties finding good ways to implement the actual recognition of a card, so to this point (the first retro) the user can click a button when a card is in view and there is an attempt to scrape the text from the card that is visible. This information would then be parsed for useful text to be fed to the Scryfall API.
 
 ## Machine Design
 
@@ -110,22 +129,3 @@ It is import to have `stepper.h` in the arduino control script to be able to use
 ### Controlling motors
 
 We have to assign a `step` and `direction` that matches the pins on the arduino for each stepper motor we have plugged into it. Once these are set you need to initialize the motors being used with `stepper()`. Then in our loop for counting cards, every 5 cards we can move the stepper motor by declaring a `step` and direction. So each step will raise or lower the platforms.
-
-## Database Design
-
-The application and website both utilize a MySQL database that contains two tables.
-
-### Schema
-
-One table contain the list of all the user's cards (`user_cards`), which has primary keys `set_name` `collector_code` that are also foreign keys in the `api_dump` table. The `api_dump` table contains one entry for each datapoint in the Scryfall API (~450k objects).
-
-![EER](https://github.com/TroyChiasson/LongBox/assets/80844548/7ab379c8-ad8a-42a1-a037-32d87f88aa2d)
-
-### Views
-
-There are two basic views for each table that simply displays all entries within.
-
-![API_Datapoints](https://github.com/TroyChiasson/LongBox/assets/80844548/b5cd0d2a-2c9c-4840-bb4c-568a9328a514)
-
-![User's Cards](https://github.com/TroyChiasson/LongBox/assets/80844548/506b8174-e96e-4270-b582-3dceb76ceab2)
-
