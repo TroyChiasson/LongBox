@@ -91,11 +91,15 @@ Here is a search for a card by its exact name, Mana Crypt.
 
 ## Arduino Controls
 
-Use `digitalRead` on the arduino and `Serial` on the computer to be able to send information via usb
+Arduino utilizes a type of C++ code and it comes with built in functions for sending info over usb to a seperate computer. You use `digitalRead` on the arduino and `Serial` on the computer to be able to send information via usb. Then having a start button and a loop to count scanned cards and you are able to control the arduino.
 
 ### Libraries
 
+It is import to have `stepper.h` in the arduino control script to be able to use the motors.
+
 ### Controlling motors
+
+We have to assign a `step` and `direction` for each stepper motor we have plugged into out arduino. Once these are set you need to initialize the motors being used with `stepper()`. Then in our loop for counting cards, every 5 cards we can move the stepper motor by declaring a `step` and direction. So each step will raise or lower the platforms.
 
 ## Database Design
 
