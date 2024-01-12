@@ -14,15 +14,36 @@ h1 {
     text-align: center;
 }
 
-#addCardSection, #cardListSection {
-    margin: 10px; /* margin for spacing */
+.columns {
+    display: flex;
+}
+
+/* Left column */
+.column.side {
+    width: 20%;
+}
+
+/* Main column */
+.column.main {
+    width: 80%;
+}
+
+/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .column.side, .column.main {
+        width: 100%;
+    }
+}
+
+#addCardSection, #cardListSection, #folderSection {
+    margin: 10px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
 input[type=text], button {
-    margin: 10px 0; /* margin for spacing */
+    margin: 10px 0;
     padding: 10px;
     width: 200px;
 }
@@ -40,7 +61,12 @@ button:hover {
 }
 
 #cardTable th {
-    padding: 10px 20px; 
+    padding: 10px 20px;
+}
+
+#cardTable td {
+    padding: 5px 10px; 
+    text-align: left; 
 }
 
 @font-face {
@@ -54,4 +80,11 @@ body {
 
 h1 {
     font-family: 'Magic', sans-serif;
+}
+
+footer {
+    background-color: #004a04;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-align: center;
 }
