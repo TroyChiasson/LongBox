@@ -13,6 +13,11 @@
 - [longbox.css](#longboxcss)
   - [Styling](#styling)
   - [Font Definition](#font-definition-css)
+- [Machine Design](#machine-design)
+  - [Framework](#framework)
+- [Arduino Controls](#arduino-controls)
+    -[Libraries](#libraries)
+    -[Controlling Motors](#controlling-motors)
 
 ## Introduction
 
