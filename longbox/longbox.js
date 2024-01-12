@@ -90,8 +90,34 @@ function addCard() {
     document.getElementById('color').selectedIndex = 0; // Reset the color dropdown to its default option
     document.getElementById('manaCost').value = '';
 }
+// Add listeners for checkbox changes
+const checkboxes = document.querySelectorAll("input[type='checkbox']");
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", handleCheckboxChange);
+});
 
+// Function to handle checkbox changes
+function handleCheckboxChange() {
+    const cardList = document.getElementById("cardList");
+    const checkboxes = cardList.querySelectorAll("input[type='checkbox']");
+    const removeCardsButton = document.getElementById("removeCardsButton");
 
+    let atLeastOneSelected = false;
+
+    // Check if at least one checkbox is selected
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            atLeastOneSelected = true;
+        }
+    });
+
+    // Show/hide the Remove Cards button based on selection
+    if (atLeastOneSelected) {
+        removeCardsButton.style.display = "block";
+    } else {
+        removeCardsButton.style.display = "none";
+    }
+}
 
 function addFolder() {
     const folderName = document.getElementById('folderName').value.trim();
@@ -108,4 +134,20 @@ function addFolder() {
 
     // Clear the input field
     document.getElementById('folderName').value = '';
+}
+
+function removeSelectedCards() {
+    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+    const cardList = document.getElementById("cardList");
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            const row = checkbox.closest("tr");
+            cardList.removeChild(row);
+        }
+    });
+}
+
+function addToFolder() {
+    alert("Add logic to put cards into folder");
 }
