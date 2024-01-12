@@ -69,8 +69,12 @@ Repeats the definition of the 'Magic' font using the `@font-face` rule. This ens
 
 ### Framework
 ![Dashboard](backRear.PNG)
+![Dashboard](rightFrontal.PNG)
+![Dashboard](leftFrontal.PNG)
 
 ## Arduino Controls
+
+Use 'digitalRead' on the arduino and 'Serial' on the computer to be able to send information via usb
 
 ### Libraries
 
