@@ -18,6 +18,8 @@
 - [Arduino Controls](#arduino-controls)
     - [Libraries](#libraries)
     - [Controlling Motors](#controlling-motors)
+- [Database Design](#database-design)
+    - [Schema](#schema)
 
 ## Introduction
 
@@ -74,6 +76,12 @@ Repeats the definition of the 'Magic' font using the `@font-face` rule. This ens
 ### Libraries
 
 ### Controlling motors
+
+## Database Design
+
+### Schema
+
+
 
 
 
