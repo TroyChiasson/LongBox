@@ -102,6 +102,9 @@
                     <tbody id="cardList">
                         <!-- Cards added here with checkboxes -->
                     </tbody>
+                <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+                <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
+                <table id="cardTable">
                 </table>
             </div>
         </div>
@@ -129,17 +132,16 @@
             loginForm.style.display = "block";
         }
 
-        // Function to handle the login process (you can implement your logic here)
+        // Function to handle the login process
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            // You can implement your login logic here, e.g., send a request to a server for authentication
-
-            // For now, just close the login form
+            // close the login form
             const loginForm = document.getElementById("loginForm");
             loginForm.style.display = "none";
         }
+
     </script>
 </body>
 </html>
