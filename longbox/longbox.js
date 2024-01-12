@@ -51,29 +51,46 @@ function addCard() {
     const color = document.getElementById('color').value;
     const manaCost = document.getElementById('manaCost').value;
 
-    // Get the table body and append the new row
-    const cardList = document.getElementById('cardList');
-    const newRow = cardList.insertRow();
+    // Create a new table row
+    const newRow = document.createElement('tr');
+
+    // Create a checkbox cell
+    const checkboxCell = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkboxCell.appendChild(checkbox);
 
     // Create table data cells for each column
-    const cardNameCell = newRow.insertCell(0);
-    cardNameCell.textContent = cardName;
-
-    const collectorsNumberCell = newRow.insertCell(1);
+    const collectorsNumberCell = document.createElement('td');
     collectorsNumberCell.textContent = collectorsNumber;
 
-    const colorCell = newRow.insertCell(2);
+    const cardNameCell = document.createElement('td');
+    cardNameCell.textContent = cardName;
+
+    const colorCell = document.createElement('td');
     colorCell.textContent = color;
 
-    const manaCostCell = newRow.insertCell(3);
+    const manaCostCell = document.createElement('td');
     manaCostCell.textContent = manaCost;
+
+    // Append the cells to the new row
+    newRow.appendChild(checkboxCell);
+    newRow.appendChild(cardNameCell);
+    newRow.appendChild(collectorsNumberCell);
+    newRow.appendChild(colorCell);
+    newRow.appendChild(manaCostCell);
+
+    // Get the table body and append the new row
+    const cardList = document.getElementById('cardList');
+    cardList.appendChild(newRow);
 
     // Clear input fields
     document.getElementById('collectorsNumber').value = '';
     document.getElementById('cardName').value = '';
-    document.getElementById('color').selectedIndex = 0;
+    document.getElementById('color').selectedIndex = 0; // Reset the color dropdown to its default option
     document.getElementById('manaCost').value = '';
 }
+
 
 
 function addFolder() {
