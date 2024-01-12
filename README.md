@@ -20,6 +20,7 @@
     - [Controlling Motors](#controlling-motors)
 - [Database Design](#database-design)
     - [Schema](#schema)
+- [Scryfall API](#scryfall-api)
 
 ## Introduction
 
@@ -85,6 +86,14 @@ Use `digitalRead` on the arduino and `Serial` on the computer to be able to send
 ## Database Design
 
 ### Schema
+
+## Scryfall API
+
+Using the API avaiable on Scryfall.com, we are able to search for cards by different characteristics.
+
+Here I searched for a card by its exact name, Mana Crypt.
+
+![image](https://github.com/TroyChiasson/LongBox/assets/45201515/d62c9bbb-e63d-42b4-9833-d58f77681988)
 
 
 
