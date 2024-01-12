@@ -16,8 +16,8 @@
 - [Database Design](#database-design)
   - [Schema](#schema)
   - [Views](#views)
-- [Card Recognition](#card-recognition)
 - [Scryfall API](#scryfall-api)
+- [Card Recognition](#card-recognition)
 - [Machine Design](#machine-design)
   - [Framework](#framework)
 - [Arduino Controls](#arduino-controls)
@@ -88,9 +88,6 @@ There are two basic views for each table that simply displays all entries within
 
 ![User's Cards](https://github.com/TroyChiasson/LongBox/assets/80844548/506b8174-e96e-4270-b582-3dceb76ceab2)
 
-## Card Recognition
-Using Python and the openCV library, a camera is used to view the world in which a card is placed in its field of view.
-There were difficulties finding good ways to implement the actual recognition of a card, so to this point (the first retro) the user can click a button when a card is in view and there is an attempt to scrape the text from the card that is visible. This information would then be parsed for useful text to be fed to the Scryfall API.
 
 ## Scryfall API
 
@@ -99,6 +96,10 @@ Using the API avaiable on Scryfall.com, we are able to search for cards by diffe
 Here is a search for a card by its exact name, Mana Crypt.
 
 ![image](https://github.com/TroyChiasson/LongBox/assets/45201515/d62c9bbb-e63d-42b4-9833-d58f77681988)
+
+## Card Recognition
+Using Python and the openCV library, a camera is used to view the world in which a card is placed in its field of view.
+There were difficulties finding good ways to implement the actual recognition of a card, so to this point (the first retro) the user can click a button when a card is in view and there is an attempt to scrape the text from the card that is visible. This information would then be parsed for useful text to be fed to the Scryfall API.
 
 ## Machine Design
 
