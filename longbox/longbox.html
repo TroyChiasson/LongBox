@@ -32,7 +32,8 @@
     <div id="addCardSection">
         <h2>Add a New Card</h2>
         <form id="addCardForm" action="/addcard" method="post">
-            <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector's Number" required>
+			<input type="text" id="setCode" name="setCode" placeholder="Set Code" required>
+            <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector Number" required>
             <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
             <select id="color" name="color">
                 <option value="black">Black</option>
@@ -53,7 +54,8 @@
             <thead>
                 <tr>
                     <th>Card Name</th>
-                    <th>Collector's Number</th>
+					<th>Set Code</th>
+                    <th>Collector Number</th>
                     <th>Color</th>
                     <th>Mana Cost</th>
                     <th>Price</th>

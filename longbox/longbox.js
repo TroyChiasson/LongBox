@@ -24,6 +24,7 @@ function validateCollectorNumber() {
 }
 
 function addCard() {
+	const setCode = document.getElementById('setCode').value;
     const collectorsNumber = document.getElementById('collectorsNumber').value;
     const cardName = document.getElementById('cardName').value;
     const color = document.getElementById('color').value;
@@ -33,6 +34,9 @@ function addCard() {
     const newRow = document.createElement('tr');
 
     // Create table data cells for each column
+	const setCodeCell = document.createElement('td');
+    setCodeCell.textContent = setCode;
+	
     const collectorsNumberCell = document.createElement('td');
     collectorsNumberCell.textContent = collectorsNumber;
 
@@ -47,6 +51,7 @@ function addCard() {
 
     // Append the cells to the new row
     newRow.appendChild(cardNameCell);
+    newRow.appendChild(setCodeCell);
     newRow.appendChild(collectorsNumberCell);
     newRow.appendChild(colorCell);
     newRow.appendChild(manaCostCell);
@@ -56,6 +61,7 @@ function addCard() {
     cardList.appendChild(newRow);
 
     // Clear input fields
+    document.getElementById('setCode').value = '';
     document.getElementById('collectorsNumber').value = '';
     document.getElementById('cardName').value = '';
     document.getElementById('color').selectedIndex = 0; // Reset the color dropdown to its default option
