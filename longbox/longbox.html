@@ -27,7 +27,7 @@
     </style>
 </head>
 <body>
-    <h1>Longbox</h1>
+    <h1>ScrollRack</h1>
     
     <div id="addCardSection">
         <h2>Add a New Card</h2>
@@ -46,25 +46,36 @@
             <button type="button" onclick="validateCollectorNumber(); addCard()">Add Card</button>
         </form>
     </div>
-    
-    <div id="cardListSection">
-        <h2>Card List</h2>
-        <table id="cardTable">
-            <thead>
-                <tr>
-                    <th>Card Name</th>
-                    <th>Collector's Number</th>
-                    <th>Color</th>
-                    <th>Mana Cost</th>
-                    <th>Price</th>
-                </tr>
-            </thead>            
-            <tbody id="cardList">
-                <!-- Cards added here -->
-            </tbody>
-        </table>
+    <div class="columns">
+        <div class="column.main">
+            <div id="cardListSection">
+                <h2>Card List</h2>
+                <table id="cardTable">
+                    <thead>
+                        <tr>
+                            <th>Card Name</th>
+                            <th>Collector's Number</th>
+                            <th>Color</th>
+                            <th>Mana Cost</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>            
+                    <tbody id="cardList">
+                        <!-- Cards added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="column.side">
+            <div id="folderSection">
+                <h2>Folders</h2>
+                <button onclick="addFolder()">Add Folder</button>
+                <input type="text" id="folderName" placeholder="Folder Name">
+                <ul id="folderList"></ul>
+            </div>
+        </div>
     </div>
-
+    <footer>ScrollRack</footer>
     <script src="longbox.js"></script>
 </body>
 </html>
