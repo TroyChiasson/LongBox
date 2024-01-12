@@ -59,3 +59,18 @@ This section defines the CSS styles for the web page. It styles the body, headin
 ### Font Definition
 
 Repeats the definition of the 'Magic' font using the `@font-face` rule. This ensures consistent font usage throughout the page.
+
+## Machine Design
+
+### Framework
+
+## Arduino Controls
+
+### Libraries
+
+### Controlling motors
+
+
+
+
+
