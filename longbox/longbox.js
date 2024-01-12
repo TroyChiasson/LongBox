@@ -23,41 +23,72 @@ function validateCollectorNumber() {
     }
 }
 
+// Function to create a new folder
+function createFolder() {
+    const folderName = document.getElementById('folderName').value;
+    
+    // Check if folderName is not empty
+    if (folderName.trim() === '') {
+        alert('Please enter a folder name.');
+        return;
+    }
+
+    // Create a new folder list item
+    const folderListItem = document.createElement('li');
+    folderListItem.textContent = folderName;
+
+    // Append the folder list item to the folder list
+    const folderList = document.getElementById('folderList');
+    folderList.appendChild(folderListItem);
+
+    // Clear the folder name input field
+    document.getElementById('folderName').value = '';
+}
+
 function addCard() {
     const collectorsNumber = document.getElementById('collectorsNumber').value;
     const cardName = document.getElementById('cardName').value;
     const color = document.getElementById('color').value;
     const manaCost = document.getElementById('manaCost').value;
 
-    // Create a new table row
-    const newRow = document.createElement('tr');
-
-    // Create table data cells for each column
-    const collectorsNumberCell = document.createElement('td');
-    collectorsNumberCell.textContent = collectorsNumber;
-
-    const cardNameCell = document.createElement('td');
-    cardNameCell.textContent = cardName;
-
-    const colorCell = document.createElement('td');
-    colorCell.textContent = color;
-
-    const manaCostCell = document.createElement('td');
-    manaCostCell.textContent = manaCost;
-
-    // Append the cells to the new row
-    newRow.appendChild(cardNameCell);
-    newRow.appendChild(collectorsNumberCell);
-    newRow.appendChild(colorCell);
-    newRow.appendChild(manaCostCell);
-
     // Get the table body and append the new row
     const cardList = document.getElementById('cardList');
-    cardList.appendChild(newRow);
+    const newRow = cardList.insertRow();
+
+    // Create table data cells for each column
+    const cardNameCell = newRow.insertCell(0);
+    cardNameCell.textContent = cardName;
+
+    const collectorsNumberCell = newRow.insertCell(1);
+    collectorsNumberCell.textContent = collectorsNumber;
+
+    const colorCell = newRow.insertCell(2);
+    colorCell.textContent = color;
+
+    const manaCostCell = newRow.insertCell(3);
+    manaCostCell.textContent = manaCost;
 
     // Clear input fields
     document.getElementById('collectorsNumber').value = '';
     document.getElementById('cardName').value = '';
-    document.getElementById('color').selectedIndex = 0; // Reset the color dropdown to its default option
+    document.getElementById('color').selectedIndex = 0;
     document.getElementById('manaCost').value = '';
+}
+
+
+function addFolder() {
+    const folderName = document.getElementById('folderName').value.trim();
+
+    if (folderName === '') {
+        alert('Please enter a folder name.');
+        return;
+    }
+
+    const folderList = document.getElementById('folderList');
+    const folderItem = document.createElement('li');
+    folderItem.textContent = folderName;
+    folderList.appendChild(folderItem);
+
+    // Clear the input field
+    document.getElementById('folderName').value = '';
 }
