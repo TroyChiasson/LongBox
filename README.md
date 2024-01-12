@@ -16,8 +16,8 @@
 - [Machine Design](#machine-design)
   - [Framework](#framework)
 - [Arduino Controls](#arduino-controls)
-    -[Libraries](#libraries)
-    -[Controlling Motors](#controlling-motors)
+    - [Libraries](#libraries)
+    - [Controlling Motors](#controlling-motors)
 
 ## Introduction
 
