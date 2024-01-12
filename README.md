@@ -103,8 +103,19 @@ We have to assign a `step` and `direction` that matches the pins on the arduino 
 
 ## Database Design
 
+The application and website both utilize a MySQL database that contains two tables.
+
 ### Schema
 
+One table contain the list of all the user's cards (`user_cards`), which has primary keys `set_name` `collector_code` that are also foreign keys in the `api_dump` table. The `api_dump` table contains one entry for each datapoint in the Scryfall API (~450k objects).
 
+![EER](https://github.com/TroyChiasson/LongBox/assets/80844548/7ab379c8-ad8a-42a1-a037-32d87f88aa2d)
 
+### Views
+
+There are two basic views for each table that simply displays all entries within.
+
+![API_Datapoints](https://github.com/TroyChiasson/LongBox/assets/80844548/b5cd0d2a-2c9c-4840-bb4c-568a9328a514)
+
+![User's Cards](https://github.com/TroyChiasson/LongBox/assets/80844548/506b8174-e96e-4270-b582-3dceb76ceab2)
 
