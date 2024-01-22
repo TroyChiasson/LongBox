@@ -97,12 +97,12 @@ footer {
     padding: 10px;
     text-align: center;
 }
-/* Style for the navigation bar */
+
 nav {
     background-color: #004a04;
     color: #FFFFFF;
     text-align: center;
-    padding: 10px 0; /* Add padding to create some space around the links */
+    padding: 10px 0;
 }
 
 nav ul {
@@ -123,5 +123,12 @@ nav a {
 }
 
 nav a:hover {
-    color: #237123; /* Change the color on hover */
+    color: #237123; 
 }
+
+#folderList {
+    margin-top: 10px;
+}
+
+.folder-item {
+    margin-bottom: 10px;

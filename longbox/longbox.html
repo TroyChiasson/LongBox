@@ -69,18 +69,19 @@
     <h1>ScrollRack<span class="login-link" onclick="showLoginForm()">Login</span></h1> <!-- Place the login link inside the header -->
     <nav>
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="longbox.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="download.html">Download</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
-    </nav>      
+    </nav>         
     <div id="addCardSection">
         <h2>Add a New Card</h2>
         <form id="addCardForm" action="/addcard" method="post">
             <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector's Number" required>
             <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
             <select id="color" name="color">
+                <option value="" disabled selected>Color</option>
                 <option value="black">Black</option>
                 <option value="blue">Blue</option>
                 <option value="green">Green</option>
@@ -99,7 +100,7 @@
                 <table id="cardTable">
                     <thead>
                         <tr>
-                            <th></th> <!-- Add an empty header for the checkbox -->
+                            <th></th>
                             <th>Card Name</th>
                             <th>Collector's Number</th>
                             <th>Color</th>
@@ -108,7 +109,6 @@
                         </tr>
                     </thead>            
                     <tbody id="cardList">
-                        <!-- Cards added here with checkboxes -->
                     </tbody>
                 <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
                 <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
@@ -121,7 +121,7 @@
                 <h2>Folders</h2>
                 <button onclick="addFolder()">Add Folder</button>
                 <input type="text" id="folderName" placeholder="Folder Name">
-                <ul id="folderList"></ul>
+                <div id="folderList"></div>
             </div>
         </div>
     </div>
@@ -134,13 +134,11 @@
     <footer>ScrollRack</footer>
     <script src="longbox.js"></script>
     <script>
-        // Function to show the login form when the "Login" link is clicked
         function showLoginForm() {
             const loginForm = document.getElementById("loginForm");
             loginForm.style.display = "block";
         }
 
-        // Function to handle the login process
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;

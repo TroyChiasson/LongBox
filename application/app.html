@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ScrollRack</title>
+  <link rel="stylesheet" type="text/css" href="app.css">
+</head>
+<body>
+  <h1>ScrollRack</h1>
+  <!-- Navigation Bar -->
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+  
+  <!-- Main Content -->
+  <div id="addCardSection">
+    <h2>Add a New Card</h2>
+    <form id="addCardForm">
+      <input type="text" id="collectorsNumber" placeholder="Collector's Number" required>
+      <input type="text" id="cardName" placeholder="Card Name" required>
+      <select id="color" name="color">
+        <option value="black">Black</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="red">Red</option>
+        <option value="white">White</option>
+        <option value="colorless">Colorless</option>
+      </select>
+      <input type="text" id="manaCost" placeholder="Mana Cost" required>
+      <button type="button" onclick="validateCollectorNumber(); addCard()">Add Card</button>
+    </form>
+  </div>
+
+  <!-- Card List -->
+  <div class="columns">
+    <div class="column main">
+      <div id="cardListSection">
+        <h2>Card List</h2>
+        <table id="cardTable">
+          <thead>
+            <tr>
+              <th></th> <!-- Add an empty header for the checkbox -->
+              <th>Card Name</th>
+              <th>Collector's Number</th>
+              <th>Color</th>
+              <th>Mana Cost</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody id="cardList">
+            <!-- Cards added here with checkboxes -->
+          </tbody>
+        </table>
+        <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+        <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
+      </div>
+    </div>
+    <!-- Folders Sidebar -->
+    <div class="column side">
+      <div id="folderSection">
+        <h2>Folders</h2>
+        <button onclick="addFolder()">Add Folder</button>
+        <input type="text" id="folderName" placeholder="Folder Name">
+        <ul id="folderList">
+          <!-- Folders added here -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Form -->
+  <div class="login-form" id="loginForm">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button type="button" onclick="login()">Login</button>
+  </div>
+
+  <footer>ScrollRack</footer>
+
+  <!-- Include your JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>
