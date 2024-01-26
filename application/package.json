@@ -1,5 +1,18 @@
 {
-  "devDependencies": {
-    "electron": "^28.1.4"
+  "name": "ScrollRack",
+  "version": "1.0.0",
+  "description": "Desktop application for ScrollRack MTG card organizer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "ScrollRack"
+  ],
+  "author": "Madeline Ballew",
+  "license": "N/A",
+  "dependencies": {
+    "electron": "28.1.4"
   }
 }
