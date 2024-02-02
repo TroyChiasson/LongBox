@@ -184,3 +184,25 @@ app.on('ready', () => {
     });
   });
   
+  // Function to toggle between tabs
+function showTab(tabName) {
+  var i, tabcontent;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  document.getElementById(tabName).style.display = "block";
+}
+
+// Function to create a new folder
+function createFolder() {
+  var folderName = document.getElementById("newFolderName").value;
+  // Logic to create and display the new folder
+}
+
+// Add event listener for tab clicks
+document.querySelectorAll('nav ul li a').forEach(tab => {
+  tab.addEventListener('click', function() {
+    showTab(this.getAttribute('href').substring(1));
+  });
+});
