@@ -16,17 +16,12 @@ h1 {
 
 .columns {
     display: flex;
-}
-
-/* Left column */
-.column.side {
-    width: 20%;
-}
-
-/* Main column */
-.column.main {
-    width: 80%;
-}
+    flex-wrap: wrap;
+  }
+  
+  .column.main, .column.side {
+    flex: 1 1 50%;
+}  
 
 #cardTable input[type="checkbox"] {
     margin-right: 5px;
