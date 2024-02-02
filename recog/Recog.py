@@ -1,34 +1,40 @@
 import cv2
 import pytesseract
 
-# Set up the video capture (0 for default camera, or provide a video file path)
+# Set up the video capture
 cap = cv2.VideoCapture(0)
 
 # Set up Tesseract OCR
-pytesseract.pytesseract.tesseract_cmd = r'/usr/local/Cellar/tesseract/5.3.3/bin/tesseract'  # Update with your Tesseract installation path
+pytesseract.pytesseract.tesseract_cmd = r'/usr/local/bin/tesseract'  # Update with your path
 
 while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
 
-    # Preprocess the frame if needed (resize, crop, etc.)
+    # Define the ROI for the card name
+    # These values need to be adjusted based on your specific setup and camera positioning
+    x, y, w, h = 300, 0, 400, 100  # Example coordinates
+    roi = frame[y:y+h, x:x+w]
 
-    # Display the frame
-    cv2.imshow('Magic Card OCR', frame)
+    # Convert the ROI to grayscale
+    grey_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+
+    # Optionally, apply further preprocessing to the ROI for better OCR results (e.g., thresholding)
+
+    # Display the ROI (optional)
+    cv2.imshow('Card Name ROI', grey_roi)
 
     # Wait for a key press
     key = cv2.waitKey(1) & 0xFF
 
-    # Check if the 'c' key is pressed to capture an image
+    # Check if the 'c' key is pressed to capture the image
     if key == ord('c'):
-        # Perform OCR to extract text from the captured frame
-        text = pytesseract.image_to_string(frame)
+        # Perform OCR on the grayscale ROI
+        text = pytesseract.image_to_string(grey_roi)
 
-        # Display the extracted text
-        print(text)
 
-        # Save the captured frame to a variable or file as needed
-        captured_image = frame  # Update this line based on your needs
+        with open("card_scans.txt", "a+") as file:
+            file.write(text.split("\n")[0] + "\n")
 
     # Break the loop if 'q' key is pressed
     elif key == ord('q'):
