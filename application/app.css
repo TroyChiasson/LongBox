@@ -8,24 +8,28 @@ body {
 }
 
 h1 {
+    font-family: 'Magic', sans-serif;
     background-color: #004a04;
     color: rgb(255, 255, 255);
     padding: 10px;
     text-align: center;
 }
 
-.columns {
-    display: flex;
+.header {
+    justify-content: center;
+    position: relative;
 }
-
-/* Left column */
-.column.side {
-    width: 20%;
+  
+#loginButton {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /* Main column */
 .column.main {
-    width: 80%;
+    width: 100%;
 }
 
 #cardTable input[type="checkbox"] {
@@ -35,34 +39,17 @@ h1 {
 
 button {
     font-family: 'Magic', sans-serif;
-}
-
-/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .column.side, .column.main {
-        width: 100%;
-    }
-}
-
-#addCardSection, #cardListSection, #folderSection {
-    margin: 10px;
-    padding: 20px;
-    border: 1px solid #ddd;
+    background-color: #004a04;
+    color: #FFFFFF;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 input[type=text], button {
     margin: 10px 0;
     padding: 10px;
     width: 200px;
-}
-
-button {
-    background-color: #004a04;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 button:hover {
@@ -81,14 +68,6 @@ button:hover {
 @font-face {
     font-family: 'Magic';
     src: url('magic.TTF') format('truetype');
-}
-
-body {
-    font-family: 'Magic', sans-serif;
-}
-
-h1 {
-    font-family: 'Magic', sans-serif;
 }
 
 footer {
@@ -121,52 +100,6 @@ nav a {
     font-size: 18px;
 }
 
-body {
-    font-family: 'Magic', sans-serif;
-    background-color: #333333;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-h1 {
-    background-color: #004a04;
-    color: rgb(255, 255, 255);
-    padding: 10px;
-    text-align: center;
-}
-
-.columns {
-    display: flex;
-}
-
-/* Left column */
-.column.side {
-    width: 20%;
-}
-
-/* Main column */
-.column.main {
-    width: 80%;
-}
-
-#cardTable input[type="checkbox"] {
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-button {
-    font-family: 'Magic', sans-serif;
-}
-
-/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .column.side, .column.main {
-        width: 100%;
-    }
-}
-
 #addCardSection, #cardListSection, #folderSection {
     margin: 10px;
     padding: 20px;
@@ -174,72 +107,36 @@ button {
     border-radius: 5px;
 }
 
-input[type=text], button {
-    margin: 10px 0;
-    padding: 10px;
-    width: 200px;
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    z-index: 1; /* Sit on top */
+}
+ 
+.modal-content {
+  background-color: #7a7272;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #373737;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
 
-button {
-    background-color: #004a04;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-button:hover {
-    background-color: #003102;
-}
-
-#cardTable th {
-    padding: 10px 20px;
-}
-
-#cardTable td {
-    padding: 5px 10px; 
-    text-align: left; 
-}
-
-@font-face {
-    font-family: 'Magic';
-    src: url('magic.TTF') format('truetype');
-}
-
-body {
-    font-family: 'Magic', sans-serif;
-}
-
-h1 {
-    font-family: 'Magic', sans-serif;
-}
-
-footer {
-    background-color: #004a04;
-    color: rgb(255, 255, 255);
-    padding: 10px;
-    text-align: center;
-}
-/* Style for the navigation bar */
-nav {
-    background-color: #004a04;
-    color: #FFFFFF;
-    text-align: center;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 18px;
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }

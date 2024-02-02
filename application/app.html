@@ -5,14 +5,17 @@
   <link rel="stylesheet" type="text/css" href="app.css">
 </head>
 <body>
-  <h1>ScrollRack</h1>
+  <div class="header">
+    <h1>ScrollRack</h1>
+    <button id="loginButton">Login</button>
+  </div>
   <!-- Navigation Bar -->
   <nav>
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Services</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="app.html">Home</a></li>
+      <li><a href="folders.html">Folders</a></li>
+      <li><a href="prices.html">Prices</a></li>
+      <li><a href="about.html">About</a></li>
     </ul>
   </nav>
   
@@ -36,48 +39,39 @@
   </div>
 
   <!-- Card List -->
-  <div class="columns">
-    <div class="column main">
-      <div id="cardListSection">
-        <h2>Card List</h2>
-        <table id="cardTable">
-          <thead>
-            <tr>
-              <th></th> <!-- Add an empty header for the checkbox -->
-              <th>Card Name</th>
-              <th>Collector's Number</th>
-              <th>Color</th>
-              <th>Mana Cost</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody id="cardList">
-            <!-- Cards added here with checkboxes -->
-          </tbody>
-        </table>
-        <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
-        <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
-      </div>
-    </div>
-    <!-- Folders Sidebar -->
-    <div class="column side">
-      <div id="folderSection">
-        <h2>Folders</h2>
-        <button onclick="addFolder()">Add Folder</button>
-        <input type="text" id="folderName" placeholder="Folder Name">
-        <ul id="folderList">
-          <!-- Folders added here -->
-        </ul>
-      </div>
+  <div class="column main">
+    <div id="cardListSection">
+      <h2>Card List</h2>
+      <table id="cardTable">
+        <thead>
+          <tr>
+            <th></th> <!-- Add an empty header for the checkbox -->
+            <th>Card Name</th>
+            <th>Collector's Number</th>
+            <th>Color</th>
+            <th>Mana Cost</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody id="cardList">
+          <!-- Cards added here with checkboxes -->
+        </tbody>
+      </table>
+      <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+      <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
     </div>
   </div>
 
   <!-- Login Form -->
-  <div class="login-form" id="loginForm">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button type="button" onclick="login()">Login</button>
+  <div id="loginModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <input type="text" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button type="button" onclick="login()">Login</button>
+    </div>
   </div>
 
   <footer>ScrollRack</footer>

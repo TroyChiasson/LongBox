@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ScrollRack</title>
+  <link rel="stylesheet" type="text/css" href="folder.css">
+</head>
+<body>
+  <div class="header">
+    <h2>Folders</h2>
+    <button id="loginButton">Login</button>
+  </div>
+  <!-- Navigation Bar -->
+  <nav>
+    <ul>
+      <li><a href="app.html">Home</a></li>
+      <li><a href="folders.html">Folders</a></li>
+      <li><a href="prices.html">Prices</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+  <div id="addFolderSection">
+    <input type="text" id="folderName" placeholder="Folder Name">
+    <button onclick="createFolder()">Add Folder</button>
+  </div>
+  <ul id="folderList">
+    <!-- Folders will be listed here -->
+  </ul>
+  <footer>ScrollRack</footer>
+
+  <!-- Include your JavaScript file -->
+  <script src="folders.js"></script>
+</body>
+</html>
