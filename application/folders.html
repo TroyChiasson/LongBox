@@ -2,11 +2,11 @@
 <html>
 <head>
   <title>ScrollRack</title>
-  <link rel="stylesheet" type="text/css" href="folder.css">
+  <link rel="stylesheet" type="text/css" href="folders.css">
 </head>
 <body>
   <div class="header">
-    <h2>Folders</h2>
+    <h1>Folders</h1>
     <button id="loginButton">Login</button>
   </div>
   <!-- Navigation Bar -->
@@ -25,6 +25,19 @@
   <ul id="folderList">
     <!-- Folders will be listed here -->
   </ul>
+
+    <!-- Login Form -->
+    <div id="loginModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Login</h2>
+        <input type="text" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button type="button" onclick="login()">Login</button>
+      </div>
+    </div>
+    
   <footer>ScrollRack</footer>
 
   <!-- Include your JavaScript file -->

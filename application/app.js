@@ -104,16 +104,6 @@ function showTab(tabName) {
   document.getElementById(tabName).style.display = "block";
 }
 
-// Add event listener for tab clicks
-document.querySelectorAll('nav ul li a').forEach(tab => {
-  tab.addEventListener('click', function() {
-    showTab(this.getAttribute('href').substring(1));
-  });
-});
-window.onload = function() {
-  // Setup event listeners or initial state here.
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   var modal = document.getElementById('loginModal');
   var loginButton = document.getElementById('loginButton');
