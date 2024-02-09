@@ -71,6 +71,7 @@ button:hover {
 }
 
 footer {
+    font-family: 'Magic', sans-serif;
     background-color: #004a04;
     color: rgb(255, 255, 255);
     padding: 10px;

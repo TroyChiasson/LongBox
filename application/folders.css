@@ -20,6 +20,11 @@ h1 {
     text-align: center;
 }
 
+.header {
+  justify-content: center;
+  position: relative;
+}
+
 /* Style for the navigation bar */
 nav {
   font-family: 'Magic', sans-serif;
