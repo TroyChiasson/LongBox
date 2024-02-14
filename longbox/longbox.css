@@ -1,7 +1,18 @@
+/* Color Palette
+    CFDBDF
+    B19B89
+    A47257
+    130906
+    642C1E
+    E0EAEE
+    602113
+    313B45
+    412A21
+*/
 body {
     font-family: 'Magic', sans-serif;
-    background-color: #9f96a7;
-    color: #FFFFFF;
+    background-color: #CFDBDF;
+    color: #412A21;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -9,8 +20,8 @@ body {
 
 h1 {
     font-family: 'Magic', sans-serif;
-    background-color: #9d64d6;
-    color: rgb(255, 255, 255);
+    background-color: #A47257;
+    color: #412A21;
     margin: 0px;
     padding-top: 25px;
     text-align: center;
@@ -19,16 +30,16 @@ h1 {
 
 h3 {
     font-family: 'Magic', sans-serif;
-    background-color: #9d64d6;
-    color: rgb(255, 255, 255);
+    background-color: #A47257;
+    color: #412A21;
     margin: -20px;
     margin-right: 25px;
 }
 
 h4 {
     font-family: 'Magic', sans-serif;
-    background-color: #9d64d6;
-    color: rgb(255, 255, 255);
+    background-color: #A47257;
+    color: #412A21;
     padding: 0px;
     margin-top: -0px;
 
@@ -48,10 +59,6 @@ h4 {
     vertical-align: middle;
 }
 
-button {
-    font-family: 'Magic', sans-serif;
-}
-
 /* Responsive layout - makes the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .column.side, .column.main {
@@ -62,7 +69,7 @@ button {
 #addCardSection, #cardListSection, #folderSection {
     margin: 10px;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #130906;
     border-radius: 5px;
 }
 
@@ -73,15 +80,16 @@ input[type=text], button {
 }
 
 button {
-    background-color: #a2e8e2;
-    color: #FFFFFF;
+    font-family: 'Magic', sans-serif;
+    background-color: #A47257;
+    color: #412A21;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #77d0c9;
+    background-color: #785440;
 }
 
 #cardTable th {
@@ -99,16 +107,16 @@ button:hover {
 }
 
 footer {
-    background-color: #9d64d6;
-    color: rgb(255, 255, 255);
+    background-color: #A47257;
+    color: #412A21;
     padding: 10px;
     text-align: center;
 }
 
 nav {
     position: center;
-    background-color: #9d64d6;
-    color: #FFFFFF;
+    background-color: #A47257;
+    color: #412A21;
     text-align: center;
     word-spacing: 180px;
     padding-top: 10px;
@@ -128,13 +136,13 @@ nav li {
 
 nav a {
     text-decoration: none;
-    color: #FFFFFF;
+    color: #412A21;
     font-weight: bold;
     font-size: 24px;
 }
 
 nav a:hover {
-    color: #7d43b6; 
+    color: #785440; 
 }
 
 #folderList {
@@ -147,8 +155,8 @@ nav a:hover {
 
 .login-form {
     display: none;
-    background-color: #333;
-    color: #FFFFFF;
+    background-color: #A47257;
+    color: #412A21;
     padding: 20px;
     border-radius: 5px;
     position: absolute;
@@ -166,12 +174,16 @@ nav a:hover {
 }
 
 .login-form button {
-    background-color: #35c4b8;
-    color: #FFFFFF;
+    background-color: #A47257;
+    color: #412A21;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+.login-form button:hover{
+    background-color: #785440;
 }
 
 select#color {
@@ -182,7 +194,7 @@ select#color {
 /* Style for the login link */
 .login-link {
     float: right;
-    color: #ffffff;
+    color: #412A21;
     text-decoration: underline;
     cursor: pointer;
     font-size: 14px; /* Adjust the font size as needed */
