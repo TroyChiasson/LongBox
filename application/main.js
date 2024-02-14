@@ -13,10 +13,10 @@ function createWindow() {
   });
 
   // Load app.html as the window's content
-  mainWindow.loadFile('longbox.html');
+  mainWindow.loadFile('app.html');
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools(); // Uncomment if you want to open DevTools by default
+  // Open the DevTools if you want, comment out if not
+  // mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
