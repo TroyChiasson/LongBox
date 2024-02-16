@@ -64,9 +64,30 @@
             cursor: pointer;
         }
     </style>
+
+
 </head>
 <body>
-    <h1>ScrollRack<span class="login-link" onclick="showLoginForm()">Login</span></h1> <!-- Place the login link inside the header -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+
+<!-- update the version number as needed -->
+<script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+<!-- include only the Firebase features as you need -->
+<script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+<script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+
+<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+<script defer src="longbox.js"></script>
+
+    <h1>ScrollRack<span class="login-link" id="LoginB">Login</span></h1> <!-- Place the login link inside the header -->
     <div id="addCardSection">
         <h2>Add a New Card</h2>
         <form id="addCardForm" action="/addcard" method="post">
@@ -81,7 +102,7 @@
                 <option value="colorless">Colorless</option>
             </select>
             <input type="text" id="manaCost" name="manaCost" placeholder="Mana Cost" required>
-            <button type="button" onclick="validateCollectorNumber(); addCard()">Add Card</button>
+            <button type="button" onclick="addCard()">Add Card</button>
         </form>
     </div>
     <div class="columns">
@@ -117,6 +138,7 @@
             </div>
         </div>
     </div>
+    
     <div class="login-form" id="loginForm">
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username">
@@ -124,24 +146,7 @@
         <button type="button" onclick="login()">Login</button>
     </div>
     <footer>ScrollRack</footer>
-    <script src="longbox.js"></script>
-    <script>
-        // Function to show the login form when the "Login" link is clicked
-        function showLoginForm() {
-            const loginForm = document.getElementById("loginForm");
-            loginForm.style.display = "block";
-        }
 
-        // Function to handle the login process
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            // close the login form
-            const loginForm = document.getElementById("loginForm");
-            loginForm.style.display = "none";
-        }
-
-    </script>
 </body>
+
 </html>
