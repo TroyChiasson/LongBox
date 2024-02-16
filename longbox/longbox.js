@@ -1,153 +1,193 @@
-const express = require('express');
-const bodyParser = require('body-parser');
 
-const app = express();
-const port = 3000;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
-
-function validateCollectorNumber() {
-    const collectorsNumberInput = document.getElementById('collectorsNumber');
-    const collectorsNumber = collectorsNumberInput.value;
-
-    // Check to make sure input is only numbers
-    const validInput = /^[0-9]+$/.test(collectorsNumber);
-
-    if (!validInput) {
-        alert("Please enter a valid Collector's Number with only numbers.");
-        collectorsNumberInput.value = ''; // Clear input
-    }
+if (firebase.apps.length === 0) {
+    alert("Firebase is not initialized.");
+  } else {
+    alert("Firebase is initialized.");
+  }
+// Utility Functions
+function showLoginForm() {
+    document.getElementById("loginForm").style.display = "block";
 }
 
-// Function to create a new folder
-function createFolder() {
-    const folderName = document.getElementById('folderName').value;
-    
-    // Check if folderName is not empty
-    if (folderName.trim() === '') {
-        alert('Please enter a folder name.');
-        return;
-    }
-
-    // Create a new folder list item
-    const folderListItem = document.createElement('li');
-    folderListItem.textContent = folderName;
-
-    // Append the folder list item to the folder list
-    const folderList = document.getElementById('folderList');
-    folderList.appendChild(folderListItem);
-
-    // Clear the folder name input field
-    document.getElementById('folderName').value = '';
+function showLoginForm() {
+    const loginForm = document.getElementById("loginForm");
+    loginForm.style.display = "block";
 }
 
+function loginFormDisplay() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    // close the login form
+    const loginForm = document.getElementById("loginForm");
+    loginForm.style.display = "none";
+}
+
+function login() {
+    // Logic to handle login, currently hides the login form
+    document.getElementById("loginForm").style.display = "none";
+}
+
+// Card Management Functions
 function addCard() {
     const collectorsNumber = document.getElementById('collectorsNumber').value;
     const cardName = document.getElementById('cardName').value;
     const color = document.getElementById('color').value;
     const manaCost = document.getElementById('manaCost').value;
-
-    // Create a new table row
-    const newRow = document.createElement('tr');
-
-    // Create a checkbox cell
-    const checkboxCell = document.createElement('td');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkboxCell.appendChild(checkbox);
-
-    // Create table data cells for each column
-    const collectorsNumberCell = document.createElement('td');
-    collectorsNumberCell.textContent = collectorsNumber;
-
-    const cardNameCell = document.createElement('td');
-    cardNameCell.textContent = cardName;
-
-    const colorCell = document.createElement('td');
-    colorCell.textContent = color;
-
-    const manaCostCell = document.createElement('td');
-    manaCostCell.textContent = manaCost;
-
-    // Append the cells to the new row
-    newRow.appendChild(checkboxCell);
-    newRow.appendChild(cardNameCell);
-    newRow.appendChild(collectorsNumberCell);
-    newRow.appendChild(colorCell);
-    newRow.appendChild(manaCostCell);
-
-    // Get the table body and append the new row
     const cardList = document.getElementById('cardList');
-    cardList.appendChild(newRow);
+    if (/^\d+$/.test(collectorsNumber)) {
+        // Convert the string to an integer
+        var intValue = parseInt(collectorsNumber);
+    
+        // Check if the parsed value is an integer
+        if (Number.isInteger(intValue)) {
+            // Create a new table row and cells
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+            <td><input type="checkbox"></td>
+            <td>${cardName}</td>
+            <td>${collectorsNumber}</td>
+            <td>${color}</td>
+            <td>${manaCost}</td>
+        `;
+            // Append the new row to the card list
+            cardList.appendChild(newRow);
 
-    // Clear input fields
-    document.getElementById('collectorsNumber').value = '';
-    document.getElementById('cardName').value = '';
-    document.getElementById('color').selectedIndex = 0; // Reset the color dropdown to its default option
-    document.getElementById('manaCost').value = '';
-}
-// Add listeners for checkbox changes
-const checkboxes = document.querySelectorAll("input[type='checkbox']");
-checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", handleCheckboxChange);
-});
-
-// Function to handle checkbox changes
-function handleCheckboxChange() {
-    const cardList = document.getElementById("cardList");
-    const checkboxes = cardList.querySelectorAll("input[type='checkbox']");
-    const removeCardsButton = document.getElementById("removeCardsButton");
-
-    let atLeastOneSelected = false;
-
-    // Check if at least one checkbox is selected
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            atLeastOneSelected = true;
-        }
-    });
-
-    // Show/hide the Remove Cards button based on selection
-    if (atLeastOneSelected) {
-        removeCardsButton.style.display = "block";
-    } else {
-        removeCardsButton.style.display = "none";
+            // Clear input fields
+            document.getElementById('collectorsNumber').value = '';
+            document.getElementById('cardName').value = '';
+            document.getElementById('color').selectedIndex = 0;
+            document.getElementById('manaCost').value = '';
     }
 }
-
-function addFolder() {
-    const folderName = document.getElementById('folderName').value.trim();
-
-    if (folderName === '') {
-        alert('Please enter a folder name.');
-        return;
+    else {
+        alert("Please enter a valid Collector's Number with only numbers.");
+        collectorsNumberInput.classList.add('error');
+        collectorsNumberInput.value = ''; // Clear input
+        return false
     }
 
-    const folderList = document.getElementById('folderList');
-    const folderItem = document.createElement('li');
-    folderItem.textContent = folderName;
-    folderList.appendChild(folderItem);
-
-    // Clear the input field
-    document.getElementById('folderName').value = '';
+    
 }
 
 function removeSelectedCards() {
-    const checkboxes = document.querySelectorAll("input[type='checkbox']");
-    const cardList = document.getElementById("cardList");
-
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            const row = checkbox.closest("tr");
-            cardList.removeChild(row);
-        }
-    });
+    const checkboxes = document.querySelectorAll("#cardList input[type='checkbox']:checked");
+    checkboxes.forEach(checkbox => checkbox.closest("tr").remove());
 }
 
-function addToFolder() {
-    alert("Add logic to put cards into folder");
+// Folder Management Functions
+function addFolder() {
+    const folderNameInput = document.getElementById('folderName');
+    const folderName = folderNameInput.value.trim();
+    const folderList = document.getElementById('folderList');
+
+    if (!folderName) {
+        alert('Please enter a folder name.');
+        return;
+    }
+    const folderNameList = document.createElement('tr');
+            folderNameList.innerHTML = `
+            <td><input type="checkbox"></td>
+            <td>${folderName}</td>
+        `;
+    folderList.appendChild(folderNameList);
+
+    folderNameInput.value = ''; // Clear the input field
+}
+function addToFolder(){
+    const cardName = document.getElementById('cardName');
+    const folderName = document.getElementById('folderName');
+    const folderList = document.getElementById('folderList');
+    const checkboxes = document.querySelectorAll("#folderList input[type='checkbox']:checked");
+    const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
+
+        if (folderName) {
+            checkboxes.forEach(function(checkbox) {
+                cardsChecked.forEach(function(cardChecked) {
+                    const cardRow = document.createElement('tr');
+                    cardRow.innerHTML = `<td>${cardName.value}</td>`;
+                    folderList.appendChild(cardRow);
+                });
+            });
+        }
+
+}
+// Initialization Functions
+function initializeEventListeners() {
+    const addButton = document.getElementById('addCardForm').querySelector('button');
+    addButton.onclick = function() {
+        addCard();
+    };
+
+    document.getElementById('removeCardsButton').onclick = removeSelectedCards;
+    document.getElementById('addToFolderButton').onclick = addToFolder;
+}
+
+// Call initialize function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initializeEventListeners);
+
+function addCard() {
+    // Assuming the user is already authenticated
+    const currentUser = firebase.auth().currentUser;
+
+    if (currentUser) {
+        const userId = currentUser.uid;
+
+        // Reference to the 'All_User_cards' collection for the current user
+        const userCardsCollectionRef = firebase.firestore().collection('Users').doc(userId).collection('All_User_cards');
+
+        // Get input values from the form
+        const collectorsNumber = document.getElementById("collectorsNumber").value;
+        const cardName = document.getElementById("cardName").value;
+        const color = document.getElementById("color").value;
+        const manaCost = document.getElementById("manaCost").value;
+
+        // Add the new card to the 'All_User_cards' collection
+        userCardsCollectionRef.add({
+            collectorsNumber: collectorsNumber,
+            cardName: cardName,
+            color: color,
+            manaCost: manaCost,
+            // Add other card details as needed
+        })
+        .then((docRef) => {
+            console.log("Card added successfully with ID:", docRef.id);
+
+            // Optionally, you can clear the form fields after adding the card
+            document.getElementById("collectorsNumber").value = "";
+            document.getElementById("cardName").value = "";
+            document.getElementById("color").value = "";
+            document.getElementById("manaCost").value = "";
+
+            // Optionally, you can update the displayed card list
+            showUserCards();
+        })
+        .catch((error) => {
+            console.error("Error adding card:", error);
+        });
+    } else {
+        console.error("User not authenticated.");
+    }
+}
+function validateCollectorNumber(){
+    alert(firebase.userId)
+}
+function addCardToFirestore() {
+    const collectorsNumber = document.getElementById("collectorsNumber").value;
+    const cardName = document.getElementById("cardName").value;
+    const color = document.getElementById("color").value;
+    const manaCost = document.getElementById("manaCost").value;
+
+    addCard({ collectorsNumber, cardName, color, manaCost })
+        .then((result) => {
+
+            // Optionally, you can clear the form fields after adding the card
+            document.getElementById("collectorsNumber").value = "";
+            document.getElementById("cardName").value = "";
+            document.getElementById("color").value = "";
+            document.getElementById("manaCost").value = "";
+        })
+        .catch((error) => {
+            console.error("Error adding card:", error);
+        });
 }
