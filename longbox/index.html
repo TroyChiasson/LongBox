@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home BAaassse</title>
+    <!-- Add any CSS styles here -->
+</head>
+<body>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+    
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <h1>Home Base</h1>
+    <button onclick="showLoginForm()">Log In</button>
+    <button onclick="showSignupForm()">Sign Up</button>
+
+    <!-- Log In Form -->
+    <form id="login-form" style="display: none;">
+        <input type="email" id="login-email" placeholder="Email" required><br>
+        <input type="password" id="login-password" placeholder="Password" required><br>
+        <button type="submit">Log in</button>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signup-form" style="display: none;">
+        <input type="email" id="signup-email" placeholder="Email" required><br>
+        <input type="password" id="signup-password" placeholder="Password" required><br>
+        <button type="submit">Sign Up</button>
+    </form>
+
+    
+    <script>
+        function showLoginForm() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function showSignupForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+    
+        // Get reference to the sign-up form
+        const signupForm = document.getElementById('signup-form');
+            const loginForm = document.getElementById('login-form');
+
+            // Add event listener for sign-up form submission
+            signupForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get user input
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+
+                // Create user with email and password
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Sign-up successful
+                        const user = userCredential.user;
+                        alert('Sign-up successful! User ID: ' + user.uid);
+                        // Optionally, redirect to another page
+                        window.location.href = '/longbox.html'; // Redirect to login page
+                    })
+                    .catch((error) => {
+                        // Sign-up failed
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        alert('Sign-up failed: ' + errorMessage);
+                    });
+            });
+
+            // Add event listener for login form submission
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get user input
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                // Sign in user with email and password
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Login successful
+                        const user = userCredential.user;
+                        alert('Login successful! User ID: ' + user.uid);
+                        // Optionally, redirect to another page
+                        window.location.href = '/longbox.html'; // Redirect to main page
+                    })
+                    .catch((error) => {
+                        // Login failed
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        alert('Login failed: ' + errorMessage);
+                    });
+            });
+    </script>
+</body>
+</html>
