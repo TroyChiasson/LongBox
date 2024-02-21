@@ -68,9 +68,14 @@
             max-height: 200px;
             overflow-y: auto;
             z-index: 1000; /* Ensure the suggestions appear on top */
+            position: absolute;
+            width: 100%;
+            background-color: #fff;
+            color: #000;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .ui-menu-item {
-            background-color: #fff; /* Background color for suggestions */
             padding: 5px;
             cursor: pointer;
         }
@@ -105,26 +110,12 @@
 
 <script defer src="longbox.js"></script>
 
+    <h1>ScrollRack<span class="login-link" id="LoginB">Login</span></h1> <!-- Place the login link inside the header -->
+
     <input type="text" id="card-name" placeholder="Search for a card">
 
-    <h1>ScrollRack<span class="login-link" id="LoginB">Login</span></h1> <!-- Place the login link inside the header -->
-    <div id="addCardSection">
-        <h2>Add a New Card</h2>
-        <form id="addCardForm" action="/addcard" method="post">
-            <input type="text" id="collectorsNumber" name="collectorsNumber" placeholder="Collector's Number" required>
-            <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
-            <select id="color" name="color">
-                <option value="black">Black</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="red">Red</option>
-                <option value="white">White</option>
-                <option value="colorless">Colorless</option>
-            </select>
-            <input type="text" id="manaCost" name="manaCost" placeholder="Mana Cost" required>
-            <button type="button" onclick="addCard()">Add Card</button>
-        </form>
-    </div>
+    <div class="ui-autocomplete"></div>
+
     <div class="columns">
         <div class="column.main">
             <div id="cardListSection">
@@ -134,19 +125,15 @@
                         <tr>
                             <th></th> <!-- Add an empty header for the checkbox -->
                             <th>Card Name</th>
-                            <th>Collector's Number</th>
-                            <th>Color</th>
-                            <th>Mana Cost</th>
                             <th>Price</th>
                         </tr>
                     </thead>            
                     <tbody id="cardList">
                         <!-- Cards added here with checkboxes -->
                     </tbody>
+                </table>
                 <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
                 <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
-                <table id="cardTable">
-                </table>
             </div>
         </div>
         <div class="column.side">
