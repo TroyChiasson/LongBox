@@ -63,6 +63,20 @@
             padding: 10px 20px;
             cursor: pointer;
         }
+        /* Custom styling for autocomplete suggestions */
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000; /* Ensure the suggestions appear on top */
+        }
+        .ui-menu-item {
+            background-color: #fff; /* Background color for suggestions */
+            padding: 5px;
+            cursor: pointer;
+        }
+        .ui-menu-item:hover {
+            background-color: #f0f0f0; /* Background color for suggestions on hover */
+        }
     </style>
 
 
@@ -70,7 +84,6 @@
 <body>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 
-<!-- update the version number as needed -->
 <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
 <!-- include only the Firebase features as you need -->
 <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
@@ -85,7 +98,14 @@
 
 <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
+<!-- Include jQuery from a CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Include jQuery UI from a CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <script defer src="longbox.js"></script>
+
+    <input type="text" id="card-name" placeholder="Search for a card">
 
     <h1>ScrollRack<span class="login-link" id="LoginB">Login</span></h1> <!-- Place the login link inside the header -->
     <div id="addCardSection">
@@ -145,6 +165,47 @@
         <input type="password" id="password" placeholder="Password">
         <button type="button" onclick="login()">Login</button>
     </div>
+    <script>
+        // uses Jquery function/UI to display autosuggestions and pull from RTDB
+    $(function() {
+    $("#card-name").autocomplete({
+        source: function(request, response) {
+            // fit file structure
+            var term = request.term.toLowerCase();
+            // Ensure the input term has at least 1 character before querying the Realtime Database
+            if (term.length >= 1) {
+                var firstLetter = term.charAt(0).toLowerCase();
+                // RTDB path, it knows URL by default from initilizing
+                var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
+                dbRef.once('value', function(snapshot) {
+                    var suggestions = [];
+                    snapshot.forEach(function(childSnapshot) {
+                        var cardName = childSnapshot.key.toLowerCase();
+                        if (cardName.includes(term)) {
+                            suggestions.push(cardName);
+                        }
+                    });
+                    // show top 10
+                    response(suggestions.slice(0, 10));
+                }, function(error) {
+                    console.error("Error fetching card suggestions:", error);
+                    response([]);
+                });
+            } else {
+                response([]);
+            }
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            // Call addCard function with the selected card name and alert for test
+            alert(ui.item.value)
+            addCard(ui.item.value); 
+        }
+    });
+});
+
+</script>
+    
     <footer>ScrollRack</footer>
 
 </body>

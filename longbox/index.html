@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home BAaassse</title>
+    <title>Home Base</title>
     <!-- Add any CSS styles here -->
 </head>
 <body>
@@ -27,11 +27,11 @@
     <button onclick="showSignupForm()">Sign Up</button>
 
     <!-- Log In Form -->
-    <form id="login-form" style="display: none;">
-        <input type="email" id="login-email" placeholder="Email" required><br>
-        <input type="password" id="login-password" placeholder="Password" required><br>
-        <button type="submit">Log in</button>
-    </form>
+<form id="login-form" style="display: none;">
+    <input type="email" id="login-email" placeholder="Email" required><br>
+    <input type="password" id="login-password" placeholder="Password" required><br>
+    <button type="submit">Log in</button>
+</form>
 
     <!-- Sign Up Form -->
     <form id="signup-form" style="display: none;">
@@ -51,60 +51,99 @@
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'block';
         }
-    
-        // Get reference to the sign-up form
+
+        // Get reference to the login and signup forms
+        const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
-            const loginForm = document.getElementById('login-form');
 
-            // Add event listener for sign-up form submission
-            signupForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
+        // Function to handle login form submission
+        function handleLoginFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
 
-                // Get user input
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
+            // Get user input
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-                // Create user with email and password
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        // Sign-up successful
-                        const user = userCredential.user;
-                        alert('Sign-up successful! User ID: ' + user.uid);
-                        // Optionally, redirect to another page
-                        window.location.href = '/longbox.html'; // Redirect to login page
-                    })
-                    .catch((error) => {
-                        // Sign-up failed
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        alert('Sign-up failed: ' + errorMessage);
-                    });
+            // Sign in user with email and password
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                alert('Login successful! User ID: ' + user.uid);
+                // Redirect to longbox.html with user ID appended as a URL parameter
+                window.location.href = '/longbox.html?userId=' + user.uid;
+            })
+            .catch((error) => {
+                // Login failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Login failed: ' + errorMessage);
             });
+        }
 
-            // Add event listener for login form submission
-            loginForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
+        // Add event listener for login form submission
+        loginForm.addEventListener('submit', handleLoginFormSubmission);
 
-                // Get user input
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
+        // Check if email exists in local storage and autofill the email field
+        const storedEmail = localStorage.getItem('storedEmail');
+        if (storedEmail) {
+            document.getElementById('login-email').value = storedEmail;
+            // Check if there's a stored password for the email
+            const storedPassword = localStorage.getItem('storedPassword');
+            if (storedPassword) {
+                document.getElementById('login-password').value = storedPassword;
+            }
+        }
 
-                // Sign in user with email and password
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        // Login successful
-                        const user = userCredential.user;
-                        alert('Login successful! User ID: ' + user.uid);
-                        // Optionally, redirect to another page
-                        window.location.href = '/longbox.html'; // Redirect to main page
-                    })
-                    .catch((error) => {
-                        // Login failed
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        alert('Login failed: ' + errorMessage);
-                    });
+        // Function to handle storing email and password in local storage
+        function storeCredentials() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            localStorage.setItem('storedEmail', email);
+            localStorage.setItem('storedPassword', password);
+        }
+
+        // Add event listener to the signup form to store email and password in local storage
+        signupForm.addEventListener('submit', storeCredentials);
+
+        function handleSignupFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get user input
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            // Create user with email and password
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                alert('User signed up successfully! User ID:', user.uid);
+
+                // Create a folder for the user in Firestore
+                const db = firebase.firestore();
+                const userFolderRef = db.collection('Users').doc(user.uid).collection('folders').doc('All_Cards');
+                userFolderRef.set({})
+                .then(() => {
+                    alert('Folder created successfully.');
+                    // Redirect to longbox.html with user ID appended as a URL parameter
+                    window.location.href = '/longbox.html?userId=' + user.uid;
+                })
+                .catch((error) => {
+                    alert('Error creating folder:', error);
+                    alert('Failed to create folder.');
+                });
+            })
+            .catch((error) => {
+                // Sign-up failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Sign-up failed: ' + errorMessage);
             });
+        }
+
+        // Add event listener for signup form submission
+        signupForm.addEventListener('submit', handleSignupFormSubmission);
+
+        
     </script>
 </body>
 </html>

@@ -24,7 +24,8 @@
       {
         "source": "**",
         "destination": "/MainPage.html"
-      }
+      },
+      { "source": "/api/myFunction", "function": "add_card" }
     ]
   },
   "storage": {
