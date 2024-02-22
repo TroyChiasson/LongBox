@@ -5,19 +5,6 @@ if (firebase.apps.length === 0) {
     alert("Firebase is initialized.")
   }
 
-  // Enable offline persistence
-firebase.firestore().enablePersistence()
-.catch(function(err) {
-    if (err.code === 'failed-precondition') {
-        // Multiple tabs open, persistence can only be enabled
-        // in one tab at a a time.
-        console.log('Failed to enable persistence');
-    } else if (err.code === 'unimplemented') {
-        // The current browser does not support all of the
-        // features required to enable persistence
-        console.log('Persistence is not available');
-    }
-});
 // Utility Functions
 function showLoginForm() {
     document.getElementById("loginForm").style.display = "block";
@@ -162,10 +149,58 @@ function addCard(selectedCardName) {
 
 
 
+// Function to remove selected cards from UI and Firestore
 function removeSelectedCards() {
     const checkboxes = document.querySelectorAll("#cardList input[type='checkbox']:checked");
-    checkboxes.forEach(checkbox => checkbox.closest("tr").remove());
+    
+    // Check if any card is selected
+    if (checkboxes.length === 0) {
+        alert('Please select at least one card to remove.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+
+    // Check if user is authenticated
+    if (!user) {
+        alert('User not authenticated.');
+        return;
+    }
+
+    // Loop through each selected card checkbox
+    checkboxes.forEach(checkbox => {
+        const cardName = checkbox.closest("tr").querySelector("td:nth-child(2)").textContent;
+        
+        // Reference to the specific collection in Firestore for user's cards
+        const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+        // Query for the card to be deleted
+        userCardsRef.where("cardName", "==", cardName)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    // Delete the card document from Firestore
+                    doc.ref.delete().then(() => {
+                        console.log("Card successfully deleted from Firestore!");
+                    }).catch(error => {
+                        console.error("Error removing card from Firestore: ", error);
+                        alert('Failed to remove card from Firestore.');
+                    });
+                });
+            })
+            .catch(error => {
+                console.error("Error querying card for deletion: ", error);
+                alert('Failed to remove card from Firestore.');
+            });
+
+        // Remove the card row from the UI
+        checkbox.closest("tr").remove();
+    });
+
+    alert('Selected card(s) removed successfully.');
 }
+
 
 // Folder Management Functions
 function addFolder() {
