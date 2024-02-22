@@ -1,0 +1,166 @@
+body {
+    font-family: 'Magic', sans-serif;
+    background-color: #333333;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-family: 'Magic', sans-serif;
+    background-color: #004a04;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-align: center;
+}
+
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+}
+  
+.column.main, .column.side {
+    flex: 1 1 50%;
+}  
+
+#cardTable input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+button {
+    font-family: 'Magic', sans-serif;
+}
+
+/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .column.side, .column.main {
+        width: 100%;
+    }
+}
+
+#addCardSection, #cardListSection, #folderSection {
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type=text], button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 200px;
+}
+
+button {
+    background-color: #004a04;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #003102;
+}
+
+#cardTable th {
+    padding: 10px 20px;
+}
+
+#cardTable td {
+    padding: 5px 10px; 
+    text-align: left; 
+}
+
+@font-face {
+    font-family: 'Magic';
+    src: url('magic.TTF') format('truetype');
+}
+
+footer {
+    background-color: #004a04;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    background-color: #004a04;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+nav a:hover {
+    color: #237123; 
+}
+
+#folderList {
+    margin-top: 10px;
+}
+
+.folder-item {
+    margin-bottom: 10px;
+}
+
+.login-form {
+    display: none;
+    background-color: #333;
+    color: #FFFFFF;
+    padding: 20px;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.login-form button {
+    background-color: #004a04;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+select#color {
+    width: 200px;
+    padding: 10px;
+}
+
+/* Style for the login link */
+.login-link {
+    float: right;
+    color: #FFFFFF;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px; /* Adjust the font size as needed */
+}
