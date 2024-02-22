@@ -1,7 +1,11 @@
 .DS_Store
 recog/scry.json
 <<<<<<< HEAD
+<<<<<<< HEAD
 recog/card_scans.txt
 =======
 electron.exe
 >>>>>>> 35740dc9692df80fa04d5fd307243102229ccb1c
+=======
+electron.exe
+>>>>>>> origin/website-development
