@@ -1,5 +1,0 @@
-4	afr	144	\N	
-1	cmr	388	\N	
-99	lci	70	Pirate themed cards
-2	lci	8	\N	
-1	rav	271	\N	
