@@ -1,3 +1,4 @@
+
 # ScrollRack Documentation
 
 - [Introduction](#introduction)
@@ -129,3 +130,6 @@ It is import to have `stepper.h` in the arduino control script to be able to use
 ### Controlling motors
 
 We have to assign a `step` and `direction` that matches the pins on the arduino for each stepper motor we have plugged into it. Once these are set you need to initialize the motors being used with `stepper()`. Then in our loop for counting cards, every 5 cards we can move the stepper motor by declaring a `step` and direction. So each step will raise or lower the platforms.
+
+Check the wiki tab for more info or click [here](https://github.com/TroyChiasson/LongBox/wiki)!
+
