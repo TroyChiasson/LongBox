@@ -9,6 +9,46 @@
     313B45
     412A21
 */
+
+.price-options {
+    position: relative;
+    display: inline-block;
+}
+
+.price-button {
+    background-color: #f1f1f1;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.price-options-menu {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+}
+
+.price-options-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.price-options-menu ul li {
+    padding: 5px;
+}
+
+.price-options-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.price-options-menu.show {
+    display: block;
+}
+
 body {
     font-family: 'Magic', sans-serif;
     background-color: #CFDBDF;

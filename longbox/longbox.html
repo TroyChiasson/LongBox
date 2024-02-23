@@ -26,129 +26,185 @@
         .ui-menu-item:hover {
             background-color: #f0f0f0; /* Background color for suggestions on hover */
         }
+
+        /* Style for Price and Mana Cost options menu */
+        .options-menu {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .options-button {
+            background-color: #f1f1f1;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+        }
+
+        .options-menu-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 80px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .options-menu-content a {
+            color: black;
+            padding: 5px;
+            display: block;
+            text-align: left;
+        }
+
+        .options-menu-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .options-menu:hover .options-menu-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 
-<script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
-<!-- include only the Firebase features as you need -->
-<script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
-<script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
 
-<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-<!-- Include jQuery from a CDN -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- Include jQuery UI from a CDN -->
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Include jQuery UI from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Include your longbox.js script -->
+    <script defer src="longbox.js"></script>
 
-<script defer src="longbox.js"></script>
-
-<div class="container">
-    <h1>ScrollRack</h1>
-    <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
-    <h4>
-        <nav>
-            <ul>
-                <li><a href="longbox.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="download.html">Download</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>  
-    </h4>           
-    <div id="addCardSection">
-        <h2>Add a New Card</h2>
-        <form id="addCardForm" action="/addcard" method="post">
-            <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
-            <button type="button" onclick="addCard()">Add Card</button>
-        </form>
-    </div>
-    <div class="columns">
-        <div class="column.main">
-            <div id="cardListSection">
-                <h2>Card List</h2>
-                <table id="cardTable">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Card Name</th>
-                            <th>Color</th>
-                            <th>Mana Cost</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cardList">
-                        <!-- Cards with checkboxes will be dynamically added here -->
-                    </tbody>
-                </table>
-                <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
-                <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
+    <div class="container">
+        <h1>ScrollRack</h1>
+        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+        <h4>
+            <nav>
+                <ul>
+                    <li><a href="longbox.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="download.html">Download</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>  
+        </h4>           
+        <div id="addCardSection">
+            <h2>Add a New Card</h2>
+            <form id="addCardForm" action="/addcard" method="post">
+                <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
+                <button type="button" onclick="addCard()">Add Card</button>
+            </form>
+        </div>
+        <div class="columns">
+            <div class="column.main">
+                <div id="cardListSection">
+                    <h2>Card List</h2>
+                    <table id="cardTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Card Name</th>
+                                <th>Color</th>
+                                <th class="options-menu">
+                                    <div class="options-button">Mana Cost</div>
+                                    <div class="options-menu-content">
+                                        <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
+                                        <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
+                                    </div>
+                                </th>
+                                <th class="options-menu">
+                                    <div class="options-button">Price</div>
+                                    <div class="options-menu-content">
+                                        <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
+                                        <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="cardList">
+                            <tr>
+                                <td>
+                                    <!-- Price options menu will be here -->
+                                </td>
+                                <!-- Other columns will follow -->
+                            </tr>
+                            <!-- More rows will follow -->
+                        </tbody>
+                    </table>
+                    <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+                    <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
+                </div>
+            </div>
+            <div class="column.side">
+                <div id="folderSection">
+                    <h2>Folders</h2>
+                    <button onclick="addFolder()">Add Folder</button>
+                    <input type="text" id="folderName" placeholder="Folder Name">
+                    <table id="folderList"></table>
+                </div>
             </div>
         </div>
-        <div class="column.side">
-            <div id="folderSection">
-                <h2>Folders</h2>
-                <button onclick="addFolder()">Add Folder</button>
-                <input type="text" id="folderName" placeholder="Folder Name">
-                <div id="folderList"></div>
-            </div>
+        <div class="login-form" id="loginForm">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button type="button" onclick="loginFormDisplay()">Login</button>
         </div>
     </div>
-    <div class="login-form" id="loginForm">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button type="button" onclick="loginFormDisplay()">Login</button>
-    </div>
-</div>
-<script>
-    // uses Jquery function/UI to display autosuggestions and pull from RTDB
-    $(function() {
-        $("#cardName").autocomplete({
-            source: function(request, response) {
-                // fit file structure
-                var term = request.term.toLowerCase();
-                // Ensure the input term has at least 1 character before querying the Realtime Database
-                if (term.length >= 1) {
-                    var firstLetter = term.charAt(0).toLowerCase();
-                    // RTDB path, it knows URL by default from initializing
-                    var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
-                    dbRef.once('value', function(snapshot) {
-                        var suggestions = [];
-                        snapshot.forEach(function(childSnapshot) {
-                            var cardName = childSnapshot.key.toLowerCase();
-                            if (cardName.includes(term)) {
-                                suggestions.push(cardName);
-                            }
+    <footer>ScrollRack</footer>
+
+    <script>
+        // uses Jquery function/UI to display autosuggestions and pull from RTDB
+        $(function() {
+            $("#cardName").autocomplete({
+                source: function(request, response) {
+                    // fit file structure
+                    var term = request.term.toLowerCase();
+                    // Ensure the input term has at least 1 character before querying the Realtime Database
+                    if (term.length >= 1) {
+                        var firstLetter = term.charAt(0).toLowerCase();
+                        // RTDB path, it knows URL by default from initializing
+                        var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
+                        dbRef.once('value', function(snapshot) {
+                            var suggestions = [];
+                            snapshot.forEach(function(childSnapshot) {
+                                var cardName = childSnapshot.key.toLowerCase();
+                                if (cardName.includes(term)) {
+                                    suggestions.push(cardName);
+                                }
+                            });
+                            // show top 10
+                            response(suggestions.slice(0, 10));
+                        }, function(error) {
+                            console.error("Error fetching card suggestions:", error);
+                            response([]);
                         });
-                        // show top 10
-                        response(suggestions.slice(0, 10));
-                    }, function(error) {
-                        console.error("Error fetching card suggestions:", error);
+                    } else {
                         response([]);
-                    });
-                } else {
-                    response([]);
+                    }
+                },
+                minLength: 1,
+                select: function(event, ui) {
+                    // Call addCard function with the selected card name
+                    addCard(ui.item.value); 
                 }
-            },
-            minLength: 1,
-            select: function(event, ui) {
-                // Call addCard function with the selected card name
-                alert(ui.item.value)
-                addCard(ui.item.value); 
-            }
+            });
         });
-    });
-</script>
-<footer>ScrollRack</footer>
+    </script>
 </body>
 </html>
