@@ -7,11 +7,26 @@
     <link rel="shortcut icon" href="C:\Users\madel\Documents\Current Classes\Senior Capstone\LongBox-1\longbox\logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="longbox.css">
     <style>
-        /* Custom styling for autocomplete suggestions */
+            /* CSS for the card image popup unsure if i can just put in .css*/
+        .card-image-popup {
+            position: absolute;
+            display: none;
+            z-index: 1000;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image-popup img {
+            max-width: 200px;
+            max-height: 300px;
+        }
+        /*  styling for autocomplete suggestions */
         .ui-autocomplete {
             max-height: 200px;
             overflow-y: auto;
-            z-index: 1000; /* Ensure the suggestions appear on top */
+            z-index: 1000; /* Ensure the suggestions appear on top so not white on white*/
             position: absolute;
             width: 100%;
             background-color: #fff;
@@ -27,7 +42,7 @@
             background-color: #f0f0f0; /* Background color for suggestions on hover */
         }
 
-        /* Style for Price and Mana Cost options menu */
+        /* Style for Price and Mana Cost options menu all subject to change just placeholder */
         .options-menu {
             position: relative;
             display: inline-block;
@@ -70,7 +85,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
 
     <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
     <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
@@ -113,6 +127,9 @@
         <div class="columns">
             <div class="column.main">
                 <div id="cardListSection">
+                    <div id="cardImagePopup" class="card-image-popup">
+                        <img id="cardImagePopupContent" src="" alt="Card Image">
+                    </div>
                     <h2>Card List</h2>
                     <table id="cardTable">
                         <thead>
@@ -139,11 +156,8 @@
                         <tbody id="cardList">
                             <tr>
                                 <td>
-                                    <!-- Price options menu will be here -->
-                                </td>
-                                <!-- Other columns will follow -->
+                                </td>                            
                             </tr>
-                            <!-- More rows will follow -->
                         </tbody>
                     </table>
                     <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
@@ -182,6 +196,7 @@
                         var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
                         dbRef.once('value', function(snapshot) {
                             var suggestions = [];
+                            // snapshot grabs a pic of db and we iterate over the child snaps to get values for RTDB (Real time db)
                             snapshot.forEach(function(childSnapshot) {
                                 var cardName = childSnapshot.key.toLowerCase();
                                 if (cardName.includes(term)) {

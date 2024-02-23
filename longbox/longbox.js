@@ -33,7 +33,7 @@ function login() {
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('userId');
 
-/// Check authentication state and call function
+/// Check authentication state and call function to restore cards in list
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         console.log('User signed in:', user);
@@ -84,7 +84,7 @@ function addCard(selectedCardName) {
     // Reference to the specific card in the Realtime Database
     const cardRef = dbRef.child("mtg_names").child(firstLetter).child("cards").child(formattedCardName);
 
-    // Retrieve the card data
+    // Retrieve the card data using snapshot from firebase
     cardRef.once('value')
         .then(snapshot => {
             const cardData = snapshot.val();
@@ -448,6 +448,85 @@ function displaySortedCards(sortBy) {
     });
 }
 
+// Function to display card image popup when row is hovered over card name
+function displayCardImagePopup(cardName, event) {
+    // Get the URL of the card image from Firebase Storage
+    getCardImageUrlFromStorage(cardName)
+        .then((imageUrl) => {
+            // Update the image in the popup container
+            var popupContent = document.getElementById('cardImagePopupContent');
+            if (imageUrl && popupContent) {
+                popupContent.src = imageUrl;
+            }
+
+            // Position the popup
+            var popup = document.getElementById('cardImagePopup');
+            if (popup) {
+                // Set the position of the popup relative to the mouse position
+                popup.style.top = (event.clientY + 10) + 'px';
+                popup.style.left = (event.clientX + 10) + 'px';
+
+                // Show the popup
+                popup.style.display = 'block';
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching card image:', error);
+        });
+}
+
+// Function to get card image URL from Firebase Storage
+function getCardImageUrlFromStorage(cardName) {
+    return new Promise((resolve, reject) => {
+        // Get the first letter of the card name
+        var firstLetter = cardName.charAt(0).toLowerCase();
+
+        // Create a reference to the folder containing card images
+        var storageRef = firebase.storage().ref();
+        var folderRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName + '/');
+
+        // List all the items (files) in the folder
+        folderRef.listAll().then(function(result) {
+            if (result.items.length > 0) {
+                // Get the URL of the first image in the folder
+                result.items[0].getDownloadURL().then(function(url) {
+                    resolve(url); // Resolve with the image URL
+                }).catch(function(error) {
+                    reject(error); // Reject with the error
+                });
+            } else {
+                reject(new Error('No images found for ' + cardName));
+            }
+        }).catch(function(error) {
+            reject(error); // Reject with the error
+        });
+    });
+}
+
+
+// Function to hide the card image popup
+function hideCardImagePopup() {
+    var popup = document.getElementById('cardImagePopup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+// Event listener for hovering over card name cells
+document.addEventListener('DOMContentLoaded', function() {
+    var table = document.getElementById('cardTable');
+    table.addEventListener('mouseover', function(event) {
+        var target = event.target;
+        if (target.tagName === 'TD' && target.parentNode.tagName === 'TR' && target.cellIndex === 1) {
+            var cardName = target.textContent.trim();
+            displayCardImagePopup(cardName, event);
+        }
+    });
+
+    table.addEventListener('mouseout', function(event) {
+        hideCardImagePopup();
+    });
+});
 
 
 
