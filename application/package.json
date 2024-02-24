@@ -14,6 +14,7 @@
   "license": "N/A",
   "dependencies": {
     "electron": "28.1.4",
+    "firebase": "^10.8.0",
     "firebase-tools": "^13.3.1"
   }
 }
