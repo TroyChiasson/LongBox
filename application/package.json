@@ -13,6 +13,7 @@
   "author": "Madeline Ballew",
   "license": "N/A",
   "dependencies": {
-    "electron": "28.1.4"
+    "electron": "28.1.4",
+    "firebase-tools": "^13.3.1"
   }
 }
