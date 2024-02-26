@@ -1,14 +1,15 @@
+import firebase from "./firebase.js";
+
 if (firebase.apps.length === 0) {
     alert("Firebase is not initialized.");
 } else {
     alert("Firebase is initialized.");
 }
 
+
 // Utility Functions
 function showLoginForm() {
     document.getElementById("loginForm").style.display = "block";
-}
-function showLoginForm() {
     const loginForm = document.getElementById("loginForm");
     loginForm.style.display = "block";
 }
@@ -42,7 +43,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-// Card Management Functions
+/* Card Management Functions
 function addCard() {
     const collectorsNumber = document.getElementById('collectorsNumber').value;
     const cardName = document.getElementById('cardName').value;
@@ -79,7 +80,7 @@ function addCard() {
         collectorsNumberInput.value = ''; // Clear input
         return false
     }
-}
+} */
 
 function addCard(selectedCardName) {
     // Validate input value
@@ -574,3 +575,4 @@ function initializeEventListeners() {
 
 // Call initialize function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
+
