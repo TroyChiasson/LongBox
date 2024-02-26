@@ -110,6 +110,9 @@ function addCard(selectedCardName) {
                         // Get the URL of the added document in Firestore
                         alert("Card added successfully at: " + docRef.path);
 
+                        const inputBox = document.getElementById('cardName');
+                        inputBox.value = ''; // Clear the input box after successful addition
+
                         // Update the Card List table with the new card
                         const cardList = document.getElementById('cardList');
                         const newRow = cardList.insertRow();
@@ -372,7 +375,8 @@ function getFoldersFromFirestore() {
         folderList.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
-            const folderData = doc.data();
+            // Use the document ID as the folder name
+            const folderName = doc.id.replace(/_/g, ' '); // Replace underscores with spaces
 
             // Create a new row for each folder
             const newRow = folderList.insertRow();
@@ -385,7 +389,7 @@ function getFoldersFromFirestore() {
 
             // Fill in the rest of the cells with folder details
             const cell1 = newRow.insertCell(1);
-            cell1.innerHTML = folderData.folderName; // Assuming folderName is a field in your Firestore document
+            cell1.innerHTML = folderName;
 
             // You can add more cells for additional folder details if needed
         });
@@ -394,6 +398,8 @@ function getFoldersFromFirestore() {
         alert('Failed to retrieve folders from Firestore.');
     });
 }
+
+
 
 function displaySortedCards(sortBy) {
     const user = firebase.auth().currentUser;

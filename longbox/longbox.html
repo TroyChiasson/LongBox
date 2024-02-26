@@ -4,19 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTG Card Organizer</title>
-    <link rel="shortcut icon" href="C:\Users\madel\Documents\Current Classes\Senior Capstone\LongBox-1\longbox\logo.jpg" type="image/jpeg">
+    <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="longbox.css">
     <style>
-            /* CSS for the card image popup unsure if i can just put in .css*/
+        /* CSS for the card image popup unsure if i can just put in .css*/
         .card-image-popup {
-            position: absolute;
+            position: fixed;
             display: none;
             z-index: 1000;
             padding: 10px;
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+            width: 250px; /* 1.5 inches at 100 pixels per inch */
+            height: 350px; /* 1.5 inches at 100 pixels per inch */
+            object-fit: contain; /* Maintain aspect ratio if necessary */
+            top: 5%; /* Adjusted top position */
+            right: 5%; /* Adjusted right position */
+            left: auto;
+            transform: translateX(50%); /* Center horizontally */
+}
+
+
+
 
         /*  styling for autocomplete suggestions */
         .ui-autocomplete {
@@ -102,7 +112,7 @@
 
     <div class="container">
         <h1>ScrollRack</h1>
-        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+        <h3><span></span></h3>    
         <h4>
             <nav>
                 <ul>
@@ -124,7 +134,8 @@
             <div class="column.main">
                 <div id="cardListSection">
                     <div id="cardImagePopup" class="card-image-popup">
-                        <img id="cardImagePopupContent" src="" alt="Card Image">
+                        <img id="cardImagePopupContent" src="" alt="Card Image" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+
                     </div>
                     <h2>Card List</h2>
                     <table id="cardTable">
