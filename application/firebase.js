@@ -1,3 +1,6 @@
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -11,9 +14,9 @@ const firebaseConfig = {
     measurementId: "G-GJDCC73TLN"
 };
 
-firebase.initializeApp(firebaseConfig);
+const firebase = initializeApp(firebaseConfig);
 
-const firestore = firebase.firestore();
+const firestore = getFirestore();
 const settings = {
   timestampsInSnapshots: true,
 };
