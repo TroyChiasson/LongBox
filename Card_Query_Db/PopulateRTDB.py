@@ -3,8 +3,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 
-# need sdk key and its locatin to do this
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/troy/Desktop/sinuous-vortex-411619-firebase-adminsdk-bw0qd-3236cfb663.json'
+# need sdk key and its location to do this
+
 
 # Initialize Firebase app
 cred = credentials.ApplicationDefault()
