@@ -28,7 +28,7 @@
 
 ## Introduction
 
-ScrollRack is a web application for organizing Magic: The Gathering cards.
+ScrollRack is a web and desktop application for organizing Magic: The Gathering cards.
 
 ## longbox.js
 
@@ -80,6 +80,57 @@ Contains the main content of the web page, including the title, the form for add
 ### Styling
 
 Defines the CSS styles for the web page. Styles the body, headings, form elements, buttons, and table headers, giving the page a coherent and visually appealing design.
+
+## Desktop Application
+### app.js
+#### showLoginForm()
+The showLoginForm function displays the login form by making it visible on the page. It's a utility function for user interaction with the login UI.
+
+#### loginFormDisplay()
+The loginFormDisplay function captures the username and password from the login form, hides the form, and handles the login logic.
+
+#### addCard()
+The addCard function allows users to add a new card to the card list. It performs input validation, constructs a new table row for the card, and appends it to the card list. It also handles the clearing of input fields after submission.
+
+#### removeSelectedCards()
+This function removes selected cards from the list. It targets checked checkboxes within the card list and removes the corresponding table rows.
+
+#### addFolder()
+addFolder creates a new folder entry based on user input. It includes basic validation to ensure a folder name is provided before adding to the folder list.
+
+#### addToFolder()
+The addToFolder function is intended to add selected cards to a folder, though the specific implementation details are not provided in this code snippet. It can be customized to handle card-to-folder interactions, such as creating a folder selection UI or processing folder data.
+
+#### initializeEventListeners()
+This function sets up event listeners for various UI elements like buttons. It allows the initialization of the application's interactive features.
+
+### main.js
+#### createWindow()
+The createWindow function initializes the main window of an Electron app with specified dimensions and web preferences. It loads the app's HTML file into this window.
+
+#### app.whenReady().then(createWindow)
+This line calls the createWindow function once Electron's app module is ready, setting up the initial application window.
+
+#### app.on('window-all-closed', ...)
+Handles the event when all application windows are closed, quitting the app on platforms other than macOS.
+
+#### app.on('activate', ...)
+Event handler that re-creates the window if the app is reactivated and no other windows are open.
+
+### app.html
+This is the main interface for the app with functionalities such as card addition, function listing, and folder management. It includes a login form, navigation bar, and sections for adding cards, listing cards, and managing folders. The UI is designed for user interaction with various features of our ScrollRack application.
+
+### folders.html
+folders.html is the place for the folder functionality of our application. This page includes navigation links and theh same functionality as thefolder section of the website, so that the user may easily work with the cards in their account.
+
+### about.html
+Provides information about the ScrollRack application, including its purpose and a link to this GitHub repository.
+
+### longbox.css
+The styling rules for the application. It includes styles for the layout, typography, form elements, navigation bar, and other UI components in the HTML files.
+
+## phoneAppAndroid
+This is the beginning basis of what will become the android phone app for Scrollrack. It will include the same functionalities as the application and website, allowing the user to sign into their account to access and organize their cards. In addition, this app will include phone camera functionality so that instead of having to manually type in their cards, they can simply scan them with their phone camera and they will automatically be added to their card list on their account!
 
 ## Database Design
 
