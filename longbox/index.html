@@ -132,6 +132,8 @@
     </div>
 
     <script>
+
+        
         function showLoginForm() {
             document.getElementById('login-form').style.display = 'block';
             document.getElementById('signup-form').style.display = 'none';
@@ -158,7 +160,7 @@
             firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                alert('Login successful! User ID: ' + user.uid);
+                // alert('Login successful! User ID: ' + user.uid);
                 // Redirect to longbox.html with user ID appended as a URL parameter
                 window.location.href = '/longbox.html?userId=' + user.uid;
             })
@@ -166,7 +168,7 @@
                 // Login failed
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                alert('Login failed: ' + errorMessage);
+                // alert('Login failed: ' + errorMessage);
             });
         }
 
@@ -206,27 +208,27 @@
             firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                alert('User signed up successfully! User ID:', user.uid);
+                // alert('User signed up successfully! User ID:', user.uid);
 
                 // Create a folder for the user in Firestore
                 const db = firebase.firestore();
                 const userFolderRef = db.collection('Users').doc(user.uid).collection('folders').doc('All_Cards');
                 userFolderRef.set({})
                 .then(() => {
-                    alert('Folder created successfully.');
+                    // alert('Folder created successfully.');
                     // Redirect to longbox.html with user ID appended as a URL parameter
                     window.location.href = '/longbox.html?userId=' + user.uid;
                 })
                 .catch((error) => {
-                    alert('Error creating folder:', error);
-                    alert('Failed to create folder.');
+                    // alert('Error creating folder:', error);
+                    // alert('Failed to create folder.');
                 });
             })
             .catch((error) => {
                 // Sign-up failed
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                alert('Sign-up failed: ' + errorMessage);
+                // alert('Sign-up failed: ' + errorMessage);
             });
         }
 

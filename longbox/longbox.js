@@ -1,8 +1,8 @@
 
 if (firebase.apps.length === 0) {
-    alert("Firebase is not initialized.");
+    // alert("Firebase is not initialized.");
   } else {
-    alert("Firebase is initialized.")
+    // alert("Firebase is initialized.")
   }
 
 // Utility Functions
@@ -29,9 +29,6 @@ function login() {
     document.getElementById("loginForm").style.display = "none";
 }
 
-// old way to get uid
-const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get('userId');
 
 /// Check authentication state and call function to restore cards in list
 firebase.auth().onAuthStateChanged((user) => {
@@ -44,10 +41,11 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-function addCard(selectedCardName) {
+// Function to add a card to the user's collection
+function addCard(selectedCardName, setName, printingVersion, printingCollectorNumber) {
     // Validate input value
     if (!selectedCardName) {
-        alert("Please enter a card name.");
+        // alert("Please enter a card name.");
         return;
     }
 
@@ -71,7 +69,7 @@ function addCard(selectedCardName) {
     // Get the currently authenticated user for testing
     const user = firebase.auth().currentUser;
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -81,8 +79,9 @@ function addCard(selectedCardName) {
     // Get the first letter of the card name to fit file structure
     const firstLetter = formattedCardName.charAt(0).toLowerCase();
 
-    // Reference to the specific card in the Realtime Database
-    const cardRef = dbRef.child("mtg_names").child(firstLetter).child("cards").child(formattedCardName);
+    const cardName = selectedCardName.replace(".", " ").replace("?", "_").replace("!", "_").replace("/", "-").replace("#", "-");
+  
+    const cardRef = dbRef.child("mtg_names").child(firstLetter).child("cards").child(cardName);
 
     // Retrieve the card data using snapshot from firebase
     cardRef.once('value')
@@ -98,17 +97,16 @@ function addCard(selectedCardName) {
                 
                 // Add the card to the user's collection
                 userCardsRef.add({
-                    cardName: formattedCardName, // Use the formatted card name
+                    name: selectedCardName,
+                    set_name: setName,
+                    version: printingVersion,
+                    collector_number: printingCollectorNumber,
                     color: cardData.color,
-                    convertedManaCost: cardData.converted_mana_cost,
-                    id: cardData.id,
-                    manaCost: cardData.mana_cost,
-                    amountOfColors: cardData.amount_of_colors
-                    // Add other card details as needed
+                    converted_mana_cost: cardData.converted_mana_cost
                 })
                     .then((docRef) => {
                         // Get the URL of the added document in Firestore
-                        alert("Card added successfully at: " + docRef.path);
+                        // alert("Card added successfully at: " + docRef.path);
 
                         const inputBox = document.getElementById('cardName');
                         inputBox.value = ''; // Clear the input box after successful addition
@@ -129,23 +127,26 @@ function addCard(selectedCardName) {
                         const cell3 = newRow.insertCell(3);
                         const cell4 = newRow.insertCell(4);
 
-                        cell1.innerHTML = formattedCardName; // Set the card name
+                        cell1.innerHTML = selectedCardName; // Set the card name
                         cell2.innerHTML = cardData.color; // Set the color
                         cell3.innerHTML = cardData.converted_mana_cost; // Set the converted mana cost
                         cell4.innerHTML = ""; // Set the price or add price calculation if needed
                     })
                     .catch(error => {
                         console.error('Error adding card:', error);
-                        alert('Failed to add card.');
+                        // alert('Failed to add card.');
                     });
             } else {
-                alert('Card not found.');
+                // alert('Card not found.');
             }
         })
         .catch(error => {
             console.error('Error getting card:', error);
-            alert('Failed to get card data.');
+            // alert('Failed to get card data.');
         });
+
+    // Call displayCardList function
+
 }
 
 
@@ -156,7 +157,7 @@ function removeSelectedCards() {
     
     // Check if any card is selected
     if (checkboxes.length === 0) {
-        alert('Please select at least one card to remove.');
+        // alert('Please select at least one card to remove.');
         return;
     }
 
@@ -165,7 +166,7 @@ function removeSelectedCards() {
 
     // Check if user is authenticated
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -186,20 +187,20 @@ function removeSelectedCards() {
                         console.log("Card successfully deleted from Firestore!");
                     }).catch(error => {
                         console.error("Error removing card from Firestore: ", error);
-                        alert('Failed to remove card from Firestore.');
+                        // alert('Failed to remove card from Firestore.');
                     });
                 });
             })
             .catch(error => {
                 console.error("Error querying card for deletion: ", error);
-                alert('Failed to remove card from Firestore.');
+                // alert('Failed to remove card from Firestore.');
             });
 
         // Remove the card row from the UI
         checkbox.closest("tr").remove();
     });
 
-    alert('Selected card(s) removed successfully.');
+    // alert('Selected card(s) removed successfully.');
 }
 
 
@@ -210,7 +211,7 @@ function addFolder() {
     const folderList = document.getElementById('folderList');
 
     if (!folderName) {
-        alert('Please enter a folder name.');
+        // alert('Please enter a folder name.');
         return;
     }
 
@@ -218,7 +219,7 @@ function addFolder() {
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -227,7 +228,7 @@ function addFolder() {
     // Create a new document with the folder name
     foldersRef.doc(folderName).set({})
         .then(() => {
-            alert(`Folder '${folderName}' added successfully.`);
+            // alert(`Folder '${folderName}' added successfully.`);
             
             // Add the folder name to the UI
             const folderRow = document.createElement('tr');
@@ -241,7 +242,7 @@ function addFolder() {
         })
         .catch(error => {
             console.error('Error adding folder:', error);
-            alert('Failed to add folder.');
+            // alert('Failed to add folder.');
         });
 }
 
@@ -252,12 +253,12 @@ function addToFolder(){
     const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
 
     if (folderCheckboxes.length === 0) {
-        alert('Please select at least one folder.');
+        // alert('Please select at least one folder.');
         return;
     }
 
     if (cardsChecked.length === 0) {
-        alert('Please select at least one card to add to the folder(s).');
+        // alert('Please select at least one card to add to the folder(s).');
         return;
     }
 
@@ -265,7 +266,7 @@ function addToFolder(){
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -296,7 +297,7 @@ function addToFolder(){
             })
             .catch(error => {
                 console.error('Error adding card to folder:', error);
-                alert('Failed to add card to folder.');
+                // alert('Failed to add card to folder.');
             });
         });
     });
@@ -306,7 +307,7 @@ function addToFolder(){
         cardChecked.checked = false;
     });
 
-    alert('Card(s) added to selected folder(s) successfully.');
+    // alert('Card(s) added to selected folder(s) successfully.');
 }
 
 // seems they are not actually authenticated even tho they are signed in
@@ -315,7 +316,7 @@ function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -353,7 +354,7 @@ function getCardsFromFirestore() {
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
-        alert('Failed to retrieve cards from Firestore.');
+        // alert('Failed to retrieve cards from Firestore.');
     });
 }
 
@@ -361,7 +362,7 @@ function getFoldersFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -395,7 +396,7 @@ function getFoldersFromFirestore() {
         });
     }).catch((error) => {
         console.error("Error getting folders: ", error);
-        alert('Failed to retrieve folders from Firestore.');
+        // alert('Failed to retrieve folders from Firestore.');
     });
 }
 
@@ -450,7 +451,7 @@ function displaySortedCards(sortBy) {
         });
     }).catch((error) => {
         console.error("Error getting sorted cards: ", error);
-        alert('Failed to retrieve sorted cards from Firestore.');
+        // alert('Failed to retrieve sorted cards from Firestore.');
     });
 }
 
@@ -518,6 +519,7 @@ function hideCardImagePopup() {
     }
 }
 
+
 // Event listener for hovering over card name cells
 document.addEventListener('DOMContentLoaded', function() {
     var table = document.getElementById('cardTable');
@@ -547,6 +549,7 @@ function initializeEventListeners() {
     document.getElementById('addToFolderButton').onclick = addToFolder;
 
 }
+
 
 // Call initialize function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
