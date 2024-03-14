@@ -248,13 +248,13 @@ function addFolder() {
         .then(() => {
             // alert(`Folder '${folderName}' added successfully.`);
             
-            // Add the folder name to the UI
-            const folderRow = document.createElement('tr');
-            folderRow.innerHTML = `
-                <td><input type="checkbox"></td>
-                <td>${folderName}</td>
+            // Add the folder name to the UI with a checkbox
+            const folderItem = document.createElement('li');
+            folderItem.innerHTML = `
+                <input type="checkbox" id="${folderName}" class="folder-checkbox">
+                <label for="${folderName}">${folderName}</label>
             `;
-            folderList.appendChild(folderRow);
+            folderList.appendChild(folderItem);
             
             folderNameInput.value = ''; // Clear the input field
         })
@@ -264,6 +264,91 @@ function addFolder() {
         });
 }
 
+function displayFolderContents(folderName) {
+    folderName = String(folderName);
+    // Replace spaces with underscores in folderName
+    const formattedFolderName = folderName.replace(/\s+/g, '_');
+
+    console.log("Folder name clicked:", formattedFolderName);
+
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const cardsRef = db.collection(`Users/${user.uid}/folders/${formattedFolderName}/cards`);
+
+    cardsRef.get().then((querySnapshot) => {
+        const cardList = $("#folderCardList");
+
+        // Clear existing card list before populating again
+        cardList.empty();
+
+        querySnapshot.forEach((doc) => {
+            const cardData = doc.data();
+            const cardName = cardData.name;
+            const cardColor = cardData.color;
+
+            const newRow = $("<tr>");
+            const checkboxCell = $("<td>").appendTo(newRow);
+            const checkbox = $("<input>").attr("type", "checkbox").attr("name", "selectedCard").val(doc.id);
+            checkbox.appendTo(checkboxCell);
+
+            $("<td>").text(cardName).appendTo(newRow);
+            $("<td>").text(cardColor).appendTo(newRow);
+
+            newRow.appendTo(cardList);
+        });
+
+        console.log("Cards retrieved successfully from folder:", formattedFolderName);
+    }).catch((error) => {
+        console.error("Error getting cards from folder:", formattedFolderName, error);
+    });
+}
+
+
+function getFolderContents(folderName) {
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const cardsRef = db.collection(`Users/${user.uid}/folders/${folderName}/cards`);
+
+    cardsRef.get().then((querySnapshot) => {
+        const folderCardList = document.getElementById('folderCardList');
+
+        // Clear existing folder card list before populating again
+        folderCardList.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+
+            console.log(doc)
+            const cardData = doc.data();
+            const cardName = cardData.name;
+            const cardColor = cardData.color;
+
+            // Create a new row for each card 
+            const newRow = folderCardList.insertRow();
+
+            // Fill in the cells with card details
+            const cell1 = newRow.insertCell(0);
+            cell1.textContent = cardName;
+
+            const cell2 = newRow.insertCell(1);
+            cell2.textContent = cardColor;
+        });
+    }).catch((error) => {
+        console.error("Error getting cards from folder:", error);
+    });
+}
+
+// Need to fix add to folder
 function addToFolder(){
     const cardName = document.getElementById('cardName').value;
     const folderList = document.getElementById('folderList');
@@ -288,26 +373,24 @@ function addToFolder(){
         return;
     }
 
+    // may need to fix route
     const foldersRef = db.collection(`Users/${user.uid}/folders`);
 
-    // Loop through each selected folder checkbox
+    // Loop through each selected folder checkbox, but need to fix it so they all have checkboxes
     folderCheckboxes.forEach(function(folderCheckbox) {
         const folderName = folderCheckbox.closest("tr").querySelector("td:nth-child(2)").textContent;
 
-        // Create a reference to the folder's document
         const folderDocRef = foldersRef.doc(folderName);
 
-        // Loop through each selected card checkbox
         cardsChecked.forEach(function(cardChecked) {
             const cardName = cardChecked.closest("tr").querySelector("td:nth-child(2)").textContent;
 
             // Reference to the specific collection in Firestore for cards in this folder
             const folderCardsRef = folderDocRef.collection("cards");
 
-            // Add the card to the folder's collection
+            // need to maybe fix so that it grabs the info from the rtdb then inserts
             folderCardsRef.add({
-                cardName: cardName,
-                // You can add other details here if needed
+                cardName: cardName
             })
             .then((docRef) => {
                 console.log("Card added to folder:", folderName, "Card Name:", cardName);
@@ -324,11 +407,9 @@ function addToFolder(){
     cardsChecked.forEach(function(cardChecked) {
         cardChecked.checked = false;
     });
-
-    // alert('Card(s) added to selected folder(s) successfully.');
 }
 
-// seems they are not actually authenticated even tho they are signed in
+
 // work in progress need persistence to work
 function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
@@ -381,7 +462,6 @@ function getFoldersFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        // alert('User not authenticated.');
         return;
     }
 
@@ -398,26 +478,25 @@ function getFoldersFromFirestore() {
             // Use the document ID as the folder name
             const folderName = doc.id.replace(/_/g, ' '); // Replace underscores with spaces
 
-            // Create a new row for each folder
-            const newRow = folderList.insertRow();
+            // Create a new list item for each folder
+            const folderItem = document.createElement('li');
+            folderItem.textContent = folderName;
 
-            // Create a checkbox in the first cell
-            const checkboxCell = newRow.insertCell(0);
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkboxCell.appendChild(checkbox);
+            // Add a click event listener to the folder item
+            folderItem.addEventListener('click', () => {
+                // Implement the logic when a folder is clicked, if needed
+                console.log(`Folder "${folderName}" clicked`);
+                displayFolderContents(folderName);
+            });
 
-            // Fill in the rest of the cells with folder details
-            const cell1 = newRow.insertCell(1);
-            cell1.innerHTML = folderName;
-
-            // You can add more cells for additional folder details if needed
+            // Append the folder item to the folder list
+            folderList.appendChild(folderItem);
         });
     }).catch((error) => {
         console.error("Error getting folders: ", error);
-        // alert('Failed to retrieve folders from Firestore.');
     });
 }
+
 
 
 
