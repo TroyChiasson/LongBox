@@ -40,6 +40,7 @@
                     <li><a href="longbox.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="download.html">Download</a></li>
+                    <li><a href="finance.html">Finance</a></li>
                 </ul>
             </nav>  
         </h4>           
@@ -95,7 +96,9 @@
                     <h2>Folders</h2>
                     <button onclick="addFolder()">Add Folder</button>
                     <input type="text" id="folderName" placeholder="Folder Name">
-                    <table id="folderList"></table>
+                    <ul id="folderList" onclick="displayFolderContents(event)"></ul>
+                    <!-- This is where the cards will be displayed from calling display function-->
+                    <table id="folderCardList"></table>
                 </div>
             </div>
         </div>
@@ -107,6 +110,7 @@
         </div>
     </div>
     <footer>ScrollRack</footer>
+
 
     <script>
         // uses Jquery function/UI to display autosuggestions and pull from RTDB
@@ -145,6 +149,14 @@
                     addCard(ui.item.value); 
                 }
             });
+
+            $(document).ready(function() {
+            // Click event for folder names to display folder contents
+            $("#folderList").on("click", "li", function(event) {
+                var folderName = $(event.currentTarget).text().trim();
+                displayFolderContents(folderName);
+            });
+        });
         });
     </script>
 </body>

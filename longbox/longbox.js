@@ -1,8 +1,8 @@
 
 if (firebase.apps.length === 0) {
-    alert("Firebase is not initialized.");
+    // alert("Firebase is not initialized.");
   } else {
-    alert("Firebase is initialized.")
+    // alert("Firebase is initialized.")
   }
 
 // Utility Functions
@@ -29,15 +29,12 @@ function login() {
     document.getElementById("loginForm").style.display = "none";
 }
 
-// old way to get uid
-const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get('userId');
 
 /// Check authentication state and call function to restore cards in list
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         console.log('User signed in:', user);
-        getCardsFromFirestore(); // Call the function here
+        getCardsFromFirestore();
         getFoldersFromFirestore();
     } else {
         console.log('User not signed in.');
@@ -47,31 +44,29 @@ firebase.auth().onAuthStateChanged((user) => {
 function addCard(selectedCardName) {
     // Validate input value
     if (!selectedCardName) {
-        alert("Please enter a card name.");
+        // alert("Please enter a card name.");
         return;
     }
 
     // Function to capitalize the first letter of each word
     const capitalizeFirstLetter = (string) => {
-        return string.toLowerCase().replace(/(?:^|\s)\S/g, function (char) {
-            return char.toUpperCase();
-        });
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     };
 
-    // Convert selectedCardName to lowercase and capitalize the first letter of each word
+    // Convert selectedCardName to lowercase and capitalize each word except specified articles
     const formattedCardName = selectedCardName
         .toLowerCase()
         .split(' ')
         .map(word => {
-            const lowerCaseWords = ['a', 'the', 'and', 'of']; // Words to keep lowercase could cause issues
-            return lowerCaseWords.includes(word) ? word : capitalizeFirstLetter(word);
+            const articles = ['a', 'the', 'and', 'of']; // Articles to keep lowercase
+            return articles.includes(word) ? word : capitalizeFirstLetter(word);
         })
         .join(' ');
 
     // Get the currently authenticated user for testing
     const user = firebase.auth().currentUser;
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -81,69 +76,96 @@ function addCard(selectedCardName) {
     // Get the first letter of the card name to fit file structure
     const firstLetter = formattedCardName.charAt(0).toLowerCase();
 
-    // Reference to the specific card in the Realtime Database
-    const cardRef = dbRef.child("mtg_names").child(firstLetter).child("cards").child(formattedCardName);
+    const cardName = formattedCardName
+        .replace(".", " ")
+        .replace("?", "_")
+        .replace("!", "_")
+        .replace("/", "-")
+        .replace("#", "-");
+    console.log(cardName)
 
-    // Retrieve the card data using snapshot from firebase
+    const cardRef = dbRef
+        .child("mtg_names")
+        .child(firstLetter)
+        .child("cards")
+        .child(cardName);
+
+    // Retrieve the first card data using snapshot from firebase
     cardRef.once('value')
         .then(snapshot => {
-            const cardData = snapshot.val();
-            console.log("Card Data:", cardData); // Log card data to console for debugging
-            if (cardData) {
-                // Reference to Firestore
-                const db = firebase.firestore();
+            // Iterate through the children and select the first one
+            let firstChildKey;
+            snapshot.forEach(childSnapshot => {
+                firstChildKey = childSnapshot.key;
+                return true; // Exit loop after the first child
+            });
 
-                // Reference to the specific collection in Firestore
-                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+            // Get the data of the first child
+            const firstChildData = snapshot.child(firstChildKey).val();
+            console.log("First Child Data:", firstChildData);
+
+            // Reference to Firestore
+            const db = firebase.firestore();
+
+            // Reference to the specific collection in Firestore
+            const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
                 
-                // Add the card to the user's collection
-                userCardsRef.add({
-                    cardName: formattedCardName, // Use the formatted card name
-                    color: cardData.color,
-                    convertedManaCost: cardData.converted_mana_cost,
-                    id: cardData.id,
-                    manaCost: cardData.mana_cost,
-                    amountOfColors: cardData.amount_of_colors
-                    // Add other card details as needed
-                })
-                    .then((docRef) => {
-                        // Get the URL of the added document in Firestore
-                        alert("Card added successfully at: " + docRef.path);
+            // Add the card to the user's collection
+            userCardsRef.add({
+                name: firstChildData.name,
+                set_code: firstChildData.set_code,
+                collector_number: firstChildData.collector_number,
+                color_identity: firstChildData.color_identity,
+                colors: firstChildData.colors,
+                converted_mana_cost: firstChildData.converted_mana_cost,
+                id: firstChildData.id,
+                mana_cost: firstChildData.mana_cost,
+                prices: firstChildData.prices,
+                type_of_card: firstChildData.type_of_card
+                // Add more fields as needed
+            })
+            .then((docRef) => {
+                // alert("Card added successfully at: " + docRef.path);
 
-                        // Update the Card List table with the new card
-                        const cardList = document.getElementById('cardList');
-                        const newRow = cardList.insertRow();
+                const inputBox = document.getElementById('cardName');
+                inputBox.value = ''; // Clear the input box after successful addition
 
-                        // Create a checkbox in the first cell
-                        const checkboxCell = newRow.insertCell(0);
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkboxCell.appendChild(checkbox);
+                // Update the Card List table with the new card
+                const cardList = document.getElementById('cardList');
+                const newRow = cardList.insertRow();
 
-                        // Fill in the rest of the cells with card details
-                        const cell1 = newRow.insertCell(1);
-                        const cell2 = newRow.insertCell(2);
-                        const cell3 = newRow.insertCell(3);
-                        const cell4 = newRow.insertCell(4);
+                // Create a checkbox in the first cell
+                const checkboxCell = newRow.insertCell(0);
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkboxCell.appendChild(checkbox);
 
-                        cell1.innerHTML = formattedCardName; // Set the card name
-                        cell2.innerHTML = cardData.color; // Set the color
-                        cell3.innerHTML = cardData.converted_mana_cost; // Set the converted mana cost
-                        cell4.innerHTML = ""; // Set the price or add price calculation if needed
-                    })
-                    .catch(error => {
-                        console.error('Error adding card:', error);
-                        alert('Failed to add card.');
-                    });
-            } else {
-                alert('Card not found.');
-            }
+                // Fill in the rest of the cells with card details
+                const cell1 = newRow.insertCell(1);
+                const cell2 = newRow.insertCell(2);
+                const cell3 = newRow.insertCell(3);
+                const cell4 = newRow.insertCell(4);
+
+                cell1.innerHTML = firstChildData.name; // Set the card name
+                cell2.innerHTML = firstChildData.color_identity.join(', '); // Set the color identity
+                cell3.innerHTML = firstChildData.converted_mana_cost; // Set the converted mana cost
+                cell4.innerHTML = firstChildData.prices.usd_foil ? firstChildData.prices.usd_foil : firstChildData.prices.usd;
+
+            })
+            .catch(error => {
+                console.error('Error adding card:', error);
+                // alert('Failed to add card.');
+            });
         })
         .catch(error => {
             console.error('Error getting card:', error);
-            alert('Failed to get card data.');
+            // alert('Failed to get card data.');
         });
+
+    // Call displayCardList function
+
 }
+
 
 
 
@@ -153,7 +175,7 @@ function removeSelectedCards() {
     
     // Check if any card is selected
     if (checkboxes.length === 0) {
-        alert('Please select at least one card to remove.');
+        // alert('Please select at least one card to remove.');
         return;
     }
 
@@ -162,7 +184,7 @@ function removeSelectedCards() {
 
     // Check if user is authenticated
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -183,20 +205,20 @@ function removeSelectedCards() {
                         console.log("Card successfully deleted from Firestore!");
                     }).catch(error => {
                         console.error("Error removing card from Firestore: ", error);
-                        alert('Failed to remove card from Firestore.');
+                        // alert('Failed to remove card from Firestore.');
                     });
                 });
             })
             .catch(error => {
                 console.error("Error querying card for deletion: ", error);
-                alert('Failed to remove card from Firestore.');
+                // alert('Failed to remove card from Firestore.');
             });
 
         // Remove the card row from the UI
         checkbox.closest("tr").remove();
     });
 
-    alert('Selected card(s) removed successfully.');
+    // alert('Selected card(s) removed successfully.');
 }
 
 
@@ -207,7 +229,7 @@ function addFolder() {
     const folderList = document.getElementById('folderList');
 
     if (!folderName) {
-        alert('Please enter a folder name.');
+        // alert('Please enter a folder name.');
         return;
     }
 
@@ -215,7 +237,7 @@ function addFolder() {
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -224,24 +246,109 @@ function addFolder() {
     // Create a new document with the folder name
     foldersRef.doc(folderName).set({})
         .then(() => {
-            alert(`Folder '${folderName}' added successfully.`);
+            // alert(`Folder '${folderName}' added successfully.`);
             
-            // Add the folder name to the UI
-            const folderRow = document.createElement('tr');
-            folderRow.innerHTML = `
-                <td><input type="checkbox"></td>
-                <td>${folderName}</td>
+            // Add the folder name to the UI with a checkbox
+            const folderItem = document.createElement('li');
+            folderItem.innerHTML = `
+                <input type="checkbox" id="${folderName}" class="folder-checkbox">
+                <label for="${folderName}">${folderName}</label>
             `;
-            folderList.appendChild(folderRow);
+            folderList.appendChild(folderItem);
             
             folderNameInput.value = ''; // Clear the input field
         })
         .catch(error => {
             console.error('Error adding folder:', error);
-            alert('Failed to add folder.');
+            // alert('Failed to add folder.');
         });
 }
 
+function displayFolderContents(folderName) {
+    folderName = String(folderName);
+    // Replace spaces with underscores in folderName
+    const formattedFolderName = folderName.replace(/\s+/g, '_');
+
+    console.log("Folder name clicked:", formattedFolderName);
+
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const cardsRef = db.collection(`Users/${user.uid}/folders/${formattedFolderName}/cards`);
+
+    cardsRef.get().then((querySnapshot) => {
+        const cardList = $("#folderCardList");
+
+        // Clear existing card list before populating again
+        cardList.empty();
+
+        querySnapshot.forEach((doc) => {
+            const cardData = doc.data();
+            const cardName = cardData.name;
+            const cardColor = cardData.color;
+
+            const newRow = $("<tr>");
+            const checkboxCell = $("<td>").appendTo(newRow);
+            const checkbox = $("<input>").attr("type", "checkbox").attr("name", "selectedCard").val(doc.id);
+            checkbox.appendTo(checkboxCell);
+
+            $("<td>").text(cardName).appendTo(newRow);
+            $("<td>").text(cardColor).appendTo(newRow);
+
+            newRow.appendTo(cardList);
+        });
+
+        console.log("Cards retrieved successfully from folder:", formattedFolderName);
+    }).catch((error) => {
+        console.error("Error getting cards from folder:", formattedFolderName, error);
+    });
+}
+
+
+function getFolderContents(folderName) {
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const cardsRef = db.collection(`Users/${user.uid}/folders/${folderName}/cards`);
+
+    cardsRef.get().then((querySnapshot) => {
+        const folderCardList = document.getElementById('folderCardList');
+
+        // Clear existing folder card list before populating again
+        folderCardList.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+
+            console.log(doc)
+            const cardData = doc.data();
+            const cardName = cardData.name;
+            const cardColor = cardData.color;
+
+            // Create a new row for each card 
+            const newRow = folderCardList.insertRow();
+
+            // Fill in the cells with card details
+            const cell1 = newRow.insertCell(0);
+            cell1.textContent = cardName;
+
+            const cell2 = newRow.insertCell(1);
+            cell2.textContent = cardColor;
+        });
+    }).catch((error) => {
+        console.error("Error getting cards from folder:", error);
+    });
+}
+
+// Need to fix add to folder
 function addToFolder(){
     const cardName = document.getElementById('cardName').value;
     const folderList = document.getElementById('folderList');
@@ -249,12 +356,12 @@ function addToFolder(){
     const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
 
     if (folderCheckboxes.length === 0) {
-        alert('Please select at least one folder.');
+        // alert('Please select at least one folder.');
         return;
     }
 
     if (cardsChecked.length === 0) {
-        alert('Please select at least one card to add to the folder(s).');
+        // alert('Please select at least one card to add to the folder(s).');
         return;
     }
 
@@ -262,30 +369,28 @@ function addToFolder(){
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
+    // may need to fix route
     const foldersRef = db.collection(`Users/${user.uid}/folders`);
 
-    // Loop through each selected folder checkbox
+    // Loop through each selected folder checkbox, but need to fix it so they all have checkboxes
     folderCheckboxes.forEach(function(folderCheckbox) {
         const folderName = folderCheckbox.closest("tr").querySelector("td:nth-child(2)").textContent;
 
-        // Create a reference to the folder's document
         const folderDocRef = foldersRef.doc(folderName);
 
-        // Loop through each selected card checkbox
         cardsChecked.forEach(function(cardChecked) {
             const cardName = cardChecked.closest("tr").querySelector("td:nth-child(2)").textContent;
 
             // Reference to the specific collection in Firestore for cards in this folder
             const folderCardsRef = folderDocRef.collection("cards");
 
-            // Add the card to the folder's collection
+            // need to maybe fix so that it grabs the info from the rtdb then inserts
             folderCardsRef.add({
-                cardName: cardName,
-                // You can add other details here if needed
+                cardName: cardName
             })
             .then((docRef) => {
                 console.log("Card added to folder:", folderName, "Card Name:", cardName);
@@ -293,7 +398,7 @@ function addToFolder(){
             })
             .catch(error => {
                 console.error('Error adding card to folder:', error);
-                alert('Failed to add card to folder.');
+                // alert('Failed to add card to folder.');
             });
         });
     });
@@ -302,17 +407,15 @@ function addToFolder(){
     cardsChecked.forEach(function(cardChecked) {
         cardChecked.checked = false;
     });
-
-    alert('Card(s) added to selected folder(s) successfully.');
 }
 
-// seems they are not actually authenticated even tho they are signed in
+
 // work in progress need persistence to work
 function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        alert('User not authenticated.');
+        // alert('User not authenticated.');
         return;
     }
 
@@ -343,14 +446,15 @@ function getCardsFromFirestore() {
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
 
-            cell1.innerHTML = cardData.cardName;
-            cell2.innerHTML = cardData.color;
-            cell3.innerHTML = cardData.convertedManaCost;
-            cell4.innerHTML = ""; // You can add other details or calculations here if needed
+            cell1.innerHTML = cardData.name;
+            cell2.innerHTML = cardData.colors;
+            cell3.innerHTML = cardData.converted_mana_cost;
+            cell4.innerHTML = cardData.prices.usd_foil ? cardData.prices.usd_foil : cardData.prices.usd;
+ // You can add other details or calculations here if needed
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
-        alert('Failed to retrieve cards from Firestore.');
+        // alert('Failed to retrieve cards from Firestore.');
     });
 }
 
@@ -358,7 +462,6 @@ function getFoldersFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        alert('User not authenticated.');
         return;
     }
 
@@ -372,28 +475,30 @@ function getFoldersFromFirestore() {
         folderList.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
-            const folderData = doc.data();
+            // Use the document ID as the folder name
+            const folderName = doc.id.replace(/_/g, ' '); // Replace underscores with spaces
 
-            // Create a new row for each folder
-            const newRow = folderList.insertRow();
+            // Create a new list item for each folder
+            const folderItem = document.createElement('li');
+            folderItem.textContent = folderName;
 
-            // Create a checkbox in the first cell
-            const checkboxCell = newRow.insertCell(0);
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkboxCell.appendChild(checkbox);
+            // Add a click event listener to the folder item
+            folderItem.addEventListener('click', () => {
+                // Implement the logic when a folder is clicked, if needed
+                console.log(`Folder "${folderName}" clicked`);
+                displayFolderContents(folderName);
+            });
 
-            // Fill in the rest of the cells with folder details
-            const cell1 = newRow.insertCell(1);
-            cell1.innerHTML = folderData.folderName; // Assuming folderName is a field in your Firestore document
-
-            // You can add more cells for additional folder details if needed
+            // Append the folder item to the folder list
+            folderList.appendChild(folderItem);
         });
     }).catch((error) => {
         console.error("Error getting folders: ", error);
-        alert('Failed to retrieve folders from Firestore.');
     });
 }
+
+
+
 
 function displaySortedCards(sortBy) {
     const user = firebase.auth().currentUser;
@@ -407,46 +512,78 @@ function displaySortedCards(sortBy) {
 
     let query;
     if (sortBy === 'highestMana') {
-        query = userCardsRef.orderBy('convertedManaCost', 'desc');
+        query = userCardsRef.orderBy('converted_mana_cost', 'desc');
     } else if (sortBy === 'lowestMana') {
-        query = userCardsRef.orderBy('convertedManaCost', 'asc');
+        query = userCardsRef.orderBy('converted_mana_cost', 'asc');
     } else {
-        // Default sorting
-        query = userCardsRef.orderBy('cardName');
+        // Default sorting by name
+        query = userCardsRef.orderBy('name');
+    }
+
+    const cardList = document.getElementById('cardTable');
+    if (!cardList) {
+        console.log('Card list element not found.');
+        return;
+    }
+
+    // Create tbody if it doesn't exist
+    let tbody = cardList.querySelector('tbody');
+    if (!tbody) {
+        tbody = document.createElement('tbody');
+        cardList.appendChild(tbody);
+    } else {
+        // Clear existing rows from the table
+        tbody.innerHTML = '';
     }
 
     query.get().then((querySnapshot) => {
-        const cardList = document.getElementById('cardList');
-        cardList.innerHTML = ''; // Clear existing card list
-
+        const sortedCards = [];
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
 
-            // Create a new row for each card
-            const newRow = cardList.insertRow();
+            // Calculate the price to display (the higher of usd and usd_foil)
+            let displayPrice = 'N/A';
+            if (cardData.prices && (cardData.prices.usd || cardData.prices.usd_foil)) {
+                const usd = parseFloat(cardData.prices.usd) || 0;
+                const usdFoil = parseFloat(cardData.prices.usd_foil) || 0;
+                displayPrice = Math.max(usd, usdFoil).toFixed(2);
+            }
 
-            // Create a checkbox in the first cell
+            sortedCards.push({ cardData, displayPrice });
+        });
+
+        // Sort the cards by the display price
+        if (sortBy === 'highestPrice') {
+            sortedCards.sort((a, b) => parseFloat(b.displayPrice) - parseFloat(a.displayPrice));
+        } else if (sortBy === 'lowestPrice') {
+            sortedCards.sort((a, b) => parseFloat(a.displayPrice) - parseFloat(b.displayPrice));
+        }
+
+        // Display the sorted cards
+        sortedCards.forEach((card) => {
+            const newRow = tbody.insertRow();
+
             const checkboxCell = newRow.insertCell(0);
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkboxCell.appendChild(checkbox);
 
-            // Fill in the rest of the cells with card details
             const cell1 = newRow.insertCell(1);
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
 
-            cell1.innerHTML = cardData.cardName;
-            cell2.innerHTML = cardData.color;
-            cell3.innerHTML = cardData.convertedManaCost;
-            cell4.innerHTML = cardData.price;
+            cell1.innerHTML = card.cardData.name;
+            cell2.innerHTML = card.cardData.colors;
+            cell3.innerHTML = card.cardData.converted_mana_cost;
+            cell4.innerHTML = card.displayPrice;
         });
     }).catch((error) => {
         console.error("Error getting sorted cards: ", error);
-        alert('Failed to retrieve sorted cards from Firestore.');
     });
 }
+
+
 
 // Function to display card image popup when row is hovered over card name
 function displayCardImagePopup(cardName, event) {
@@ -512,6 +649,7 @@ function hideCardImagePopup() {
     }
 }
 
+
 // Event listener for hovering over card name cells
 document.addEventListener('DOMContentLoaded', function() {
     var table = document.getElementById('cardTable');
@@ -541,6 +679,7 @@ function initializeEventListeners() {
     document.getElementById('addToFolderButton').onclick = addToFolder;
 
 }
+
 
 // Call initialize function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
