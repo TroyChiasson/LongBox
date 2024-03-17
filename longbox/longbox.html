@@ -82,6 +82,11 @@
                         </thead>
                         <tbody id="cardList">
                             <tr>
+                                <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
+                                    <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
+                                    <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
+                                    <a href="#" class="switch-collector">Switch Collector Number</a>
+                                </div>
                                 <td>
                                 </td>                            
                             </tr>
@@ -96,11 +101,12 @@
                     <h2>Folders</h2>
                     <button onclick="addFolder()">Add Folder</button>
                     <input type="text" id="folderName" placeholder="Folder Name">
-                    <ul id="folderList" onclick="displayFolderContents(event)"></ul>
-                    <!-- This is where the cards will be displayed from calling display function-->
-                    <table id="folderCardList"></table>
+                    <ul id="folderList" onclick="getFolderContents(event)"></ul>
                 </div>
-            </div>
+                <div id="folderCardList" class="card-list">
+                    <!-- The cardTable will be appended here -->
+                </div>
+            </div>           
         </div>
         <div class="login-form" id="loginForm">
             <h2>Login</h2>
@@ -154,9 +160,40 @@
             // Click event for folder names to display folder contents
             $("#folderList").on("click", "li", function(event) {
                 var folderName = $(event.currentTarget).text().trim();
-                displayFolderContents(folderName);
+                getFolderContents(folderName);
             });
         });
+
+                // Event listener for the card names in the card list
+        $(document).ready(function() {
+            $('#cardList').on('click', '.card-name', function(e) {
+                e.stopPropagation();
+                showPopupMenu(this);
+            });
+
+            // Handle options within the popup menu
+            $('#cardOptionsMenu').on('click', '.buy-tcgplayer', function() {
+                // Handle buy on TCG Player action
+                var cardName = $(this).closest('.card-name').text();
+                // Implement your logic here for TCG Player
+                console.log('Buy on TCG Player:', cardName);
+            });
+
+            $('#cardOptionsMenu').on('click', '.buy-cardkingdom', function() {
+                // Handle buy on Card Kingdom action
+                var cardName = $(this).closest('.card-name').text();
+                // Implement your logic here for Card Kingdom
+                console.log('Buy on Card Kingdom:', cardName);
+            });
+
+            $('#cardOptionsMenu').on('click', '.switch-collector', function() {
+                // Handle switch collector number action
+                var cardName = $(this).closest('.card-name').text();
+                // Implement your logic here for switching collector number
+                console.log('Switch Collector Number:', cardName);
+            });
+        });
+
         });
     </script>
 </body>

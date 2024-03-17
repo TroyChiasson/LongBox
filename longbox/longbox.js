@@ -5,7 +5,6 @@ if (firebase.apps.length === 0) {
     // alert("Firebase is initialized.")
   }
 
-// Utility Functions
 function showLoginForm() {
     document.getElementById("loginForm").style.display = "block";
 }
@@ -109,7 +108,7 @@ function addCard(selectedCardName) {
 
             // Reference to the specific collection in Firestore
             const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
-                
+
             // Add the card to the user's collection
             userCardsRef.add({
                 name: firstChildData.name,
@@ -140,16 +139,24 @@ function addCard(selectedCardName) {
                 checkbox.type = 'checkbox';
                 checkboxCell.appendChild(checkbox);
 
+                // Insert the card name as the second cell
+                const cardNameCell = newRow.insertCell(1);
+                cardNameCell.className = 'card-name'; // Add the 'card-name' class
+                cardNameCell.textContent = firstChildData.name; // Set the card name
+
                 // Fill in the rest of the cells with card details
-                const cell1 = newRow.insertCell(1);
                 const cell2 = newRow.insertCell(2);
                 const cell3 = newRow.insertCell(3);
                 const cell4 = newRow.insertCell(4);
 
-                cell1.innerHTML = firstChildData.name; // Set the card name
                 cell2.innerHTML = firstChildData.color_identity.join(', '); // Set the color identity
                 cell3.innerHTML = firstChildData.converted_mana_cost; // Set the converted mana cost
                 cell4.innerHTML = firstChildData.prices.usd_foil ? firstChildData.prices.usd_foil : firstChildData.prices.usd;
+
+                // Add event listener to the card name cell for the popup menu
+                cardNameCell.addEventListener('click', function() {
+                    showPopupMenu(cardNameCell);
+                });
 
             })
             .catch(error => {
@@ -166,6 +173,34 @@ function addCard(selectedCardName) {
 
 }
 
+
+
+
+// Function to show the popup menu when a card name is clicked
+function showPopupMenu(cardNameCell) {
+    var $cardName = $(cardNameCell);
+    var $popupMenu = $('#cardOptionsMenu');
+
+    // Position the popup menu next to the clicked card name
+    var position = $cardName.position();
+    $popupMenu.css({
+        top: position.top + $cardName.outerHeight(),
+        left: position.left
+    });
+
+    // Show the popup menu
+    $popupMenu.fadeIn(200);
+
+    // Handle click outside to close the popup
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#cardOptionsMenu, .card-name').length) {
+            $popupMenu.fadeOut(200);
+        }
+    });
+
+    // Prevent default link behavior
+    return false;
+}
 
 
 
@@ -322,31 +357,59 @@ function getFolderContents(folderName) {
 
     cardsRef.get().then((querySnapshot) => {
         const folderCardList = document.getElementById('folderCardList');
+        const table = document.getElementById('cardTable');
+        const tbody = table.querySelector('tbody');
 
-        // Clear existing folder card list before populating again
-        folderCardList.innerHTML = '';
+        // Clear existing rows
+        tbody.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
-
-            console.log(doc)
             const cardData = doc.data();
             const cardName = cardData.name;
             const cardColor = cardData.color;
+            const cardManaCost = cardData.converted_mana_cost;
+            const cardPrice = cardData.prices.usd_foil ? cardData.prices.usd_foil : cardData.prices.usd;
 
-            // Create a new row for each card 
-            const newRow = folderCardList.insertRow();
+            const row = document.createElement('tr');
 
-            // Fill in the cells with card details
-            const cell1 = newRow.insertCell(0);
-            cell1.textContent = cardName;
+            const nameCell = document.createElement('td');
+            nameCell.textContent = cardName;
+            row.appendChild(nameCell);
 
-            const cell2 = newRow.insertCell(1);
-            cell2.textContent = cardColor;
+            const colorCell = document.createElement('td');
+            colorCell.textContent = cardColor;
+            row.appendChild(colorCell);
+
+            const manaCell = document.createElement('td');
+            manaCell.textContent = cardManaCost;
+            row.appendChild(manaCell);
+
+            const priceCell = document.createElement('td');
+            priceCell.textContent = cardPrice;
+            row.appendChild(priceCell);
+
+            tbody.appendChild(row);
         });
+
+        // Check if table already exists and remove it before appending the new one
+        const existingTable = folderCardList.querySelector('#cardTable');
+        if (existingTable) {
+            existingTable.remove();
+        }
+
+        // Append the created table to the folderCardList
+        folderCardList.appendChild(table);
+
+        // Now you can log the tbody to see the data
+        console.log(tbody);
+
     }).catch((error) => {
         console.error("Error getting cards from folder:", error);
     });
 }
+
+
+
 
 // Need to fix add to folder
 function addToFolder(){
@@ -584,7 +647,7 @@ function displaySortedCards(sortBy) {
 }
 
 
-
+// maybe make it accept the folder name, would have to figure out how to pass that as a paramter
 // Function to display card image popup when row is hovered over card name
 function displayCardImagePopup(cardName, event) {
     // Get the URL of the card image from Firebase Storage
@@ -679,6 +742,7 @@ function initializeEventListeners() {
     document.getElementById('addToFolderButton').onclick = addToFolder;
 
 }
+
 
 
 // Call initialize function when the DOM is fully loaded
