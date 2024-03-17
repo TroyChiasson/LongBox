@@ -165,27 +165,6 @@
         });
 
                 // Event listener for the card names in the card list
-        $(document).ready(function() {
-            $('#cardList').on('click', '.card-name', function(e) {
-                e.stopPropagation();
-                showPopupMenu(this);
-            });
-
-            $('#cardOptionsMenu').on('click', '.buy-tcgplayer', function() {
-                var cardName = $(this).closest('.card-name').text();
-                console.log('Buy on TCG Player:', cardName);
-            });
-
-            $('#cardOptionsMenu').on('click', '.buy-cardkingdom', function() {
-                var cardName = $(this).closest('.card-name').text();
-                console.log('Buy on Card Kingdom:', cardName);
-            });
-
-            $('#cardOptionsMenu').on('click', '.switch-collector', function() {
-                var cardName = $(this).closest('.card-name').text();
-                console.log('Switch Collector Number:', cardName);
-            });
-        });
 
         });
     </script>

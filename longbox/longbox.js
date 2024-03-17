@@ -710,6 +710,57 @@ function hideCardImagePopup() {
 }
 
 
+$(document).ready(function() {
+    // Event listener for clicking on .card-name
+    $(document).on('click', '.card-name', function(e) {
+        e.stopPropagation();
+
+
+        $(this).closest('tr').find('.card-options-menu').toggle();
+        
+        var cardName = $(this).text().trim();
+        console.log('Clicked Card Name:', cardName);
+    });
+
+    $(document).on('click', '.buy-tcgplayer', function(e) {
+        e.preventDefault();
+
+        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        console.log('Buy on TCG Player:', cardName);
+        buyOnTCG(cardName);
+    });
+
+    $(document).on('click', '.buy-cardkingdom', function(e) {
+        e.preventDefault(); 
+
+        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        console.log('Buy on Card Kingdom:', cardName);
+    });
+
+    $(document).on('click', '.switch-collector', function(e) {
+        e.preventDefault(); 
+
+        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        console.log('Switch Collector Number:', cardName);
+
+    });
+});
+
+
+
+// Function to open TCGplayer search URL for the clicked card name
+function buyOnTCG(cardName) {
+    const baseUrl = 'https://www.tcgplayer.com/search/all/product?q=';
+    const url = `${baseUrl}${encodeURIComponent(cardName)}&view=grid`;
+
+    // Open the TCGplayer URL in a new tab to buy
+    window.open(url, '_blank');
+}
+
+function switchCollector(cardName) {
+    alert(cardName);
+}
+
 // Event listener for hovering over card name cells
 document.addEventListener('DOMContentLoaded', function() {
     var table = document.getElementById('cardTable');
