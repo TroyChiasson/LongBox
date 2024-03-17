@@ -96,7 +96,7 @@ function addCard(selectedCardName) {
             let firstChildKey;
             snapshot.forEach(childSnapshot => {
                 firstChildKey = childSnapshot.key;
-                return true; // Exit loop after the first child
+                return true; // Exit loop after the first child to simulate default card
             });
 
             // Get the data of the first child
@@ -121,7 +121,6 @@ function addCard(selectedCardName) {
                 mana_cost: firstChildData.mana_cost,
                 prices: firstChildData.prices,
                 type_of_card: firstChildData.type_of_card
-                // Add more fields as needed
             })
             .then((docRef) => {
                 // alert("Card added successfully at: " + docRef.path);
@@ -129,11 +128,10 @@ function addCard(selectedCardName) {
                 const inputBox = document.getElementById('cardName');
                 inputBox.value = ''; // Clear the input box after successful addition
 
-                // Update the Card List table with the new card
                 const cardList = document.getElementById('cardList');
                 const newRow = cardList.insertRow();
 
-                // Create a checkbox in the first cell
+                // Create a checkbox in the first cell, can be put away later maybe
                 const checkboxCell = newRow.insertCell(0);
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
@@ -144,7 +142,7 @@ function addCard(selectedCardName) {
                 cardNameCell.className = 'card-name'; // Add the 'card-name' class
                 cardNameCell.textContent = firstChildData.name; // Set the card name
 
-                // Fill in the rest of the cells with card details
+                // here to add details
                 const cell2 = newRow.insertCell(2);
                 const cell3 = newRow.insertCell(3);
                 const cell4 = newRow.insertCell(4);
@@ -513,7 +511,6 @@ function getCardsFromFirestore() {
             cell2.innerHTML = cardData.colors;
             cell3.innerHTML = cardData.converted_mana_cost;
             cell4.innerHTML = cardData.prices.usd_foil ? cardData.prices.usd_foil : cardData.prices.usd;
- // You can add other details or calculations here if needed
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
@@ -547,7 +544,7 @@ function getFoldersFromFirestore() {
 
             // Add a click event listener to the folder item
             folderItem.addEventListener('click', () => {
-                // Implement the logic when a folder is clicked, if needed
+                // if folder clicked add functionality here
                 console.log(`Folder "${folderName}" clicked`);
                 displayFolderContents(folderName);
             });
