@@ -699,6 +699,97 @@ function hideCardImagePopup() {
     }
 }
 
+
+// Show the Import List Popup
+function showImportListPopup() {
+    $("#importListPopup").toggle();
+}
+
+function processCardList() {
+    const importedCards = $("#importedList").val();
+
+    // Split the imported cards into an array by newline character
+    let importedCardsArray = importedCards.split('\n');
+
+    importedCardsArray = importedCardsArray.filter(card => card.trim() !== '');
+
+
+    importedCardsArray.forEach((importedCard) => {
+        // Split the string to get amount, name, set code, and collector number
+        const [amount, ...rest] = importedCard.trim().split(' ');
+
+        const collectorNumber = rest.pop();
+
+        const setCode = rest.pop();
+        const finalSetCode = setCode.slice(1, -1)
+
+        const cardName = rest.join(' ');
+
+        console.log("Amount:", amount);
+        console.log("Card Name:", cardName);
+        console.log("Set Code:", finalSetCode);
+        console.log("Collector Number:", collectorNumber);
+
+
+        const firstLetter = cardName.charAt(0).toLowerCase();
+
+        // Replace special characters in the card name to use as a key
+        const formattedCardName = cardName
+            .toLowerCase()
+            .replace(".", " ")
+            .replace("?", "_")
+            .replace("!", "_")
+            .replace("/", "-")
+            .replace("#", "-");
+
+        console.log("format name", formattedCardName)
+
+        const db = firebase.database();
+        const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${formattedCardName}`);
+
+        console.log("db loca", dbRef);
+
+        // Get the card data from Realtime Database
+        dbRef.once('value', (snapshot) => {
+            const cardData = snapshot.val();
+            if (cardData) {
+                console.log(cardData);
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    console.error('User not authenticated.');
+                    return;
+                }
+
+                // Reference to the Firestore collection
+                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+
+                // Add the card to the user's collection
+                userCardsRef.add({
+                    name: cardData.name,
+                    set_code: cardData.set_code,
+                    collector_number: cardData.collector_number,
+                    color_identity: cardData.color_identity,
+                    colors: cardData.colors,
+                    converted_mana_cost: cardData.converted_mana_cost,
+                    id: cardData.id,
+                    mana_cost: cardData.mana_cost,
+                    prices: cardData.prices,
+                    type_of_card: cardData.type_of_card
+                }).then((docRef) => {
+                    console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
+                }).catch((error) => {
+                    console.error('Error adding card to Firestore:', error);
+                });
+            } else {
+                console.error(`Card "${cardName}" not found in the Realtime Database.`);
+            }
+        });
+    });
+}
+
+
+
 $(document).ready(function() {
 
     var clickedCardNames = [];
@@ -800,8 +891,8 @@ $(document).ready(function() {
             document.dispatchEvent(new CustomEvent('displayCardImage', { detail: null }));
         });
     }
-    
-    
+
+
     
     // Listen for the custom event 'displayCardImage'
     document.addEventListener('displayCardImage', function(event) {

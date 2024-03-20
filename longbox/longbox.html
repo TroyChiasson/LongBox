@@ -54,6 +54,13 @@
         <div class="columns">
             <div class="column.main">
                 <div id="cardListSection">
+                    <div id="importCardList">
+                        <button onclick="showImportListPopup()">Import</button>
+                        <div id="importListPopup" style="display: none;">
+                            <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
+                            <button onclick="processCardList()">Enter</button>
+                        </div>
+                    </div>
                     <div id="cardImagePopup" class="card-image-popup">
                         <img id="cardImagePopupContent" src="" alt="Card Image">
                     </div>
@@ -167,6 +174,7 @@
                 // Event listener for the card names in the card list
 
         });
+       
     </script>
 </body>
 </html>
