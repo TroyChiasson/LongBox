@@ -721,7 +721,7 @@ function processCardList() {
         const collectorNumber = rest.pop();
 
         const setCode = rest.pop();
-        const finalSetCode = setCode.slice(1, -1)
+        const finalSetCode = setCode.slice(1, -1).toLowerCase()
 
         const cardName = rest.join(' ');
 
@@ -742,10 +742,25 @@ function processCardList() {
             .replace("/", "-")
             .replace("#", "-");
 
-        console.log("format name", formattedCardName)
+
+        const capitalizeFirstLetter = (string) => {
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+        };
+
+        // Convert selectedCardName to lowercase and capitalize each word except specified articles
+        const fixedName = formattedCardName
+            .toLowerCase()
+            .split(' ')
+            .map(word => {
+            const articles = ['a', 'the', 'and', 'of'];
+            return articles.includes(word) ? word : capitalizeFirstLetter(word);
+        })
+        .join(' ');
+
+        console.log("format name", fixedName)
 
         const db = firebase.database();
-        const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${formattedCardName}`);
+        const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${fixedName}/${finalSetCode}_${collectorNumber}`);
 
         console.log("db loca", dbRef);
 
@@ -760,11 +775,12 @@ function processCardList() {
                     return;
                 }
 
-                // Reference to the Firestore collection
-                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+                const dbF = firebase.firestore();
+                // Reference to the Firestore collection, it needed dbF because its different than db (rtdb)
+                const userCardsRef = dbF.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
 
-                // Add the card to the user's collection
                 userCardsRef.add({
                     name: cardData.name,
                     set_code: cardData.set_code,
