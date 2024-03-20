@@ -41,7 +41,7 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 function addCard(selectedCardName) {
-    // Validate input value
+
     if (!selectedCardName) {
         // alert("Please enter a card name.");
         return;
@@ -103,10 +103,10 @@ function addCard(selectedCardName) {
             const firstChildData = snapshot.child(firstChildKey).val();
             console.log("First Child Data:", firstChildData);
 
-            // Reference to Firestore
+    
             const db = firebase.firestore();
 
-            // Reference to the specific collection in Firestore
+            
             const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
             // Add the card to the user's collection
@@ -139,16 +139,16 @@ function addCard(selectedCardName) {
 
                 // Insert the card name as the second cell
                 const cardNameCell = newRow.insertCell(1);
-                cardNameCell.className = 'card-name'; // Add the 'card-name' class
-                cardNameCell.textContent = firstChildData.name; // Set the card name
+                cardNameCell.className = 'card-name';
+                cardNameCell.textContent = firstChildData.name;
 
-                // here to add details
+       
                 const cell2 = newRow.insertCell(2);
                 const cell3 = newRow.insertCell(3);
                 const cell4 = newRow.insertCell(4);
 
-                cell2.innerHTML = firstChildData.color_identity.join(', '); // Set the color identity
-                cell3.innerHTML = firstChildData.converted_mana_cost; // Set the converted mana cost
+                cell2.innerHTML = firstChildData.color_identity.join(', '); 
+                cell3.innerHTML = firstChildData.converted_mana_cost;
                 cell4.innerHTML = firstChildData.prices.usd_foil ? firstChildData.prices.usd_foil : firstChildData.prices.usd;
 
                 // Add event listener to the card name cell for the popup menu
@@ -167,7 +167,6 @@ function addCard(selectedCardName) {
             // alert('Failed to get card data.');
         });
 
-    // Call displayCardList function
 
 }
 
@@ -276,10 +275,9 @@ function addFolder() {
 
     const foldersRef = db.collection(`Users/${user.uid}/folders`);
 
-    // Create a new document with the folder name
     foldersRef.doc(folderName).set({})
         .then(() => {
-            // alert(`Folder '${folderName}' added successfully.`);
+
             
             // Add the folder name to the UI with a checkbox
             const folderItem = document.createElement('li');
@@ -395,10 +393,9 @@ function getFolderContents(folderName) {
             existingTable.remove();
         }
 
-        // Append the created table to the folderCardList
+
         folderCardList.appendChild(table);
 
-        // Now you can log the tbody to see the data
         console.log(tbody);
 
     }).catch((error) => {
@@ -455,7 +452,6 @@ function addToFolder(){
             })
             .then((docRef) => {
                 console.log("Card added to folder:", folderName, "Card Name:", cardName);
-                // You might want to update the UI to reflect the card being added to the folder
             })
             .catch(error => {
                 console.error('Error adding card to folder:', error);
@@ -501,7 +497,6 @@ function getCardsFromFirestore() {
             checkbox.type = 'checkbox';
             checkboxCell.appendChild(checkbox);
 
-            // Fill in the rest of the cells with card details
             const cell1 = newRow.insertCell(1);
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
@@ -531,20 +526,16 @@ function getFoldersFromFirestore() {
     foldersRef.get().then((querySnapshot) => {
         const folderList = document.getElementById('folderList');
 
-        // Clear existing folder list before populating again
         folderList.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
-            // Use the document ID as the folder name
+
             const folderName = doc.id.replace(/_/g, ' '); // Replace underscores with spaces
 
-            // Create a new list item for each folder
             const folderItem = document.createElement('li');
             folderItem.textContent = folderName;
 
-            // Add a click event listener to the folder item
             folderItem.addEventListener('click', () => {
-                // if folder clicked add functionality here
                 console.log(`Folder "${folderName}" clicked`);
                 displayFolderContents(folderName);
             });
@@ -656,7 +647,7 @@ function displayCardImagePopup(cardName, event) {
                 popupContent.src = imageUrl;
             }
 
-            // Position the popup
+
             var popup = document.getElementById('cardImagePopup');
             if (popup) {
                 // Set the position of the popup relative to the mouse position
@@ -675,10 +666,9 @@ function displayCardImagePopup(cardName, event) {
 // Function to get card image URL from Firebase Storage
 function getCardImageUrlFromStorage(cardName) {
     return new Promise((resolve, reject) => {
-        // Get the first letter of the card name
+ 
         var firstLetter = cardName.charAt(0).toLowerCase();
 
-        // Create a reference to the folder containing card images
         var storageRef = firebase.storage().ref();
         var folderRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName + '/');
 
@@ -689,13 +679,13 @@ function getCardImageUrlFromStorage(cardName) {
                 result.items[0].getDownloadURL().then(function(url) {
                     resolve(url); // Resolve with the image URL
                 }).catch(function(error) {
-                    reject(error); // Reject with the error
+                    reject(error); 
                 });
             } else {
                 reject(new Error('No images found for ' + cardName));
             }
         }).catch(function(error) {
-            reject(error); // Reject with the error
+            reject(error); 
         });
     });
 }
@@ -710,10 +700,9 @@ function hideCardImagePopup() {
 }
 
 $(document).ready(function() {
-    // Array to store clicked card names
+
     var clickedCardNames = [];
 
-    // Event listener for clicking on .card-name
     $(document).on('click', '.card-name', function(e) {
         e.stopPropagation();
 
@@ -722,14 +711,12 @@ $(document).ready(function() {
         var cardName = $(this).text().trim();
         console.log('Clicked Card Name:', cardName);
 
-        // Call the function to store the clicked card name
         storeClickedCardName(cardName);
     });
 
     $(document).on('click', '.buy-tcgplayer', function(e) {
         e.preventDefault();
 
-        // Get the stored card name
         var cardName = getLastClickedCardName();
         console.log('Buy on TCG Player:', cardName);
         buyOnTCG(cardName);
@@ -738,7 +725,6 @@ $(document).ready(function() {
     $(document).on('click', '.buy-cardkingdom', function(e) {
         e.preventDefault(); 
 
-        // Get the stored card name
         var cardName = getLastClickedCardName();
         console.log('Buy on Card Kingdom:', cardName);
         buyOnCardKingdom(cardName);
@@ -747,20 +733,19 @@ $(document).ready(function() {
     $(document).on('click', '.switch-collector', function(e) {
         e.preventDefault(); 
 
-        // Get the stored card name
         var cardName = getLastClickedCardName();
         console.log('Switch Collector Number:', cardName);
 
         switchCollector(cardName);
     });
 
-    // Function to store the clicked card name
+    // Function to store the clicked card name because its easier
     function storeClickedCardName(cardName) {
         clickedCardNames.push(cardName);
         console.log('Stored Card Names:', clickedCardNames);
     }
 
-    // Function to retrieve the last clicked card name
+    // Function to retrieve the last clicked card name because I couldn't figure out other way
     function getLastClickedCardName() {
         if (clickedCardNames.length > 0) {
             return clickedCardNames[clickedCardNames.length - 1];
@@ -769,21 +754,20 @@ $(document).ready(function() {
         }
     }
 
-    // Function to open TCGplayer search URL for the clicked card name
+    // TCGplayer search URL for the clicked card name
     function buyOnTCG(cardName) {
         const baseUrl = 'https://www.tcgplayer.com/search/all/product?q=';
         const url = `${baseUrl}${encodeURIComponent(cardName)}&view=grid`;
 
-        // Open the TCGplayer URL in a new tab to buy
         window.open(url, '_blank');
     }
 
-    // Function to open Card Kingdom search URL for the clicked card name
+    // Card Kingdom search URL for the clicked card name
     function buyOnCardKingdom(cardName) {
         const baseUrl = 'https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=';
         const url = `${baseUrl}${encodeURIComponent(cardName)}`;
 
-        // Open the Card Kingdom URL in a new tab to buy
+
         window.open(url, '_blank');
     }
 
