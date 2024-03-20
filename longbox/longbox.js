@@ -881,7 +881,6 @@ $(document).ready(function() {
     }
 
     function switchCollector(cardName) {
-
         function capitalizeFirstLetter(string) {
             return string.replace(/\b\w/g, function(char) {
                 return char.toUpperCase();
@@ -890,27 +889,80 @@ $(document).ready(function() {
     
         const firstLetter = cardName.toLowerCase().charAt(0);
         console.log(firstLetter);
-  
+    
         const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, '_'));
         console.log(folderName);
-        const folderPath = `mtg_names_images/${firstLetter}/${folderName}`;
     
- 
-        const storageRef = firebase.storage().ref(folderPath);
-
-        // RAHHHH WONT WORK RAHHH
-
-        storageRef.getDownloadURL().then(function(url) {
-            
-            document.dispatchEvent(new CustomEvent('displayCardImage', { detail: url }));
+        var storageRef = firebase.storage().ref();
+        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + folderName);
+    
+        // Fetch all the images in the folder
+        imagesRef.listAll().then(function(result) {
+            var urls = [];
+            result.items.forEach(function(itemRef) {
+                itemRef.getDownloadURL().then(function(url) {
+                    urls.push(url);
+                    if (urls.length === result.items.length) {
+                     
+                        displayImagesInTable(urls);
+                    }
+                }).catch(function(error) {
+                    console.error('Error getting download URL:', error);
+                });
+            });
         }).catch(function(error) {
-
-            console.error('Error getting download URL:', error);
-            document.dispatchEvent(new CustomEvent('displayCardImage', { detail: null }));
+            console.error('Error listing images:', error);
         });
     }
-
-
+    
+    function displayImagesInTable(imageUrls) {
+        var table = document.createElement('table');
+    
+        for (var i = 0; i < imageUrls.length; i += 3) {
+            var row = table.insertRow();
+            for (var j = i; j < i + 3 && j < imageUrls.length; j++) {
+                var cell = row.insertCell();
+                var image = document.createElement('img');
+                image.src = imageUrls[j];
+                image.style.width = '100px';
+                image.style.cursor = 'pointer';
+    
+                image.addEventListener('click', function() {
+                    // Get the image URL by splicing the string, could be better way
+                    var imageUrl = this.src;
+                
+                    var parts = imageUrl.split('%2F');
+                
+                    var imageName = parts[parts.length - 1];
+                
+                    var imageNameWithoutParams = imageName.split('?')[0];
+                   
+                    var setAndCollector = imageNameWithoutParams.split('.')[0];
+                    var set = setAndCollector.split('_')[1];
+                    var collectorNumber = setAndCollector.split('_')[2];
+                    
+                    console.log('Clicked on image:', imageUrl);
+                    console.log('Set Name:', set);
+                    console.log('Collector Number:', collectorNumber);
+    
+                    handleImageClick(set, collectorNumber);
+                    
+              
+                    table.parentNode.removeChild(table);
+                });
+    
+                cell.appendChild(image);
+            }
+        }
+    
+        document.body.appendChild(table);
+    }
+    
+    function handleImageClick(set, collectorNumber) {
+        console.log('Handling Image Click for Set:', set, 'and Collector Number:', collectorNumber);
+    }
+    
+    
     
     // Listen for the custom event 'displayCardImage'
     document.addEventListener('displayCardImage', function(event) {
@@ -918,16 +970,6 @@ $(document).ready(function() {
         displayCardImagePopup(cardName);
     });
 
-    
-
-    // Function to display the card name when an image is clicked
-    function showCardName(imageName) {
-        // Convert image name to card name (replace underscores with spaces)
-        const cardName = imageName.replace(/_/g, ' ');
-
-        // Show an alert with the card name
-        alert('Card Name: ' + cardName);
-    }
 });
 // Event listener for hovering over card name cells in cardList
 document.addEventListener('DOMContentLoaded', function() {

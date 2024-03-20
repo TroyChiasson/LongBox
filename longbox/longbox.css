@@ -10,6 +10,23 @@
     412A21
 */
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+}
+
 .card-options-menu {
     position: absolute;
     background: #fff;
