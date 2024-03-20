@@ -719,17 +719,14 @@ function processCardList() {
         const [amount, ...rest] = importedCard.trim().split(' ');
 
         const collectorNumber = rest.pop();
-
         const setCode = rest.pop();
-        const finalSetCode = setCode.slice(1, -1).toLowerCase()
-
+        const finalSetCode = setCode.slice(1, -1).toLowerCase();
         const cardName = rest.join(' ');
 
         console.log("Amount:", amount);
         console.log("Card Name:", cardName);
         console.log("Set Code:", finalSetCode);
         console.log("Collector Number:", collectorNumber);
-
 
         const firstLetter = cardName.charAt(0).toLowerCase();
 
@@ -742,22 +739,21 @@ function processCardList() {
             .replace("/", "-")
             .replace("#", "-");
 
-
         const capitalizeFirstLetter = (string) => {
             return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         };
 
-        // Convert selectedCardName to lowercase and capitalize each word except specified articles
+        // Convert selectedCardName to lowercase and capitalize each word except specified articles for pathing
         const fixedName = formattedCardName
             .toLowerCase()
             .split(' ')
             .map(word => {
-            const articles = ['a', 'the', 'and', 'of'];
-            return articles.includes(word) ? word : capitalizeFirstLetter(word);
-        })
-        .join(' ');
+                const articles = ['a', 'the', 'and', 'of']; 
+                return articles.includes(word) ? word : capitalizeFirstLetter(word);
+            })
+            .join(' ');
 
-        console.log("format name", fixedName)
+        console.log("format name", fixedName);
 
         const db = firebase.database();
         const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${fixedName}/${finalSetCode}_${collectorNumber}`);
@@ -775,34 +771,40 @@ function processCardList() {
                     return;
                 }
 
-
                 const dbF = firebase.firestore();
-                // Reference to the Firestore collection, it needed dbF because its different than db (rtdb)
+                // Reference to the Firestore collection
                 const userCardsRef = dbF.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-
-                userCardsRef.add({
+                // error handling before adding
+                const cardToAdd = {
                     name: cardData.name,
                     set_code: cardData.set_code,
                     collector_number: cardData.collector_number,
-                    color_identity: cardData.color_identity,
-                    colors: cardData.colors,
-                    converted_mana_cost: cardData.converted_mana_cost,
-                    id: cardData.id,
-                    mana_cost: cardData.mana_cost,
-                    prices: cardData.prices,
-                    type_of_card: cardData.type_of_card
-                }).then((docRef) => {
-                    console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
-                }).catch((error) => {
-                    console.error('Error adding card to Firestore:', error);
-                });
+                    color_identity: cardData.color_identity || null,
+                    colors: cardData.colors || null,
+                    converted_mana_cost: cardData.converted_mana_cost || null,
+                    id: cardData.id || null,
+                    mana_cost: cardData.mana_cost || null,
+                    prices: cardData.prices || null,
+                    type_of_card: cardData.type_of_card || null, 
+                
+                };
+
+                // Add the card to the user's collection
+                userCardsRef.add(cardToAdd)
+                    .then((docRef) => {
+                        console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
+                    })
+                    .catch((error) => {
+                        console.error('Error adding card to Firestore:', error);
+                    });
             } else {
                 console.error(`Card "${cardName}" not found in the Realtime Database.`);
             }
         });
     });
 }
+
 
 
 
