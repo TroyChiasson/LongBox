@@ -709,23 +709,28 @@ function hideCardImagePopup() {
     }
 }
 
-
 $(document).ready(function() {
+    // Array to store clicked card names
+    var clickedCardNames = [];
+
     // Event listener for clicking on .card-name
     $(document).on('click', '.card-name', function(e) {
         e.stopPropagation();
-
 
         $(this).closest('tr').find('.card-options-menu').toggle();
         
         var cardName = $(this).text().trim();
         console.log('Clicked Card Name:', cardName);
+
+        // Call the function to store the clicked card name
+        storeClickedCardName(cardName);
     });
 
     $(document).on('click', '.buy-tcgplayer', function(e) {
         e.preventDefault();
 
-        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        // Get the stored card name
+        var cardName = getLastClickedCardName();
         console.log('Buy on TCG Player:', cardName);
         buyOnTCG(cardName);
     });
@@ -733,50 +738,124 @@ $(document).ready(function() {
     $(document).on('click', '.buy-cardkingdom', function(e) {
         e.preventDefault(); 
 
-        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        // Get the stored card name
+        var cardName = getLastClickedCardName();
         console.log('Buy on Card Kingdom:', cardName);
+        buyOnCardKingdom(cardName);
     });
 
     $(document).on('click', '.switch-collector', function(e) {
         e.preventDefault(); 
 
-        var cardName = $(this).closest('tr').find('.card-name').text().trim();
+        // Get the stored card name
+        var cardName = getLastClickedCardName();
         console.log('Switch Collector Number:', cardName);
 
+        switchCollector(cardName);
     });
+
+    // Function to store the clicked card name
+    function storeClickedCardName(cardName) {
+        clickedCardNames.push(cardName);
+        console.log('Stored Card Names:', clickedCardNames);
+    }
+
+    // Function to retrieve the last clicked card name
+    function getLastClickedCardName() {
+        if (clickedCardNames.length > 0) {
+            return clickedCardNames[clickedCardNames.length - 1];
+        } else {
+            return null;
+        }
+    }
+
+    // Function to open TCGplayer search URL for the clicked card name
+    function buyOnTCG(cardName) {
+        const baseUrl = 'https://www.tcgplayer.com/search/all/product?q=';
+        const url = `${baseUrl}${encodeURIComponent(cardName)}&view=grid`;
+
+        // Open the TCGplayer URL in a new tab to buy
+        window.open(url, '_blank');
+    }
+
+    // Function to open Card Kingdom search URL for the clicked card name
+    function buyOnCardKingdom(cardName) {
+        const baseUrl = 'https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=';
+        const url = `${baseUrl}${encodeURIComponent(cardName)}`;
+
+        // Open the Card Kingdom URL in a new tab to buy
+        window.open(url, '_blank');
+    }
+
+    function switchCollector(cardName) {
+
+        function capitalizeFirstLetter(string) {
+            return string.replace(/\b\w/g, function(char) {
+                return char.toUpperCase();
+            });
+        }
+    
+        const firstLetter = cardName.toLowerCase().charAt(0);
+        console.log(firstLetter);
+  
+        const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, '_'));
+        console.log(folderName);
+        const folderPath = `mtg_names_images/${firstLetter}/${folderName}`;
+    
+ 
+        const storageRef = firebase.storage().ref(folderPath);
+
+        // RAHHHH WONT WORK RAHHH
+
+        storageRef.getDownloadURL().then(function(url) {
+            
+            document.dispatchEvent(new CustomEvent('displayCardImage', { detail: url }));
+        }).catch(function(error) {
+
+            console.error('Error getting download URL:', error);
+            document.dispatchEvent(new CustomEvent('displayCardImage', { detail: null }));
+        });
+    }
+    
+    
+    
+    // Listen for the custom event 'displayCardImage'
+    document.addEventListener('displayCardImage', function(event) {
+        const cardName = event.detail;
+        displayCardImagePopup(cardName);
+    });
+
+    
+
+    // Function to display the card name when an image is clicked
+    function showCardName(imageName) {
+        // Convert image name to card name (replace underscores with spaces)
+        const cardName = imageName.replace(/_/g, ' ');
+
+        // Show an alert with the card name
+        alert('Card Name: ' + cardName);
+    }
 });
-
-
-
-// Function to open TCGplayer search URL for the clicked card name
-function buyOnTCG(cardName) {
-    const baseUrl = 'https://www.tcgplayer.com/search/all/product?q=';
-    const url = `${baseUrl}${encodeURIComponent(cardName)}&view=grid`;
-
-    // Open the TCGplayer URL in a new tab to buy
-    window.open(url, '_blank');
-}
-
-function switchCollector(cardName) {
-    alert(cardName);
-}
-
-// Event listener for hovering over card name cells
+// Event listener for hovering over card name cells in cardList
 document.addEventListener('DOMContentLoaded', function() {
-    var table = document.getElementById('cardTable');
-    table.addEventListener('mouseover', function(event) {
-        var target = event.target;
+    const cardList = document.getElementById('cardList');
+
+    // Event listener on cardList for mouseover events
+    cardList.addEventListener('mouseover', function(event) {
+        const target = event.target;
+
+        // Check if the mouseover target is a 'td' element inside a 'tr' element
         if (target.tagName === 'TD' && target.parentNode.tagName === 'TR' && target.cellIndex === 1) {
-            var cardName = target.textContent.trim();
+            const cardName = target.textContent.trim();
             displayCardImagePopup(cardName, event);
         }
     });
 
-    table.addEventListener('mouseout', function(event) {
+    // Event listener on cardList for mouseout events
+    cardList.addEventListener('mouseout', function(event) {
         hideCardImagePopup();
     });
 });
-
 
 
 // Initialization Functions
