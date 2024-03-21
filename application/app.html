@@ -5,31 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTG Card Organizer</title>
     <link rel="shortcut icon" href="C:\Users\madel\Documents\Current Classes\Senior Capstone\LongBox-1\longbox\logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="longbox.css">
 </head>
-<body>    
-    <!-- Include jQuery from a CDN -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Include jQuery UI from a CDN -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
-
-    <!-- update the version number as needed -->
-    <script src="/node_modules/firebase/firebase-app.js"></script>
-    <script src="/node_modules/firebase/firebase-auth.js"></script>
-    <script src="/node_modules/firebase/firebase-firestore.js"></script>
-
-    <!-- Include your app.js script -->
-    <script type="module" defer src="app.js"></script>
-
+<body>
     <h1>ScrollRack</h1> <!-- Place the login link inside the header -->
     <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
     <h4>
         <nav>
             <ul>
-                <li><a href="app.html">Home</a></li>
+                <li><a href="longbox.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="folders.html">Folders</a></li>
-                <!-- need to make contact page -->
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>  
@@ -63,20 +49,8 @@
                             <th>Card Name</th>
                             <th>Collector's Number</th>
                             <th>Color</th>
-                            <th class="options-menu">
-                                <div class="options-button">Mana Cost</div>
-                                <div class="options-menu-content">
-                                    <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
-                                    <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
-                                </div>
-                            </th>
-                            <th class="options-menu">
-                                <div class="options-button">Price</div>
-                                <div class="options-menu-content">
-                                    <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
-                                    <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
-                                </div>
-                            </th>
+                            <th>Mana Cost</th>
+                            <th>Price</th>
                         </tr>
                     </thead>            
                     <tbody id="cardList">
@@ -96,6 +70,7 @@
             </div>
         </div>
     </div>
+    <script src="longbox.js"></script>
     <div class="login-form" id="loginForm">
         <h2>Login</h2>
         <input type="text" id="username" placeholder="Username">
@@ -103,45 +78,5 @@
         <button type="button" onclick="loginFormDisplay()">Login</button>
     </div>
     <footer>ScrollRack</footer>
-    <script>
-        // uses Jquery function/UI to display autosuggestions and pull from RTDB
-        // supposed to call automatically when the "cardName" field is selected
-        $(function() {
-            $("#cardName").autocomplete({
-                source: function(request, response) {
-                    // fit file structure
-                    var term = request.term.toLowerCase();
-                    // Ensure the input term has at least 1 character before querying the Realtime Database
-                    if (term.length >= 1) {
-                        var firstLetter = term.charAt(0).toLowerCase();
-                        // RTDB path, it knows URL by default from initializing
-                        var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
-                        dbRef.once('value', function(snapshot) {
-                            var suggestions = [];
-                            // snapshot grabs a pic of db and we iterate over the child snaps to get values for RTDB (Real time db)
-                            snapshot.forEach(function(childSnapshot) {
-                                var cardName = childSnapshot.key.toLowerCase();
-                                if (cardName.includes(term)) {
-                                    suggestions.push(cardName);
-                                }
-                            });
-                            // show top 10
-                            response(suggestions.slice(0, 10));
-                        }, function(error) {
-                            console.error("Error fetching card suggestions:", error);
-                            response([]);
-                        });
-                    } else {
-                        response([]);
-                    }
-                },
-                minLength: 1,
-                select: function(event, ui) {
-                    // Call addCard function with the selected card name
-                    addCard(ui.item.value); 
-                }
-            });
-        });
-    </script>
 </body>
 </html>

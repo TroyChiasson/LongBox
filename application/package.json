@@ -1,5 +1,5 @@
 {
-  "name": "ScrollRack",
+  "name": "scrollrack",
   "version": "1.0.0",
   "description": "Desktop application for ScrollRack MTG card organizer",
   "main": "main.js",
