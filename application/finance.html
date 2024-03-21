@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrollRack - Finance</title>
+    <link rel="stylesheet" href="longbox.css">
+    
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+
+    <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Include jQuery UI from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script defer src="finance.js"></script>
+
+    <h1>ScrollRack</h1>
+    <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+    <nav>
+        <ul>
+            <li><a href="longbox.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="download.html">Download</a></li>
+            <li><a href="finance.html">Finance</a></li>
+        </ul>
+    </nav>  
+
+    <div id="finance-description">
+        <p>This is the finance tab of our website, look at all the cool stuff it can do!</p>
+    </div>
+
+    <button id="sortHighestPrice">Sort by Highest Price</button>
+    <button id="sortLowestPrice">Sort by Lowest Price</button>
+    <button id="sortHighestPercentage">Sort by Highest Percentage</button>
+    <button id="sortLowestPercentage">Sort by Lowest Percentage</button>
+
+    <div class="finance-container">
+        <div class="finance-section">
+            <div class="finance-column winners">
+                <h2>Top 50 Winners</h2>
+                <div id="winnersListContainer" class="scrollable-table">
+                    <table id="winnersList" class="finance-table"></table>
+                </div>
+            </div>
+            <div class="finance-column losers">
+                <h2>Top 50 Losers</h2>
+                <div id="losersListContainer" class="scrollable-table">
+                    <table id="losersList" class="finance-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<footer>ScrollRack</footer>
+</html>
