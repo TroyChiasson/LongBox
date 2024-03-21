@@ -10,9 +10,26 @@
     412A21
 */
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+}
+
 .card-options-menu {
     position: absolute;
-    background: #fff;
+    background: #A47257;
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -36,16 +53,17 @@
 }
 
 .price-button {
-    background-color: #f1f1f1;
-    color: black;
+    background-color: #A47257;
+    color: #412A21;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .price-options-menu {
     position: absolute;
-    background-color: #fff;
+    background-color: #CFDBDF;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1;
     display: none;
@@ -83,7 +101,7 @@ h1 {
     background-color: #A47257;
     color: #412A21;
     margin: 0px;
-    padding-top: 25px;
+    padding-top: 30px;
     text-align: center;
     font-size: 350%;   
 }
@@ -146,6 +164,8 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 button:hover {
@@ -169,8 +189,9 @@ button:hover {
 footer {
     background-color: #A47257;
     color: #412A21;
-    padding: 10px;
+    padding: 14px;
     text-align: center;
+    font-size: 24px;
 }
 
 nav {
@@ -180,7 +201,7 @@ nav {
     text-align: center;
     word-spacing: 180px;
     padding-top: 10px;
-    padding-bottom: 0px;
+    padding-bottom: 1px;
     margin-top: 3px;
 }
 
@@ -213,39 +234,6 @@ nav a:hover {
     margin-bottom: 10px;
 }
 
-.login-form {
-    display: none;
-    background-color: #A47257;
-    color: #412A21;
-    padding: 20px;
-    border-radius: 5px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
-
-.login-form input[type="text"],
-.login-form input[type="password"] {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.login-form button {
-    background-color: #A47257;
-    color: #412A21;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.login-form button:hover{
-    background-color: #785440;
-}
-
 select#color {
     width: 200px;
     padding: 10px;
@@ -257,11 +245,11 @@ select#color {
     color: #412A21;
     text-decoration: underline;
     cursor: pointer;
-    font-size: 14px; /* Adjust the font size as needed */
+    font-size: 20px; /* Adjust the font size as needed */
 }
 
 .login-link:hover {
-    color: #7d43b6;
+    color: #785440;
 }
 
 input.error {
@@ -338,4 +326,95 @@ input.error {
 
 .options-menu:hover .options-menu-content {
     display: block;
+}
+
+.scrollable-table {
+    max-height: 500px; /* Adjust the height as here to fit page */
+    overflow-y: auto;
+}
+
+.finance-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.finance-table th,
+.finance-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.finance-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.finance-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    background-color: #CFDBDF;
+}
+
+.finance-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 1200px;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #A47257;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.finance-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.finance-column h2 {
+    text-align: center;
+}
+
+.finance-card {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.finance-card p {
+    margin: 5px 0;
+}
+
+.card-tooltip {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#about-section {
+    font-size: 150%;  
+    text-align: center;
+}
+
+#about-section a {
+    color: #004a04;
+    text-decoration: underline;
+}
+
+#download-section {
+    font-size: 150%;  
+    text-align: center;
+}
+
+#finance-description {
+    font-size: 150%;  
+    text-align: center;
 }
