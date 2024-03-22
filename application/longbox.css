@@ -1,0 +1,358 @@
+/* Color Palette
+    CFDBDF
+    B19B89
+    A47257
+    130906
+    642C1E
+    E0EAEE
+    602113
+    313B45
+    412A21
+*/
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+}
+
+.card-options-menu {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.card-options-menu a {
+    display: block;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.card-options-menu a:hover {
+    background: #f0f0f0;
+}
+
+.price-options {
+    position: relative;
+    display: inline-block;
+}
+
+.price-button {
+    background-color: #f1f1f1;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.price-options-menu {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+}
+
+.price-options-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.price-options-menu ul li {
+    padding: 5px;
+}
+
+.price-options-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.price-options-menu.show {
+    display: block;
+}
+
+body {
+    font-family: 'Magic', sans-serif;
+    background-color: #CFDBDF;
+    color: #412A21;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-family: 'Magic', sans-serif;
+    background-color: #A47257;
+    color: #412A21;
+    margin: 0px;
+    padding-top: 25px;
+    text-align: center;
+    font-size: 350%;   
+}
+
+h3 {
+    font-family: 'Magic', sans-serif;
+    background-color: #A47257;
+    color: #412A21;
+    margin: -20px;
+    margin-right: 25px;
+}
+
+h4 {
+    font-family: 'Magic', sans-serif;
+    background-color: #A47257;
+    color: #412A21;
+    padding: 0px;
+    margin-top: -0px;
+
+}
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+}
+  
+.column.main, .column.side {
+    flex: 1 1 50%;
+    padding: 0px;
+}  
+
+#cardTable input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .column.side, .column.main {
+        width: 100%;
+    }
+}
+
+#addCardSection, #cardListSection, #folderSection {
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #130906;
+    border-radius: 5px;
+}
+
+input[type=text], button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 200px;
+}
+
+button {
+    font-family: 'Magic', sans-serif;
+    background-color: #A47257;
+    color: #412A21;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #785440;
+}
+
+#cardTable th {
+    padding: 10px 20px;
+}
+
+#cardTable td {
+    padding: 5px 10px; 
+    text-align: left; 
+}
+
+@font-face {
+    font-family: 'Magic';
+    src: url('magic.TTF') format('truetype');
+}
+
+footer {
+    background-color: #A47257;
+    color: #412A21;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    position: center;
+    background-color: #A47257;
+    color: #412A21;
+    text-align: center;
+    word-spacing: 180px;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    margin-top: 3px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    /*margin-right: 20px;*/
+}
+
+nav a {
+    text-decoration: none;
+    color: #412A21;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+nav a:hover {
+    color: #785440; 
+}
+
+#folderList {
+    margin-top: 10px;
+}
+
+.folder-item {
+    margin-bottom: 10px;
+}
+
+.login-form {
+    display: none;
+    background-color: #A47257;
+    color: #412A21;
+    padding: 20px;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.login-form button {
+    background-color: #A47257;
+    color: #412A21;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.login-form button:hover{
+    background-color: #785440;
+}
+
+select#color {
+    width: 200px;
+    padding: 10px;
+}
+
+/* Style for the login link */
+.login-link {
+    float: right;
+    color: #412A21;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px; /* Adjust the font size as needed */
+}
+
+.login-link:hover {
+    color: #7d43b6;
+}
+
+input.error {
+    border: 2px solid red;
+}
+
+.card-image-popup {
+    position: absolute;
+    display: none;
+    z-index: 1000;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.card-image-popup img {
+    max-width: 200px;
+    max-height: 300px;
+}
+/*  styling for autocomplete suggestions */
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000; /* Ensure the suggestions appear on top so not white on white*/
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.ui-menu-item {
+    padding: 5px;
+    cursor: pointer;
+}
+.ui-menu-item:hover {
+    background-color: #f0f0f0; /* Background color for suggestions on hover */
+}
+
+/* Style for Price and Mana Cost options menu all subject to change just placeholder */
+.options-menu {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.options-button {
+    background-color: #f1f1f1;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+}
+
+.options-menu-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 80px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.options-menu-content a {
+    color: black;
+    padding: 5px;
+    display: block;
+    text-align: left;
+}
+
+.options-menu-content a:hover {
+    background-color: #f0f0f0;
+}
+
+.options-menu:hover .options-menu-content {
+    display: block;
+}
