@@ -894,8 +894,8 @@ $(document).ready(function() {
         //         });
         // }
         
-        // const firstLetter = cardName.toLowerCase().charAt(0);
-        // console.log(firstLetter);
+        const firstLetter = cardName.toLowerCase().charAt(0);
+        console.log(firstLetter);
         
         // const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, ' '));
         // console.log(folderName);
