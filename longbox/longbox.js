@@ -881,20 +881,31 @@ $(document).ready(function() {
     }
 
     function switchCollector(cardName) {
-        function capitalizeFirstLetter(string) {
-            return string.replace(/\b\w/g, function(char) {
-                return char.toUpperCase();
-            });
-        }
-    
-        const firstLetter = cardName.toLowerCase().charAt(0);
-        console.log(firstLetter);
-    
-        const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, '_'));
-        console.log(folderName);
-    
+        // function capitalizeFirstLetter(string) {
+        //     const articles = ['a', 'an', 'the'];
+        //     return string
+        //         .toLowerCase()
+        //         .replace(/\b\w/g, function(char, index) {
+        //             if (index === 0 || !articles.includes(char.toLowerCase())) {
+        //                 return char.toUpperCase();
+        //             } else {
+        //                 return char.toLowerCase();
+        //             }
+        //         });
+        // }
+        
+        // const firstLetter = cardName.toLowerCase().charAt(0);
+        // console.log(firstLetter);
+        
+        // const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, ' '));
+        // console.log(folderName);
+        
         var storageRef = firebase.storage().ref();
-        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + folderName);
+        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName);
+        
+        
+
+        console.log("folder locat", imagesRef);
     
         // Fetch all the images in the folder
         imagesRef.listAll().then(function(result) {
@@ -938,8 +949,8 @@ $(document).ready(function() {
                     var imageNameWithoutParams = imageName.split('?')[0];
                    
                     var setAndCollector = imageNameWithoutParams.split('.')[0];
-                    var set = setAndCollector.split('_')[1];
-                    var collectorNumber = setAndCollector.split('_')[2];
+                    var set = setAndCollector.split('_')[0];
+                    var collectorNumber = setAndCollector.split('_')[1];
                     
                     console.log('Clicked on image:', imageUrl);
                     console.log('Set Name:', set);
