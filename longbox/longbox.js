@@ -894,7 +894,7 @@ $(document).ready(function() {
         console.log(folderName);
     
         var storageRef = firebase.storage().ref();
-        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + folderName);
+        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName);
     
         // Fetch all the images in the folder
         imagesRef.listAll().then(function(result) {
