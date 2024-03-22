@@ -100,24 +100,27 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script defer src="finance.js"></script>
 
-    <div class="finance-container">
-        <div class="finance-section">
-            <div class="finance-column winners">
-                <h2>Top 50 Winners</h2>
-                <div id="winnersListContainer" class="scrollable-table">
-                    <table id="winnersList" class="finance-table"></table>
-                </div>
-            </div>
-            <div class="finance-column losers">
-                <h2>Top 50 Losers</h2>
-                <div id="losersListContainer" class="scrollable-table">
-                    <table id="losersList" class="finance-table"></table>
-                </div>
-            </div>
-        </div>
+
+    <h1>ScrollRack</h1>
+    <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+    <nav>
+        <ul>
+            <li><a href="longbox.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="download.html">Download</a></li>
+            <li><a href="finance.html">Finance</a></li>
+        </ul>
+    </nav>  
+
+    <div id="finance-description">
+        <p>This is the finance tab of our website, look at all the cool stuff it can do!</p>
     </div>
 
-    <h1>Finance Cards</h1>
+    <button id="sortHighestPrice">Sort by Highest Price</button>
+    <button id="sortLowestPrice">Sort by Lowest Price</button>
+    <button id="sortHighestPercentage">Sort by Highest Percentage</button>
+    <button id="sortLowestPercentage">Sort by Lowest Percentage</button>
+
     <h2>Top 50 Winners</h2>
     <table>
         <thead>
@@ -151,9 +154,7 @@
         </tbody>
     </table>
 <!-- these are low and need to be changed -->
-    <button id="sortHighestPrice">Sort by Highest Price</button>
-    <button id="sortLowestPrice">Sort by Lowest Price</button>
-    <button id="sortHighestPercentage">Sort by Highest Percentage</button>
-    <button id="sortLowestPercentage">Sort by Lowest Percentage</button>
+    
 </body>
+<footer>ScrollRack</footer>
 </html>
