@@ -1,6 +1,7 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
+
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -12,14 +13,9 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_APP_ID,
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-const provider = new firebase.auth.GoogleAuthProvider();
-const auth = firebase.auth();
 
-const db = firebase.firestore();
-const moviesCollection = db.collection("movies");
-const usersCollection = db.collection("users");
-
-export default db;
-export { moviesCollection, usersCollection, provider, auth, firebase };
+export default { db, app, auth };
