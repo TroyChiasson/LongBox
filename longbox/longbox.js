@@ -467,12 +467,10 @@ function addToFolder(){
 }
 
 
-// work in progress need persistence to work
 function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log('User not authenticated.');
-        // alert('User not authenticated.');
         return;
     }
 
@@ -480,16 +478,25 @@ function getCardsFromFirestore() {
     const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
     userCardsRef.get().then((querySnapshot) => {
-        const cardList = document.getElementById('cardList');
+        const cardTable = document.getElementById('cardTable'); // Use 'cardTable' instead of 'cardList'
+        if (!cardTable) {
+            console.log('Card table element not found.');
+            return;
+        }
 
-        // Clear existing card list before populating again
-        cardList.innerHTML = '';
+        const tbody = cardTable.querySelector('tbody');
+        if (!tbody) {
+            return;
+        }
+
+        // Clear existing rows from the table
+        tbody.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
 
             // Create a new row for each card
-            const newRow = cardList.insertRow();
+            const newRow = tbody.insertRow();
 
             // Create a checkbox in the first cell
             const checkboxCell = newRow.insertCell(0);
@@ -509,9 +516,9 @@ function getCardsFromFirestore() {
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
-        // alert('Failed to retrieve cards from Firestore.');
     });
 }
+
 
 function getFoldersFromFirestore() {
     const user = firebase.auth().currentUser;
@@ -713,7 +720,6 @@ function processCardList() {
 
     importedCardsArray = importedCardsArray.filter(card => card.trim() !== '');
 
-
     importedCardsArray.forEach((importedCard) => {
         // Split the string to get amount, name, set code, and collector number
         const [amount, ...rest] = importedCard.trim().split(' ');
@@ -748,7 +754,7 @@ function processCardList() {
             .toLowerCase()
             .split(' ')
             .map(word => {
-                const articles = ['a', 'the', 'and', 'of']; 
+                const articles = ['a', 'the', 'and', 'of'];
                 return articles.includes(word) ? word : capitalizeFirstLetter(word);
             })
             .join(' ');
@@ -786,8 +792,8 @@ function processCardList() {
                     id: cardData.id || null,
                     mana_cost: cardData.mana_cost || null,
                     prices: cardData.prices || null,
-                    type_of_card: cardData.type_of_card || null, 
-                
+                    type_of_card: cardData.type_of_card || null,
+
                 };
 
                 // Add the card to the user's collection
@@ -797,6 +803,10 @@ function processCardList() {
                     })
                     .catch((error) => {
                         console.error('Error adding card to Firestore:', error);
+                    })
+                    .finally(() => {
+                        // After all cards are processed and added, call getCardsFromFirestore()
+                        getCardsFromFirestore();
                     });
             } else {
                 console.error(`Card "${cardName}" not found in the Realtime Database.`);
@@ -804,6 +814,7 @@ function processCardList() {
         });
     });
 }
+
 
 
 
