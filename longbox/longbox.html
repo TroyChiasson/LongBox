@@ -110,10 +110,11 @@
                     <input type="text" id="folderName" placeholder="Folder Name">
                     <ul id="folderList" onclick="getFolderContents(event)"></ul>
                 </div>
+                <!-- Isnt quite working section -->
                 <div id="folderCardList" class="card-list">
-                    <!-- The cardTable will be appended here -->
+                    <!-- The scrollable list of cards should be here/end section might not need -->
                 </div>
-            </div>           
+            </div>
         </div>
         <div class="login-form" id="loginForm">
             <h2>Login</h2>
@@ -135,7 +136,7 @@
                     // Ensure the input term has at least 1 character before querying the Realtime Database
                     if (term.length >= 1) {
                         var firstLetter = term.charAt(0).toLowerCase();
-                        // RTDB path, it knows URL by default from initializing
+                        // RTDB path,
                         var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
                         dbRef.once('value', function(snapshot) {
                             var suggestions = [];
@@ -164,17 +165,16 @@
             });
 
             $(document).ready(function() {
-            // Click event for folder names to display folder contents
-            $("#folderList").on("click", "li", function(event) {
-                var folderName = $(event.currentTarget).text().trim();
-                getFolderContents(folderName);
+                $("#folderList").on("click", "li", function(event) {
+                    event.preventDefault(); // Prevent default behavior
+                    var folderName = $(event.currentTarget).text().trim();
+                    getFolderContents(folderName);
+                });
             });
-        });
+            
 
-                // Event listener for the card names in the card list
-
+            // Event listener for the card names in the card list
         });
-       
     </script>
 </body>
 </html>

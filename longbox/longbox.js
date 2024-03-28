@@ -353,18 +353,41 @@ function getFolderContents(folderName) {
 
     cardsRef.get().then((querySnapshot) => {
         const folderCardList = document.getElementById('folderCardList');
-        const table = document.getElementById('cardTable');
-        const tbody = table.querySelector('tbody');
+        const existingTable = document.getElementById('folderCardTable');
 
-        // Clear existing rows
-        tbody.innerHTML = '';
+        // Clear existing table if it exists
+        if (existingTable) {
+            existingTable.remove();
+        }
+
+        // Create a new table for the folder's cards
+        const table = document.createElement('table');
+        table.id = 'folderCardTable';
+        table.classList.add('card-table');
+
+        // Create table headers
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        const headers = ['Card Name', 'Color', 'Mana Cost', 'Price'];
+
+        headers.forEach(headerText => {
+            const header = document.createElement('th');
+            header.textContent = headerText;
+            headerRow.appendChild(header);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
 
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
             const cardName = cardData.name;
             const cardColor = cardData.color;
             const cardManaCost = cardData.converted_mana_cost;
-            const cardPrice = cardData.prices.usd_foil ? cardData.prices.usd_foil : cardData.prices.usd;
+            const cardPrice = cardData.prices.usd ? cardData.prices.usd_foil : cardData.prices.usd;
 
             const row = document.createElement('tr');
 
@@ -387,14 +410,15 @@ function getFolderContents(folderName) {
             tbody.appendChild(row);
         });
 
-        // Check if table already exists and remove it before appending the new one
-        const existingTable = folderCardList.querySelector('#cardTable');
-        if (existingTable) {
-            existingTable.remove();
-        }
-
-
+        table.appendChild(tbody); // Add body
         folderCardList.appendChild(table);
+
+        // Wrap the table in a div to make it scrollable
+        const tableWrapper = document.createElement('div');
+        tableWrapper.classList.add('table-wrapper');
+        tableWrapper.appendChild(table);
+
+        folderCardList.appendChild(tableWrapper);
 
         console.log(tbody);
 
@@ -402,6 +426,7 @@ function getFolderContents(folderName) {
         console.error("Error getting cards from folder:", error);
     });
 }
+
 
 
 
@@ -466,7 +491,7 @@ function addToFolder(){
     });
 }
 
-
+// maybe make this just take in a folde rname as paramter
 function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
     if (!user) {
@@ -505,6 +530,7 @@ function getCardsFromFirestore() {
             checkboxCell.appendChild(checkbox);
 
             const cell1 = newRow.insertCell(1);
+            cell1.className = 'card-name';
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
@@ -512,7 +538,12 @@ function getCardsFromFirestore() {
             cell1.innerHTML = cardData.name;
             cell2.innerHTML = cardData.colors;
             cell3.innerHTML = cardData.converted_mana_cost;
-            cell4.innerHTML = cardData.prices.usd_foil ? cardData.prices.usd_foil : cardData.prices.usd;
+            cell4.innerHTML = cardData.prices.usd ? cardData.prices.usd_foil : cardData.prices.usd;
+
+            cell1.addEventListener('click', function() {
+                showPopupMenu(cell1);
+            });
+            
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
@@ -627,6 +658,7 @@ function displaySortedCards(sortBy) {
             checkboxCell.appendChild(checkbox);
 
             const cell1 = newRow.insertCell(1);
+            cell1.className = 'card-name';
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);

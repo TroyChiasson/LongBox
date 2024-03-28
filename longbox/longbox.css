@@ -9,6 +9,24 @@
     313B45
     412A21
 */
+/* added for card table when clicking folder name */
+.card-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.card-table th,
+.card-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.card-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: left;
+}
 
 table {
     border-collapse: collapse;
