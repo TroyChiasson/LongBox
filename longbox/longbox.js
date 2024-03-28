@@ -531,6 +531,7 @@ function getCardsFromFirestore() {
 
             const cell1 = newRow.insertCell(1);
             cell1.className = 'card-name';
+            cell1.setAttribute('data-card-id', cardData.id);
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
@@ -543,7 +544,7 @@ function getCardsFromFirestore() {
             cell1.addEventListener('click', function() {
                 showPopupMenu(cell1);
             });
-            
+
         });
     }).catch((error) => {
         console.error("Error getting documents: ", error);
@@ -659,6 +660,7 @@ function displaySortedCards(sortBy) {
 
             const cell1 = newRow.insertCell(1);
             cell1.className = 'card-name';
+            cell1.setAttribute('data-card-id', cardData.id);
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
@@ -861,9 +863,11 @@ $(document).ready(function() {
         $(this).closest('tr').find('.card-options-menu').toggle();
         
         var cardName = $(this).text().trim();
+        var cardId = $(this).data('card-id');
         console.log('Clicked Card Name:', cardName);
+        console.log('Card ID:', cardId);
 
-        storeClickedCardName(cardName);
+        storeClickedCardInfo(cardName, cardId);
     });
 
     $(document).on('click', '.buy-tcgplayer', function(e) {
@@ -891,10 +895,13 @@ $(document).ready(function() {
         switchCollector(cardName);
     });
 
-    // Function to store the clicked card name because its easier
-    function storeClickedCardName(cardName) {
-        clickedCardNames.push(cardName);
-        console.log('Stored Card Names:', clickedCardNames);
+    function storeClickedCardInfo(cardName, cardId) {
+        const clickedCardInfo = {
+            name: cardName,
+            id: cardId
+        };
+        clickedCardNames.push(clickedCardInfo);
+        console.log('Stored Card Info:', clickedCardNames);
     }
 
     // Function to retrieve the last clicked card name because I couldn't figure out other way
@@ -906,7 +913,6 @@ $(document).ready(function() {
         }
     }
 
-    // TCGplayer search URL for the clicked card name
     function buyOnTCG(cardName) {
         const baseUrl = 'https://www.tcgplayer.com/search/all/product?q=';
         const url = `${baseUrl}${encodeURIComponent(cardName)}&view=grid`;
@@ -914,7 +920,6 @@ $(document).ready(function() {
         window.open(url, '_blank');
     }
 
-    // Card Kingdom search URL for the clicked card name
     function buyOnCardKingdom(cardName) {
         const baseUrl = 'https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=';
         const url = `${baseUrl}${encodeURIComponent(cardName)}`;
@@ -936,15 +941,17 @@ $(document).ready(function() {
         //             }
         //         });
         // }
-        
-        const firstLetter = cardName.toLowerCase().charAt(0);
+        console.log(cardName.name);
+        card = cardName.name
+        id = cardName.id
+        const firstLetter = card.toLowerCase().charAt(0);
         console.log(firstLetter);
         
         // const folderName = capitalizeFirstLetter(cardName.toLowerCase().replace(/\s/g, ' '));
         // console.log(folderName);
         
         var storageRef = firebase.storage().ref();
-        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName);
+        var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + card);
         
         
 
@@ -958,7 +965,7 @@ $(document).ready(function() {
                     urls.push(url);
                     if (urls.length === result.items.length) {
                      
-                        displayImagesInTable(urls);
+                        displayImagesInTable(urls,card);
                     }
                 }).catch(function(error) {
                     console.error('Error getting download URL:', error);
@@ -969,7 +976,7 @@ $(document).ready(function() {
         });
     }
     
-    function displayImagesInTable(imageUrls) {
+    function displayImagesInTable(imageUrls,card) {
         var table = document.createElement('table');
     
         for (var i = 0; i < imageUrls.length; i += 3) {
@@ -998,8 +1005,10 @@ $(document).ready(function() {
                     console.log('Clicked on image:', imageUrl);
                     console.log('Set Name:', set);
                     console.log('Collector Number:', collectorNumber);
+
+                   
     
-                    handleImageClick(set, collectorNumber);
+                    handleImageClick(card, set, collectorNumber);
                     
               
                     table.parentNode.removeChild(table);
@@ -1012,8 +1021,35 @@ $(document).ready(function() {
         document.body.appendChild(table);
     }
     
-    function handleImageClick(set, collectorNumber) {
+    function handleImageClick(card, set, collectorNumber) {
+
         console.log('Handling Image Click for Set:', set, 'and Collector Number:', collectorNumber);
+        console.log(card)
+        const db = firebase.firestore();
+        const user = firebase.auth().currentUser;
+        console.log(user.uid);
+        const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+        const query = userCardsRef.where('name', '==', card);
+        
+        query.get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // testing need to change to logic to update the card info slots and update image
+                const cardData = doc.data();
+                const cardId = doc.id;
+                
+                console.log('Card Name:', cardData.name);
+                console.log('Card ID:', cardId);
+        
+            });
+        
+            if (querySnapshot.empty) {
+                console.log('No card found with the name:', card);
+            }
+        }).catch((error) => {
+            console.error('Error searching for card:', error);
+        });
+        
     }
     
     
