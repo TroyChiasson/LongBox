@@ -235,7 +235,6 @@ function removeSelectedCards() {
 }
 
 
-// Folder Management Functions
 function addFolder() {
     const folderNameInput = document.getElementById('folderName');
     const folderName = folderNameInput.value.trim();
@@ -436,7 +435,6 @@ function addToFolder(){
     // may need to fix route
     const foldersRef = db.collection(`Users/${user.uid}/folders`);
 
-    // Loop through each selected folder checkbox, but need to fix it so they all have checkboxes
     folderCheckboxes.forEach(function(folderCheckbox) {
         const folderName = folderCheckbox.closest("tr").querySelector("td:nth-child(2)").textContent;
 
@@ -445,7 +443,7 @@ function addToFolder(){
         cardsChecked.forEach(function(cardChecked) {
             const cardName = cardChecked.closest("tr").querySelector("td:nth-child(2)").textContent;
 
-            // Reference to the specific collection in Firestore for cards in this folder
+            
             const folderCardsRef = folderDocRef.collection("cards");
 
             // need to maybe fix so that it grabs the info from the rtdb then inserts
@@ -462,7 +460,6 @@ function addToFolder(){
         });
     });
 
-    // Clear the checked cards after adding them to folders
     cardsChecked.forEach(function(cardChecked) {
         cardChecked.checked = false;
     });
@@ -650,14 +647,48 @@ function displaySortedCards(sortBy) {
     });
 }
 
+function getCardImageUrlFromStorage(cardName) {
+    const currentUser = firebase.auth().currentUser;
+    
+    if (currentUser) {
+        const uid = currentUser.uid;
 
-// maybe make it accept the folder name, would have to figure out how to pass that as a paramter
-// Function to display card image popup when row is hovered over card name
+        return new Promise((resolve, reject) => {
+            var userRef = firebase.firestore().collection("Users").doc(uid).collection("folders").doc("All_Cards").collection("cards");
+            
+            userRef.where("name", "==", cardName).get().then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const cardData = querySnapshot.docs[0].data();
+                    const set = cardData.set_code;
+                    const collectorNumber = cardData.collector_number;
+
+                    console.log(set);
+                    console.log(collectorNumber);
+
+                    var storageRef = firebase.storage().ref();
+                    var filePath = `mtg_names_images/${cardName.charAt(0).toLowerCase()}/${cardName}/${set}_${collectorNumber}.jpg`;
+                    var fileRef = storageRef.child(filePath);
+
+                    fileRef.getDownloadURL().then(function(url) {
+                        resolve(url); 
+                    }).catch(function(error) {
+                        reject(error); 
+                    });
+                } else {
+                    reject(new Error('No card found for ' + cardName));
+                }
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    } else {
+        return Promise.reject(new Error('No user is currently signed in.'));
+    }
+}
+
 function displayCardImagePopup(cardName, event) {
-    // Get the URL of the card image from Firebase Storage
     getCardImageUrlFromStorage(cardName)
         .then((imageUrl) => {
-            // Update the image in the popup container
             var popupContent = document.getElementById('cardImagePopupContent');
             if (imageUrl && popupContent) {
                 popupContent.src = imageUrl;
@@ -666,7 +697,7 @@ function displayCardImagePopup(cardName, event) {
 
             var popup = document.getElementById('cardImagePopup');
             if (popup) {
-                // Set the position of the popup relative to the mouse position
+                // position of the popup relative to the mouse position - could change
                 popup.style.top = (event.clientY + 10) + 'px';
                 popup.style.left = (event.clientX + 10) + 'px';
 
@@ -679,35 +710,8 @@ function displayCardImagePopup(cardName, event) {
         });
 }
 
-// Function to get card image URL from Firebase Storage
-function getCardImageUrlFromStorage(cardName) {
-    return new Promise((resolve, reject) => {
- 
-        var firstLetter = cardName.charAt(0).toLowerCase();
-
-        var storageRef = firebase.storage().ref();
-        var folderRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + cardName + '/');
-
-        // List all the items (files) in the folder
-        folderRef.listAll().then(function(result) {
-            if (result.items.length > 0) {
-                // Get the URL of the first image in the folder
-                result.items[0].getDownloadURL().then(function(url) {
-                    resolve(url); // Resolve with the image URL
-                }).catch(function(error) {
-                    reject(error); 
-                });
-            } else {
-                reject(new Error('No images found for ' + cardName));
-            }
-        }).catch(function(error) {
-            reject(error); 
-        });
-    });
-}
 
 
-// Function to hide the card image popup
 function hideCardImagePopup() {
     var popup = document.getElementById('cardImagePopup');
     if (popup) {
@@ -715,8 +719,6 @@ function hideCardImagePopup() {
     }
 }
 
-
-// Show the Import List Popup
 function showImportListPopup() {
     $("#importListPopup").toggle();
 }
@@ -724,7 +726,6 @@ function showImportListPopup() {
 function processCardList() {
     const importedCards = $("#importedList").val();
 
-    // Split the imported cards into an array by newline character
     let importedCardsArray = importedCards.split('\n');
 
     importedCardsArray = importedCardsArray.filter(card => card.trim() !== '');
@@ -745,7 +746,7 @@ function processCardList() {
 
         const firstLetter = cardName.charAt(0).toLowerCase();
 
-        // Replace special characters in the card name to use as a key
+        // Replace special characters 
         const formattedCardName = cardName
             .toLowerCase()
             .replace(".", " ")
@@ -879,7 +880,6 @@ $(document).ready(function() {
         console.log('Stored Card Info:', clickedCardNames);
     }
 
-    // Function to retrieve the last clicked card name because I couldn't figure out other way
     function getLastClickedCardName() {
         if (clickedCardNames.length > 0) {
             return clickedCardNames[clickedCardNames.length - 1];
@@ -1012,6 +1012,8 @@ $(document).ready(function() {
                     collector_number: collectorNumber 
                 }).then(() => {
                     console.log('Card info updated successfully.');
+                    // call to reload the pictures 
+                    getCardsFromFirestore();
                 }).catch((error) => {
                     console.error('Error updating card info:', error);
                 });
