@@ -1,11 +1,10 @@
 const winnersList = document.getElementById('winnersList');
 const losersList = document.getElementById('losersList');
 
-let currentTooltip = null; // Track the current tooltip
+let currentTooltip = null; 
 
-// Function to get and display top 50 winners and losers could be excessive
 function displayTopWinnersLosers(userId) {
-    // Check if the user is authenticated to double check, could be deleted unsure yet
+    
     if (!userId) {
         console.error("User is not authenticated.");
         return;
@@ -89,7 +88,6 @@ function displayTopWinnersLosers(userId) {
         cards.sort((a, b) => parseFloat(a.querySelector('td:nth-child(5)').textContent) - parseFloat(b.querySelector('td:nth-child(5)').textContent));
     }
 
-    // Event listener for highest price descending to filter
     document.getElementById('sortHighestPrice').addEventListener('click', () => {
         const winnerCards = Array.from(winnersList.children);
         const loserCards = Array.from(losersList.children);
@@ -99,7 +97,6 @@ function displayTopWinnersLosers(userId) {
         renderFinanceCards(loserCards, losersList);
     });
 
-    // Event listener for lowest price ascending to filter
     document.getElementById('sortLowestPrice').addEventListener('click', () => {
         const winnerCards = Array.from(winnersList.children);
         const loserCards = Array.from(losersList.children);
@@ -109,7 +106,6 @@ function displayTopWinnersLosers(userId) {
         renderFinanceCards(loserCards, losersList);
     });
 
-    // Event listener for highest percentage descending to filter
     document.getElementById('sortHighestPercentage').addEventListener('click', () => {
         const winnerCards = Array.from(winnersList.children);
         const loserCards = Array.from(losersList.children);
@@ -119,7 +115,6 @@ function displayTopWinnersLosers(userId) {
         renderFinanceCards(loserCards, losersList);
     });
 
-    // Event listener for lowest percentage ascending to filter
     document.getElementById('sortLowestPercentage').addEventListener('click', () => {
         const winnerCards = Array.from(winnersList.children);
         const loserCards = Array.from(losersList.children);
@@ -154,20 +149,20 @@ function displayTopWinnersLosers(userId) {
         });
     }
 
-    // Function to display card image on hover
+
     function displayCardImage(element, imagePath) {
         // make sure clear, doesn't seem to work
         hideCardImage();
 
-        // Create new tooltip to show image
+
         const tooltip = document.createElement('div');
         tooltip.classList.add('card-tooltip');
         
-        // Get the ref for image
+  
         const storageRef = firebase.storage().ref();
         const imageRef = storageRef.child(imagePath);
 
-        // Get the download URL built in function for the image
+  
         imageRef.getDownloadURL().then((url) => {
             const imgElement = document.createElement('img');
             imgElement.src = url;
@@ -189,7 +184,19 @@ function displayTopWinnersLosers(userId) {
     }
 }
 
-// Get the current user ID more for testing but could be useful later
+function displayPrices(cardName) {
+    
+    const url = `card-details.html?card=${encodeURIComponent(cardName)}`;
+
+    const newTab = window.open(url, '_blank');
+    if (newTab) {
+        newTab.focus();
+    } else {
+        alert('Please allow pop-ups for this site to view card details.');
+    }
+}
+
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         const userId = user.uid;

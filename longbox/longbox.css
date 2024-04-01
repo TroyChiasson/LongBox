@@ -9,7 +9,11 @@
     313B45
     412A21
 */
-/* added for card table when clicking folder name */
+/* added for card table when clicking folder name/ i don't think its needed as it wasn't working for me */
+.table-wrapper {
+    max-height: 300px; 
+    overflow-y: auto;
+}
 .card-table {
     width: 100%;
     border-collapse: collapse;
@@ -27,6 +31,7 @@
     font-weight: bold;
     text-align: left;
 }
+/* end of section i dont think we need */
 
 table {
     border-collapse: collapse;
