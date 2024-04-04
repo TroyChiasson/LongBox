@@ -3,6 +3,23 @@ const losersList = document.getElementById('losersList');
 
 let currentTooltip = null; 
 
+function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, collectorNumber, image) {
+    const row = document.createElement('tr');
+    row.setAttribute('id', `${cardName}-${collectorNumber}`);
+    row.setAttribute('data-image', image);
+
+    const rowData = `
+        <td class="card-name">${cardName} ${collectorNumber}</td>
+        <td>${set}</td>
+        <td>${oldPrice}</td>
+        <td>${newPrice}</td>
+        <td>${percentageChange}%</td>
+    `;
+
+    row.innerHTML = rowData;
+    return row;
+}
+
 function displayTopWinnersLosers(userId) {
     
     if (!userId) {
@@ -124,22 +141,7 @@ function displayTopWinnersLosers(userId) {
         renderFinanceCards(loserCards, losersList);
     });
 
-    function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, collectorNumber, image) {
-        const row = document.createElement('tr');
-        row.setAttribute('id', `${cardName}-${collectorNumber}`);
-        row.setAttribute('data-image', image);
 
-        const rowData = `
-            <td class="card-name">${cardName} ${collectorNumber}</td>
-            <td>${set}</td>
-            <td>${oldPrice}</td>
-            <td>${newPrice}</td>
-            <td>${percentageChange}%</td>
-        `;
-
-        row.innerHTML = rowData;
-        return row;
-    }
 
     // changes dynamically
     function renderFinanceCards(cards, list) {
@@ -196,6 +198,41 @@ function displayPrices(cardName) {
     }
 }
 
+function loadPersonalFinance() {
+    winnersList.innerHTML = '';
+    losersList.innerHTML = '';
+
+    const winnersHeader = document.querySelector('#winnersList').parentElement.previousElementSibling;
+    winnersHeader.textContent = "All Cards Folder";
+
+    const losersHeader = document.querySelector('#losersList').parentElement.previousElementSibling;
+    losersHeader.remove();
+
+    const losersTable = document.getElementById('losersList').parentElement;
+    losersTable.remove();
+
+
+    const userId = firebase.auth().currentUser.uid;
+    const personalFinanceRef = firebase.firestore().collection("Users").doc(userId).collection("folders").doc("All_Cards").collection("cards");;
+    console.log(personalFinanceRef);
+
+    personalFinanceRef.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log(data);
+            const { cardName, set, oldPrice, newPrice, percentageChange, collectorNumber, image } = data;
+            const prices = data.prices.usd ? data.prices.usd : data.prices.usd_foil
+            const card = createFinanceCard(data.name, data.set_code, prices, newPrice, percentageChange, data.collector_number, image);
+            winnersList.appendChild(card);
+        });
+    }).catch((error) => {
+        console.error("Error loading personal finance data:", error);
+    });
+}
+
+function reloadPage() {
+    location.reload();
+}
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
