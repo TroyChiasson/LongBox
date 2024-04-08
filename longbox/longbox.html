@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="longbox.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTG Card Organizer</title>
+    <title>ScrollRack - Home</title>
     <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="longbox.css">
+    <script src="longbox.js" defer></script>
+
+    <header class="site-header">
+        <h1>ScrollRack</h1>
+        <nav>
+            <ul>
+                <li><a href="longbox.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="finance.html">Finance</a></li>
+                <li><a href="index.html">Login</a></li> 
+            </ul>
+        </nav>
+    </header>
 </head>
 <body>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
@@ -31,19 +45,7 @@
     <script defer src="longbox.js"></script>
     <script src="longbox.js"></script>
 
-    <div class="container">
-        <h1>ScrollRack</h1>
-        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
-        <h4>
-            <nav>
-                <ul>
-                    <li><a href="longbox.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="download.html">Download</a></li>
-                    <li><a href="finance.html">Finance</a></li>
-                </ul>
-            </nav>  
-        </h4>           
+    <div class="container">            
         <div id="addCardSection">
             <h2>Add a New Card</h2>
             <form id="addCardForm" action="/addcard" method="post">
@@ -116,16 +118,8 @@
                 </div>
             </div>
         </div>
-        <div class="login-form" id="loginForm">
-            <h2>Login</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button type="button" onclick="loginFormDisplay()">Login</button>
-        </div>
+
     </div>
-    <footer>ScrollRack</footer>
-
-
     <script>
         // uses Jquery function/UI to display autosuggestions and pull from RTDB
         $(function() {
@@ -177,4 +171,8 @@
         });
     </script>
 </body>
+<footer>
+    <div>ScrollRack</div>
+    <div>Magic: The Gathering is a trademark and copyright of Wizards of the Coast, Inc, a subsidiary of Hasbro, Inc. All rights reserved. This site is unaffiliated with these entities.</div>
+</footer>
 </html>
