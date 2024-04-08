@@ -1,14 +1,4 @@
-/* Color Palette
-    CFDBDF
-    B19B89
-    A47257
-    130906
-    642C1E
-    E0EAEE
-    602113
-    313B45
-    412A21
-*/
+
 /* added for card table when clicking folder name/ i don't think its needed as it wasn't working for me */
 .table-wrapper {
     max-height: 300px; 
@@ -70,63 +60,53 @@ img {
     background: #f0f0f0;
 }
 
-.price-options {
-    position: relative;
-    display: inline-block;
-}
-
-.price-button {
-    background-color: #f1f1f1;
-    color: black;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.price-options-menu {
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    display: none;
-}
-
-.price-options-menu ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.price-options-menu ul li {
-    padding: 5px;
-}
-
-.price-options-menu ul li:hover {
-    background-color: #f0f0f0;
-}
-
-.price-options-menu.show {
-    display: block;
-}
-
 body {
     font-family: 'Magic', sans-serif;
-    background-color: #CFDBDF;
-    color: #412A21;
+    /* background: radial-gradient(circle, #5fab77, #7bdb99, #9336a1 65%); */
+    background-color: rgb(182, 182, 182);
+    color: black;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    padding: 70px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-h1 {
+.site-header {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 50px; 
+    width: 100%;
+    top: 0;
+    left: 0;
+    margin-left: 50px;
+    z-index: 1000;
+    box-sizing: border-box;
+    color:#000;
+    font-size: 35px;
+    /* background-color:#004a04; */
+}
+
+.site-header .title {
+    margin: 0; 
+    font-size: 200px; 
+}
+
+/* h1 {
     font-family: 'Magic', sans-serif;
-    background-color: #A47257;
-    color: #412A21;
+    background-color:#457e48;
+    color: black;
     margin: 0px;
     padding-top: 25px;
-    text-align: center;
+    padding-bottom: 25px;
+    text-align:left;
     font-size: 350%;   
-}
+} */
 
 h3 {
     font-family: 'Magic', sans-serif;
@@ -159,7 +139,6 @@ h4 {
     vertical-align: middle;
 }
 
-/* Responsive layout - makes the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .column.side, .column.main {
         width: 100%;
@@ -169,6 +148,7 @@ h4 {
 #addCardSection, #cardListSection, #folderSection {
     margin: 10px;
     padding: 20px;
+    /* background-color: #64af7c; */
     border: 1px solid #130906;
     border-radius: 5px;
 }
@@ -181,15 +161,15 @@ input[type=text], button {
 
 button {
     font-family: 'Magic', sans-serif;
-    background-color: #A47257;
-    color: #412A21;
+    background-color: #004a04;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #785440;
+    background-color: #002802;
 }
 
 #cardTable th {
@@ -207,42 +187,27 @@ button:hover {
 }
 
 footer {
-    background-color: #A47257;
-    color: #412A21;
+    background-color: #004a04;
+    color: white;
     padding: 10px;
     text-align: center;
-}
-
-nav {
-    position: center;
-    background-color: #A47257;
-    color: #412A21;
-    text-align: center;
-    word-spacing: 180px;
-    padding-top: 10px;
-    padding-bottom: 0px;
-    margin-top: 3px;
+    width: 120%;
 }
 
 nav ul {
+    display: flex;
     list-style-type: none;
     padding: 0;
+    margin: 0;
+    font-size: 80%;
 }
 
-nav li {
-    display: inline;
-    /*margin-right: 20px;*/
-}
-
-nav a {
-    text-decoration: none;
-    color: #412A21;
-    font-weight: bold;
-    font-size: 24px;
+nav ul li {
+    margin-left: 20px; 
 }
 
 nav a:hover {
-    color: #785440; 
+    color: #003002; 
 }
 
 #folderList {
@@ -253,59 +218,9 @@ nav a:hover {
     margin-bottom: 10px;
 }
 
-.login-form {
-    display: none;
-    background-color: #A47257;
-    color: #412A21;
-    padding: 20px;
-    border-radius: 5px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
-
-.login-form input[type="text"],
-.login-form input[type="password"] {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.login-form button {
-    background-color: #A47257;
-    color: #412A21;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.login-form button:hover{
-    background-color: #785440;
-}
-
 select#color {
     width: 200px;
     padding: 10px;
-}
-
-/* Style for the login link */
-.login-link {
-    float: right;
-    color: #412A21;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 14px; /* Adjust the font size as needed */
-}
-
-.login-link:hover {
-    color: #7d43b6;
-}
-
-input.error {
-    border: 2px solid red;
 }
 
 .card-image-popup {
@@ -322,11 +237,11 @@ input.error {
     max-width: 200px;
     max-height: 300px;
 }
-/*  styling for autocomplete suggestions */
+
 .ui-autocomplete {
     max-height: 200px;
     overflow-y: auto;
-    z-index: 1000; /* Ensure the suggestions appear on top so not white on white*/
+    z-index: 1000; 
     position: absolute;
     width: 100%;
     background-color: #fff;
@@ -339,10 +254,9 @@ input.error {
     cursor: pointer;
 }
 .ui-menu-item:hover {
-    background-color: #f0f0f0; /* Background color for suggestions on hover */
+    background-color: #f0f0f0;
 }
 
-/* Style for Price and Mana Cost options menu all subject to change just placeholder */
 .options-menu {
     position: relative;
     display: inline-block;
@@ -378,4 +292,92 @@ input.error {
 
 .options-menu:hover .options-menu-content {
     display: block;
+}
+.scrollable-table {
+    max-height: 500px; /* Adjust the height here to fit page */
+    overflow-y: auto;
+}
+
+.finance-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.finance-table th,
+.finance-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.finance-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.finance-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f2f2;
+}
+
+.finance-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 1200px;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.finance-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.finance-column h2 {
+    text-align: center;
+}
+
+.finance-card {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.finance-card p {
+    margin: 5px 0;
+}
+
+.card-tooltip {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#about-section {
+    text-align: center;
+}
+
+#about-section a {
+    color: #004a04;
+    text-decoration: underline;
+}
+
+#download-section {
+    text-align: center;
+}
+
+#download-section a {
+    color: #004a04;
+    text-decoration: underline;
 }
