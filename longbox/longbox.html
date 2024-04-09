@@ -4,82 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTG Card Organizer</title>
-    <link rel="shortcut icon" href="C:\Users\madel\Documents\Current Classes\Senior Capstone\LongBox-1\longbox\logo.jpg" type="image/jpeg">
+    <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="longbox.css">
-    <style>
-            /* CSS for the card image popup unsure if i can just put in .css*/
-        .card-image-popup {
-            position: absolute;
-            display: none;
-            z-index: 1000;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-image-popup img {
-            max-width: 200px;
-            max-height: 300px;
-        }
-        /*  styling for autocomplete suggestions */
-        .ui-autocomplete {
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000; /* Ensure the suggestions appear on top so not white on white*/
-            position: absolute;
-            width: 100%;
-            background-color: #fff;
-            color: #000;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .ui-menu-item {
-            padding: 5px;
-            cursor: pointer;
-        }
-        .ui-menu-item:hover {
-            background-color: #f0f0f0; /* Background color for suggestions on hover */
-        }
-
-        /* Style for Price and Mana Cost options menu all subject to change just placeholder */
-        .options-menu {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .options-button {
-            background-color: #f1f1f1;
-            color: black;
-            border: none;
-            padding: 5px 10px;
-        }
-
-        .options-menu-content {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            min-width: 80px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .options-menu-content a {
-            color: black;
-            padding: 5px;
-            display: block;
-            text-align: left;
-        }
-
-        .options-menu-content a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .options-menu:hover .options-menu-content {
-            display: block;
-        }
-    </style>
 </head>
 <body>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
@@ -103,6 +29,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <!-- Include your longbox.js script -->
     <script defer src="longbox.js"></script>
+    <script src="longbox.js"></script>
 
     <div class="container">
         <h1>ScrollRack</h1>
@@ -113,7 +40,7 @@
                     <li><a href="longbox.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="download.html">Download</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="finance.html">Finance</a></li>
                 </ul>
             </nav>  
         </h4>           
@@ -127,6 +54,13 @@
         <div class="columns">
             <div class="column.main">
                 <div id="cardListSection">
+                    <div id="importCardList">
+                        <button onclick="showImportListPopup()">Import</button>
+                        <div id="importListPopup" style="display: none;">
+                            <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
+                            <button onclick="processCardList()">Enter</button>
+                        </div>
+                    </div>
                     <div id="cardImagePopup" class="card-image-popup">
                         <img id="cardImagePopupContent" src="" alt="Card Image">
                     </div>
@@ -155,6 +89,11 @@
                         </thead>
                         <tbody id="cardList">
                             <tr>
+                                <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
+                                    <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
+                                    <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
+                                    <a href="#" class="switch-collector">Switch Collector Number</a>
+                                </div>
                                 <td>
                                 </td>                            
                             </tr>
@@ -169,7 +108,11 @@
                     <h2>Folders</h2>
                     <button onclick="addFolder()">Add Folder</button>
                     <input type="text" id="folderName" placeholder="Folder Name">
-                    <table id="folderList"></table>
+                    <ul id="folderList" onclick="getFolderContents(event)"></ul>
+                </div>
+                <!-- Isnt quite working section -->
+                <div id="folderCardList" class="card-list">
+                    <!-- The scrollable list of cards should be here/end section might not need -->
                 </div>
             </div>
         </div>
@@ -182,6 +125,7 @@
     </div>
     <footer>ScrollRack</footer>
 
+
     <script>
         // uses Jquery function/UI to display autosuggestions and pull from RTDB
         $(function() {
@@ -192,7 +136,7 @@
                     // Ensure the input term has at least 1 character before querying the Realtime Database
                     if (term.length >= 1) {
                         var firstLetter = term.charAt(0).toLowerCase();
-                        // RTDB path, it knows URL by default from initializing
+                        // RTDB path,
                         var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
                         dbRef.once('value', function(snapshot) {
                             var suggestions = [];
@@ -219,6 +163,17 @@
                     addCard(ui.item.value); 
                 }
             });
+
+            $(document).ready(function() {
+                $("#folderList").on("click", "li", function(event) {
+                    event.preventDefault(); // Prevent default behavior
+                    var folderName = $(event.currentTarget).text().trim();
+                    getFolderContents(folderName);
+                });
+            });
+            
+
+
         });
     </script>
 </body>
