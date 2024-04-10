@@ -176,6 +176,31 @@
         // Get reference to the login and signup forms
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
+        const resetForm = document.getElementById('reset-form');
+
+        // Function to handle reset form submission
+        function handleResetFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get user input
+            const email = document.getElementById('reset-email').value;
+
+            // send password reset email
+            firebase.auth().sendPasswordResetEmail(email)
+            .then(function() {
+                alert('Password reset email sent!');
+            })
+            .catch(function(error) {
+                // reset failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Password reset failed: ' + errorMessage);
+            });
+        }
+
+        // Add event listener for login form submission
+        resetForm.addEventListener('submit', handleResetFormSubmission);
+
 
         // Function to handle login form submission
         function handleLoginFormSubmission(event) {
