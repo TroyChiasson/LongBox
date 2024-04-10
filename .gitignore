@@ -5,4 +5,4 @@ electron.exe
 functions
 application/firebase.js
 node_modules
-
+firebase-debug.log
