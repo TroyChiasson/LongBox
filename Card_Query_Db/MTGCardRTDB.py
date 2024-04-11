@@ -25,7 +25,7 @@ color_mapping = {
 
 base_api_url = "https://api.scryfall.com/cards/search"
 
-def fetch_and_upload_cards():
+def fetch_and_upload_cards(batch_size=10):
     page = 1
 
     while True:
@@ -46,20 +46,26 @@ def fetch_and_upload_cards():
                 print(f"No more cards on page {page}.")
                 break
 
-            for card in cards_on_page:
-                # Check if the card has a flip side
-                if 'card_faces' in card:
-                    for face in card['card_faces']:
-                        print_extracted_data(face)
-                        upload_to_firestore(face)
-                else:
-                    print_extracted_data(card)
-                    upload_to_firestore(card)
+            # Batch processing
+            for i in range(0, len(cards_on_page), batch_size):
+                batch = cards_on_page[i:i + batch_size]
+                process_batch(batch)
 
             page += 1
         else:
             print(f"Error fetching cards. Status Code: {response.status_code}")
             break
+
+def process_batch(cards):
+    for card in cards:
+        # Check if the card has a flip side
+        if 'card_faces' in card:
+            for face in card['card_faces']:
+                print_extracted_data(face)
+                upload_to_firestore(face)
+        else:
+            print_extracted_data(card)
+            upload_to_firestore(card)
 
 def print_extracted_data(card):
     # This function prints the extracted data for debugging purposes

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Details</title>
+    <link rel="stylesheet" href="longbox.css">
+    <style>
+        .card-details {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+        .card-details img {
+            max-width: 150%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+
+    <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Include jQuery UI from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script defer src="card-details.js"></script>
+
+    <div class="container">
+        <h1>ScrollRack</h1>
+        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+        <h4>
+            <nav>
+                <ul>
+                    <li><a href="longbox.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="download.html">Download</a></li>
+                    <li><a href="finance.html">Finance</a></li>
+                </ul>
+            </nav>  
+        </h4>   
+
+        <div id="cardDetailsContainer">
+            <!-- Card details will be displayed here -->
+        </div>
+
+        <script>
+            $(document).ready(function() {
+
+                const urlParams = new URLSearchParams(window.location.search);
+                let cardName = urlParams.get('card');
+
+                if (cardName) {
+
+                    cardName = formatCardName(cardName);
+                    console.log("Formatted Card Name:", cardName);
+
+                    const firstLetter = cardName.charAt(0).toLowerCase();
+                    const dbPath = `mtg_names/${firstLetter}/cards/${cardName}`;
+                    console.log("Database Path:", dbPath);
+
+                    const dbRef = firebase.database().ref(dbPath);
+                    dbRef.once('value', function(snapshot) {
+                        const cardDetails = snapshot.val();
+                        if (cardDetails) {
+
+                            console.log(cardDetails)
+                            const cardDetailsContainer = $("#cardDetailsContainer");
+                            cardDetailsContainer.append(`<h2>${cardName}</h2>`);
+
+                            const cardDetailsList = [];
+
+                            Object.keys(cardDetails).forEach(index => {
+                                const card = cardDetails[index];
+                                if (card.collector_number && card.set_code && card.prices) {
+
+                                    const collectorNumber = card.collector_number;
+                                    const setCode = card.set_code;
+                                    const price = card.prices.usd ? card.prices.usd : card.prices.usd_foil;
+
+                                    const cardInfo = {
+                                        collectorNumber: collectorNumber,
+                                        setCode: setCode,
+                                        price: price
+                                    };
+
+                                    cardDetailsList.push(cardInfo);
+                                }
+                            });
+                            console.log(cardDetailsList)
+                            grabImages(dbPath, cardDetailsList)
+
+                            if (cardDetails.images && cardDetails.images.length > 0) {
+                                cardDetails.images.forEach(imageUrl => {
+                                    cardDetailsContainer.append(`<img src="${imageUrl}" alt="${cardName}">`);
+                                });
+                            }
+
+                            if (cardDetails.prices && cardDetails.prices.length > 0) {
+                                cardDetailsContainer.append("<h3>Prices:</h3>");
+                                const pricesList = $("<ul>");
+                                cardDetails.prices.forEach(price => {
+                                    pricesList.append(`<li>${price}</li>`);
+                                });
+                                cardDetailsContainer.append(pricesList);
+                            }
+                        } else {
+                            cardDetailsContainer.append("<p>Card details not found.</p>");
+                        }
+                    }, function(error) {
+                        console.error("Error fetching card details:", error);
+                        $("#cardDetailsContainer").append("<p>Error fetching card details.</p>");
+                    });
+                } else {
+                    $("#cardDetailsContainer").append("<p>No card selected.</p>");
+                }
+            });
+
+            function formatCardName(cardName) {
+                const articleWords = ["a", "an", "the", "of", "and", "but", "or", "for", "nor", "on", "at", "to", "from", "by"];
+
+                const words = cardName.toLowerCase().split(" ");
+
+                for (let i = 0; i < words.length; i++) {
+                    if (!articleWords.includes(words[i]) || i === 0) {
+                        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                    }
+                }
+
+                return words.join(" ");
+            }
+
+            function grabImages(dbPath, cardDetailsList) {
+
+                const imagePath = dbPath.replace("/cards/", "/");
+                const imageP = imagePath.replace("mtg_names", "mtg_names_images");
+                console.log("Image Path:", imageP);
+
+                console.log("Card Details List:", cardDetailsList);
+
+                const storage = firebase.storage();
+                const storageRef = storage.ref();
+
+                cardDetailsList.forEach(cardDetails => {
+                    const setName = cardDetails.setCode;
+                    const collectorNumber = cardDetails.collectorNumber;
+                    const price = cardDetails.price;
+                    const setCode = cardDetails.setCode;
+
+                    console.log("Set Name:", setName);
+                    console.log("Collector Number:", collectorNumber);
+                    console.log("Price:", price);
+                    console.log("Set Code:", setCode);
+
+                    const imageUrl = `${imageP}/${setName}_${collectorNumber}.jpg`;
+
+                    const imageRef = storageRef.child(imageUrl);
+
+                    imageRef.getDownloadURL().then(url => {
+                        const cardElement = `
+                            <div class="card-details">
+                                <img src="${url}" alt="${setName} - ${collectorNumber}">
+                                <div class="price-section">
+                                    <p>Price: ${price}</p>
+                                    <p>Set Code: ${setCode}</p> <!-- Include set code here -->
+                                </div>
+                            </div>`;
+                        
+                        $("#cardDetailsContainer").append(cardElement);
+                    }).catch(error => {
+                        console.error("Error fetching image:", error);
+                        $("#cardDetailsContainer").append(`<p>Error fetching image for ${setName} - ${collectorNumber}</p>`);
+                    });
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>

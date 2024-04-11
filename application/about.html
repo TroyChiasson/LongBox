@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About</title>
-    <link rel="stylesheet" href="longbox.css">
+    <link rel="stylesheet" href="app.css">
     <style>
         #about-section {
             text-align: center;
@@ -18,10 +18,11 @@
     </style>
 </head>
 <body>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
     <h1>About ScrollRack</h1>
     <nav>
         <ul>
-            <li><a href="longbox.html">Home</a></li>
+            <li><a href="app.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="download.html">Download</a></li>
         </ul>
@@ -32,5 +33,125 @@
         <p>For more details on the development of ScrollRack, check out our GitHub repository:</p>
         <a href="https://github.com/TroyChiasson/LongBox" target="_blank">ScrollRack GitHub Repository</a>
     </div>
+    <button onclick="showLoginForm()">Log In</button>
+    <button onclick="showSignupForm()">Sign Up</button>
+
+    <!-- Log In Form -->
+    <form id="login-form" style="display: none;">
+        <input type="email" id="login-email" placeholder="Email" required><br>
+        <input type="password" id="login-password" placeholder="Password" required><br>
+        <button type="submit">Log in</button>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signup-form" style="display: none;">
+        <input type="email" id="signup-email" placeholder="Email" required><br>
+        <input type="password" id="signup-password" placeholder="Password" required><br>
+        <button type="submit">Sign Up</button>
+    </form>
+
+    
+    <script>
+        function showLoginForm() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function showSignupForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+
+        // Get reference to the login and signup forms
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+
+        // Function to handle login form submission
+        function handleLoginFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get user input
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Sign in user with email and password
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                alert('Login successful! User ID: ' + user.uid);
+                // Redirect to longbox.html with user ID appended as a URL parameter
+                window.location.href = '/longbox.html?userId=' + user.uid;
+            })
+            .catch((error) => {
+                // Login failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Login failed: ' + errorMessage);
+            });
+        }
+
+        // Add event listener for login form submission
+        loginForm.addEventListener('submit', handleLoginFormSubmission);
+
+        // Check if email exists in local storage and autofill the email field
+        const storedEmail = localStorage.getItem('storedEmail');
+        if (storedEmail) {
+            document.getElementById('login-email').value = storedEmail;
+            // Check if there's a stored password for the email
+            const storedPassword = localStorage.getItem('storedPassword');
+            if (storedPassword) {
+                document.getElementById('login-password').value = storedPassword;
+            }
+        }
+
+        // Function to handle storing email and password in local storage
+        function storeCredentials() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            localStorage.setItem('storedEmail', email);
+            localStorage.setItem('storedPassword', password);
+        }
+
+        // Add event listener to the signup form to store email and password in local storage
+        signupForm.addEventListener('submit', storeCredentials);
+
+        function handleSignupFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get user input
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            // Create user with email and password
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                alert('User signed up successfully! User ID:', user.uid);
+
+                // Create a folder for the user in Firestore
+                const db = firebase.firestore();
+                const userFolderRef = db.collection('Users').doc(user.uid).collection('folders').doc('All_Cards');
+                userFolderRef.set({})
+                .then(() => {
+                    alert('Folder created successfully.');
+                    // Redirect to longbox.html with user ID appended as a URL parameter
+                    window.location.href = '/longbox.html?userId=' + user.uid;
+                })
+                .catch((error) => {
+                    alert('Error creating folder:', error);
+                    alert('Failed to create folder.');
+                });
+            })
+            .catch((error) => {
+                // Sign-up failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Sign-up failed: ' + errorMessage);
+            });
+        }
+
+        // Add event listener for signup form submission
+        signupForm.addEventListener('submit', handleSignupFormSubmission);
+    </script>
 </body>
 </html>
