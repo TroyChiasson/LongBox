@@ -234,6 +234,47 @@ function removeSelectedCards() {
     // alert('Selected card(s) removed successfully.');
 }
 
+function exportSelectedCards() {
+    const checkboxes = document.querySelectorAll("#cardList input[type='checkbox']:checked");
+
+    // Check if any card is selected
+    if (checkboxes.length === 0) {
+        alert('Please select at least one card to export.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+    // Check if user is authenticated
+    if (!user) {
+        alert('User not authenticated.');
+        return;
+    }
+    
+    //populate array with selected cards
+    var cardList = [];
+    checkboxes.forEach(checkbox => {
+        const cardName = checkbox.closest("tr").querySelector("td:nth-child(2)").textContent;
+        cardList.push(cardName);
+    });
+    exportCardsPopup(cardList);
+}
+
+function exportCardsPopup(cardList) {
+    sortedList = structuredClone(cardList).sort();
+    var count = 1;
+    var cardExport = "";
+    for (var i=0; i<sortedList.length; i++) {
+        if (sortedList[i] == sortedList[i+1]) {
+            count +=1;
+        } else {
+            cardExport += count + " " + sortedList[i] + "\n";
+            count = 1;
+        } 
+    }
+    alert('Copy/paste this list into a marketplace or deckbuilder of your choice!\n'+cardExport);
+}
+
 
 function addFolder() {
     const folderNameInput = document.getElementById('folderName');

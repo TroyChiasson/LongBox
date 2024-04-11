@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG Card Organizer</title>
+    <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="longbox.css">
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+
+    <script defer src="/__/firebase/10.8.0/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/10.8.0/firebase-performance-compat.js"></script>
+
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <!-- Include jQuery from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Include jQuery UI from a CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Include your longbox.js script -->
+    <script defer src="longbox.js"></script>
+    <script src="longbox.js"></script>
+
+    <div class="container">
+        <h1>ScrollRack</h1>
+        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
+        <h4>
+            <nav>
+                <ul>
+                    <li><a href="longbox.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="download.html">Download</a></li>
+                    <li><a href="finance.html">Finance</a></li>
+                </ul>
+            </nav>  
+        </h4>           
+        <div id="addCardSection">
+            <h2>Add a New Card</h2>
+            <form id="addCardForm" action="/addcard" method="post">
+                <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
+                <button type="button" onclick="addCard()">Add Card</button>
+            </form>
+        </div>
+        <div class="columns">
+            <div class="column.main">
+                <div id="cardListSection">
+                    <div id="importCardList">
+                        <button onclick="showImportListPopup()">Import</button>
+                        <div id="importListPopup" style="display: none;">
+                            <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
+                            <button onclick="processCardList()">Enter</button>
+                        </div>
+                    </div>
+                    <div id="cardImagePopup" class="card-image-popup">
+                        <img id="cardImagePopupContent" src="" alt="Card Image">
+                    </div>
+                    <h2>Card List</h2>
+                    <table id="cardTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Card Name</th>
+                                <th>Color</th>
+                                <th class="options-menu">
+                                    <div class="options-button">Mana Cost</div>
+                                    <div class="options-menu-content">
+                                        <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
+                                        <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
+                                    </div>
+                                </th>
+                                <th class="options-menu">
+                                    <div class="options-button">Price</div>
+                                    <div class="options-menu-content">
+                                        <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
+                                        <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="cardList">
+                            <tr>
+                                <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
+                                    <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
+                                    <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
+                                    <a href="#" class="switch-collector">Switch Collector Number</a>
+                                </div>
+                                <td>
+                                </td>                            
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+                    <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
+                </div>
+            </div>
+            <div class="column.side">
+                <div id="folderSection">
+                    <h2>Folders</h2>
+                    <button onclick="addFolder()">Add Folder</button>
+                    <input type="text" id="folderName" placeholder="Folder Name">
+                    <ul id="folderList" onclick="getFolderContents(event)"></ul>
+                </div>
+                <div id="folderCardList" class="card-list">
+                    <!-- The cardTable will be appended here -->
+                </div>
+            </div>           
+        </div>
+        <div class="login-form" id="loginForm">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button type="button" onclick="loginFormDisplay()">Login</button>
+        </div>
+    </div>
+    <footer>ScrollRack</footer>
+
+
+    <script>
+        // uses Jquery function/UI to display autosuggestions and pull from RTDB
+        $(function() {
+            $("#cardName").autocomplete({
+                source: function(request, response) {
+                    // fit file structure
+                    var term = request.term.toLowerCase();
+                    // Ensure the input term has at least 1 character before querying the Realtime Database
+                    if (term.length >= 1) {
+                        var firstLetter = term.charAt(0).toLowerCase();
+                        // RTDB path, it knows URL by default from initializing
+                        var dbRef = firebase.database().ref("mtg_names/" + firstLetter + "/cards");
+                        dbRef.once('value', function(snapshot) {
+                            var suggestions = [];
+                            // snapshot grabs a pic of db and we iterate over the child snaps to get values for RTDB (Real time db)
+                            snapshot.forEach(function(childSnapshot) {
+                                var cardName = childSnapshot.key.toLowerCase();
+                                if (cardName.includes(term)) {
+                                    suggestions.push(cardName);
+                                }
+                            });
+                            // show top 10
+                            response(suggestions.slice(0, 10));
+                        }, function(error) {
+                            console.error("Error fetching card suggestions:", error);
+                            response([]);
+                        });
+                    } else {
+                        response([]);
+                    }
+                },
+                minLength: 1,
+                select: function(event, ui) {
+                    // Call addCard function with the selected card name
+                    addCard(ui.item.value); 
+                }
+            });
+
+            $(document).ready(function() {
+            // Click event for folder names to display folder contents
+            $("#folderList").on("click", "li", function(event) {
+                var folderName = $(event.currentTarget).text().trim();
+                getFolderContents(folderName);
+            });
+        });
+
+                // Event listener for the card names in the card list
+
+        });
+       
+    </script>
+</body>
+</html>

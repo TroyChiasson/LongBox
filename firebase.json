@@ -19,13 +19,11 @@
     }
   ],
   "hosting": {
-    "public": "/longbox",
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/MainPage.html"
-      },
-      { "source": "/api/myFunction", "function": "add_card" }
+    "public": "longbox",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ]
   },
   "storage": {

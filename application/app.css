@@ -207,3 +207,75 @@ select#color {
 input.error {
     border: 2px solid red;
 }
+
+.card-image-popup {
+    position: absolute;
+    display: none;
+    z-index: 1000;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.card-image-popup img {
+    max-width: 200px;
+    max-height: 300px;
+}
+/*  styling for autocomplete suggestions */
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000; /* Ensure the suggestions appear on top so not white on white*/
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.ui-menu-item {
+    padding: 5px;
+    cursor: pointer;
+}
+.ui-menu-item:hover {
+    background-color: #f0f0f0; /* Background color for suggestions on hover */
+}
+
+/* Style for Price and Mana Cost options menu all subject to change just placeholder */
+.options-menu {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.options-button {
+    background-color: #f1f1f1;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+}
+
+.options-menu-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 80px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.options-menu-content a {
+    color: black;
+    padding: 5px;
+    display: block;
+    text-align: left;
+}
+
+.options-menu-content a:hover {
+    background-color: #f0f0f0;
+}
+
+.options-menu:hover .options-menu-content {
+    display: block;
+}

@@ -77,6 +77,18 @@
             font-family: 'Magic';
             src: url('magic.TTF') format('truetype');
         }
+
+        .reset-link {
+            float: right;
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px; /* Adjust the font size as needed */
+        }
+
+        .reset-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -114,24 +126,66 @@
             <input type="password" id="signup-password" placeholder="Password" required><br>
             <button type="submit">Sign Up</button>
         </form>
+
+        <!-- Reset Password Form -->
+        <form id="reset-form" style="display: none;">
+            <input type="email" id="reset-email" placeholder="Email" required><br>
+            <button type="submit">Reset</button>
+        </form>
     </div>
-
+    <div style="padding:10px;">
+        <footer>
+            <span class="reset-link" onclick="showResetPassword()">Forgot Password?</span>
+        </footer>
+    </div>
+    
     <script>
-
+        function showResetPassword() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('reset-form').style.display = 'block';
+        }
         
         function showLoginForm() {
             document.getElementById('login-form').style.display = 'block';
             document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('reset-form').style.display = 'none';
         }
 
         function showSignupForm() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'block';
+            document.getElementById('reset-form').style.display = 'none';
         }
 
         // Get reference to the login and signup forms
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
+        const resetForm = document.getElementById('reset-form');
+
+        // Function to handle reset form submission
+        function handleResetFormSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get user input
+            const email = document.getElementById('reset-email').value;
+
+            // send password reset email
+            firebase.auth().sendPasswordResetEmail(email)
+            .then(function() {
+                alert('Password reset email sent!');
+            })
+            .catch(function(error) {
+                // reset failed
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Password reset failed: ' + errorMessage);
+            });
+        }
+
+        // Add event listener for login form submission
+        resetForm.addEventListener('submit', handleResetFormSubmission);
+
 
         // Function to handle login form submission
         function handleLoginFormSubmission(event) {
