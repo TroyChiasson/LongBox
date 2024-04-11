@@ -1,4 +1,4 @@
-package com.example.scrollrackmobile.ui.slideshow;
+package com.example.scrollrackmobile.ui.myCollection;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.scrollrackmobile.databinding.FragmentSlideshowBinding;
+import com.example.scrollrackmobile.databinding.FragmentMycollectionBinding;
 
-public class SlideshowFragment extends Fragment {
+public class MyCollectionFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentMycollectionBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        MyCollectionViewModel galleryViewModel =
+                new ViewModelProvider(this).get(MyCollectionViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentMycollectionBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textGallery;
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

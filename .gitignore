@@ -7,5 +7,4 @@ node_modules
 application/node_modules
 application/firebase.js
 firebase-debug.log
-
 mobileApp/app/google-services.json
