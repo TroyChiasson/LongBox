@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
+    <title>ScrollRack - About</title>
     <link rel="stylesheet" href="longbox.css">
-    <style>
-        #about-section {
-            text-align: center;
-        }
+    <script src="longbox.js" defer></script>
 
-        /* Change the link color */
-        #about-section a {
-            color: #004a04;
-            text-decoration: underline;
-        }
-    </style>
+    <header class="site-header">
+        <h1>ScrollRack</h1>
+        <nav>
+            <ul>
+                <li><a href="longbox.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="finance.html">Finance</a></li>
+                <li><a href="index.html">Login</a></li> 
+            </ul>
+        </nav>
+    </header>
+
 </head>
 <body>
-    <h1>About ScrollRack</h1>
-    <nav>
-        <ul>
-            <li><a href="longbox.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="download.html">Download</a></li>
-        </ul>
-    </nav>  
     <div id="about-section">
         <p>Welcome to ScrollRack!</p>
         <p>ScrollRack is a desktop and web application for organizing and managing your Magic: The Gathering card collection.</p>
         <p>For more details on the development of ScrollRack, check out our GitHub repository:</p>
         <a href="https://github.com/TroyChiasson/LongBox" target="_blank">ScrollRack GitHub Repository</a>
     </div>
+
+    <div id="download-section">
+        <p>Click the link below to download the desktop application of our website:</p>
+        <a href="application.zip" download="application.zip">Download Desktop App</a>
+    </div>
 </body>
+<footer>
+    <div>ScrollRack</div>
+    <div>Magic: The Gathering is a trademark and copyright of Wizards of the Coast, Inc, a subsidiary of Hasbro, Inc. All rights reserved. This site is unaffiliated with these entities.</div>
+</footer>
 </html>
