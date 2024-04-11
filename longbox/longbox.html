@@ -53,70 +53,65 @@
                 <button type="button" onclick="addCard()">Add Card</button>
             </form>
         </div>
-        <div class="columns">
-            <div class="column.main">
-                <div id="cardListSection">
-                    <div id="importCardList">
-                        <button onclick="showImportListPopup()">Import</button>
-                        <div id="importListPopup" style="display: none;">
-                            <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
-                            <button onclick="processCardList()">Enter</button>
+        <div id="cardListSection">
+            <div id="importCardList">
+                <button onclick="showImportListPopup()">Import</button>
+                <div id="importListPopup" style="display: none;">
+                    <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
+                    <button onclick="processCardList()">Enter</button>
+                </div>
+            </div>
+            <div id="cardImagePopup" class="card-image-popup">
+                <img id="cardImagePopupContent" src="" alt="Card Image">
+            </div>
+            <h2>Card List</h2>
+            <table id="cardTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Card Name</th>
+                        <th>Color</th>
+                        <th class="options-menu">
+                            <div class="options-button">Mana Cost</div>
+                            <div class="options-menu-content">
+                                <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
+                                <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
+                            </div>
+                        </th>
+                        <th class="options-menu">
+                            <div class="options-button">Price</div>
+                            <div class="options-menu-content">
+                                <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
+                                <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="cardList">
+                    <tr>
+                        <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
+                            <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
+                            <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
+                            <a href="#" class="switch-collector">Switch Collector Number</a>
                         </div>
-                    </div>
-                    <div id="cardImagePopup" class="card-image-popup">
-                        <img id="cardImagePopupContent" src="" alt="Card Image">
-                    </div>
-                    <h2>Card List</h2>
-                    <table id="cardTable">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Card Name</th>
-                                <th>Color</th>
-                                <th class="options-menu">
-                                    <div class="options-button">Mana Cost</div>
-                                    <div class="options-menu-content">
-                                        <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
-                                        <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
-                                    </div>
-                                </th>
-                                <th class="options-menu">
-                                    <div class="options-button">Price</div>
-                                    <div class="options-menu-content">
-                                        <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
-                                        <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="cardList">
-                            <tr>
-                                <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
-                                    <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
-                                    <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
-                                    <a href="#" class="switch-collector">Switch Collector Number</a>
-                                </div>
-                                <td>
-                                </td>                            
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
-                    <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>
-                </div>
-            </div>
-            <div class="column.side">
-                <div id="folderSection">
-                    <h2>Folders</h2>
-                    <button onclick="addFolder()">Add Folder</button>
-                    <input type="text" id="folderName" placeholder="Folder Name">
-                    <ul id="folderList" onclick="getFolderContents(event)"></ul>
-                </div>
-                <!-- Isnt quite working section -->
-                <div id="folderCardList" class="card-list">
-                    <!-- The scrollable list of cards should be here/end section might not need -->
-                </div>
-            </div>
+                        <td>
+                        </td>                            
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="folderSection">
+            <h2>Folders</h2>
+            <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
+            <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>    
+            <button onclick="addFolder()">Create Folder</button>
+            <input type="text" id="folderName" placeholder="Folder Name">
+            <ul id="folderList" onclick="getFolderContents(event)"></ul>
+        </div>
+        <!-- Isnt quite working section -->
+        <div id="folderCardList" class="card-list">
+            <!-- The scrollable list of cards should be here/end section might not need -->
+        </div>
         </div>
 
     </div>
