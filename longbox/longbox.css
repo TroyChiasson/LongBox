@@ -88,7 +88,7 @@ body {
     box-sizing: border-box;
     color:#000;
     font-size: 35px;
-    background-color:#004a04;
+    background-color:#89BD9A;
 }
 
 .site-header .title {
@@ -149,7 +149,7 @@ h4 {
 #addCardSection, #cardListSection, #folderSection {
     margin: 10px;
     padding: 20px;
-    background-color: #004a04;
+    background-color: #89BD9A;
     /* border: 1px solid #000000; */
     border-radius: 5px;
 }
@@ -188,7 +188,7 @@ button:hover {
 }
 
 footer {
-    background-color: #004a04;
+    background-color: #89BD9A;
     color: white;
     padding: 10px;
     text-align: center;
