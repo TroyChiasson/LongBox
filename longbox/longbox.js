@@ -531,7 +531,6 @@ function getCardsFromFirestore() {
 
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
-            console.log(cardData);
 
             const newRow = tbody.insertRow();
 
@@ -892,16 +891,16 @@ $(document).ready(function() {
         e.preventDefault();
 
         var cardName = getLastClickedCardName();
-        console.log('Buy on TCG Player:', cardName);
-        buyOnTCG(cardName);
+        console.log('Buy on TCG Player:', cardName.name);
+        buyOnTCG(cardName.name);
     });
 
     $(document).on('click', '.buy-cardkingdom', function(e) {
         e.preventDefault(); 
 
         var cardName = getLastClickedCardName();
-        console.log('Buy on Card Kingdom:', cardName);
-        buyOnCardKingdom(cardName);
+        console.log('Buy on Card Kingdom:', cardName.name);
+        buyOnCardKingdom(cardName.name);
     });
 
     $(document).on('click', '.switch-collector', function(e) {
