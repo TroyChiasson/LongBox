@@ -53,7 +53,7 @@ function addCard(selectedCardName) {
         .toLowerCase()
         .split(' ')
         .map(word => {
-            const articles = ['a', 'the', 'and', 'of']; // Articles to keep lowercase
+            const articles = ['a', 'the', 'and', 'of']; 
             return articles.includes(word) ? word : capitalizeFirstLetter(word);
         })
         .join(' ');
@@ -81,17 +81,17 @@ function addCard(selectedCardName) {
         .child("cards")
         .child(cardName);
 
-    // Retrieve the first card data using snapshot from firebase
+
     cardRef.once('value')
         .then(snapshot => {
-            // Iterate through the children and select the first one
+  
             let firstChildKey;
             snapshot.forEach(childSnapshot => {
                 firstChildKey = childSnapshot.key;
-                return true; // Exit loop after the first child to simulate default card
+                return true; 
             });
 
-            // Get the data of the first child
+            // get first card data
             const firstChildData = snapshot.child(firstChildKey).val();
             console.log("First Child Data:", firstChildData);
 
@@ -101,7 +101,7 @@ function addCard(selectedCardName) {
             
             const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-            // Add the card to the user's collection
+  
             userCardsRef.add({
                 name: firstChildData.name,
                 set_code: firstChildData.set_code,
@@ -115,7 +115,7 @@ function addCard(selectedCardName) {
                 type_of_card: firstChildData.type_of_card
             })
             .then((docRef) => {
-                // alert("Card added successfully at: " + docRef.path);
+
 
                 const inputBox = document.getElementById('cardName');
                 inputBox.value = ''; // Clear the input box after successful addition
@@ -129,7 +129,7 @@ function addCard(selectedCardName) {
                 checkbox.type = 'checkbox';
                 checkboxCell.appendChild(checkbox);
 
-                // Insert the card name as the second cell
+   
                 const cardNameCell = newRow.insertCell(1);
                 cardNameCell.className = 'card-name';
                 cardNameCell.textContent = firstChildData.name;
@@ -167,7 +167,7 @@ function showPopupMenu(cardNameCell) {
     var $cardName = $(cardNameCell);
     var $popupMenu = $('#cardOptionsMenu');
 
-    // Position the popup menu next to the clicked card name
+    // put the popup menu next to the clicked card name
     var position = $cardName.position();
     $popupMenu.css({
         top: position.top + $cardName.outerHeight(),
@@ -299,8 +299,6 @@ function addFolder() {
     foldersRef.doc(folderName).set({})
         .then(() => {
 
-            
-            // Add the folder name to the UI with a checkbox
             const folderItem = document.createElement('li');
             folderItem.innerHTML = `
                 <input type="checkbox" id="${folderName}" class="folder-checkbox">
@@ -318,7 +316,7 @@ function addFolder() {
 
 function displayFolderContents(folderName) {
     folderName = String(folderName);
-    // Replace spaces with underscores in folderName
+    // make _ into " "
     const formattedFolderName = folderName.replace(/\s+/g, '_');
 
     console.log("Folder name clicked:", formattedFolderName);
@@ -427,10 +425,10 @@ function getFolderContents(folderName) {
             tbody.appendChild(row);
         });
 
-        table.appendChild(tbody); // Add body
+        table.appendChild(tbody);
         folderCardList.appendChild(table);
 
-        // Wrap the table in a div to make it scrollable
+        // wrap table in a div to make it scrollable
         const tableWrapper = document.createElement('div');
         tableWrapper.classList.add('table-wrapper');
         tableWrapper.appendChild(table);
@@ -529,16 +527,14 @@ function getCardsFromFirestore() {
             return;
         }
 
-        // Clear existing rows from the table
         tbody.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
+            console.log(cardData);
 
-            // Create a new row for each card
             const newRow = tbody.insertRow();
 
-            // Create a checkbox in the first cell
             const checkboxCell = newRow.insertCell(0);
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
@@ -554,15 +550,8 @@ function getCardsFromFirestore() {
             cell1.innerHTML = cardData.name;
             cell2.innerHTML = cardData.colors;
             cell3.innerHTML = cardData.converted_mana_cost;
-            if (cardData && cardData.prices) {
-                // Check if usd_foil exists, if not, default to usd
-                const price = cardData.prices.usd ? cardData.prices.usd : cardData.prices.usd_foil;
-                // Update the innerHTML of cell4 with the price
-                cell4.innerHTML = price;
-            } else {
-                // Handle the case where cardData or cardData.prices is null
-                console.error('Error: cardData or cardData.prices is null');
-            }
+            cell4.innerHTML = cardData.prices;
+
 
             cell1.addEventListener('click', function() {
                 showPopupMenu(cell1);
@@ -663,14 +652,14 @@ function displaySortedCards(sortBy) {
             sortedCards.push({ cardData, displayPrice });
         });
 
-        // Sort the cards by the display price
+    
         if (sortBy === 'highestPrice') {
             sortedCards.sort((a, b) => parseFloat(b.displayPrice) - parseFloat(a.displayPrice));
         } else if (sortBy === 'lowestPrice') {
             sortedCards.sort((a, b) => parseFloat(a.displayPrice) - parseFloat(b.displayPrice));
         }
 
-        // Display the sorted cards
+        
         sortedCards.forEach((card) => {
             console.log("here is card from display sorted")
             console.log(card);
@@ -784,7 +773,7 @@ function processCardList() {
     importedCardsArray = importedCardsArray.filter(card => card.trim() !== '');
 
     importedCardsArray.forEach((importedCard) => {
-        // Split the string to get amount, name, set code, and collector number
+        // split string
         const [amount, ...rest] = importedCard.trim().split(' ');
 
         const collectorNumber = rest.pop();
@@ -799,7 +788,7 @@ function processCardList() {
 
         const firstLetter = cardName.charAt(0).toLowerCase();
 
-        // Replace special characters 
+ 
         const formattedCardName = cardName
             .toLowerCase()
             .replace(".", " ")
@@ -812,7 +801,7 @@ function processCardList() {
             return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         };
 
-        // Convert selectedCardName to lowercase and capitalize each word except specified articles for pathing
+        
         const fixedName = formattedCardName
             .toLowerCase()
             .split(' ')
@@ -829,7 +818,7 @@ function processCardList() {
 
         console.log("db loca", dbRef);
 
-        // Get the card data from Realtime Database
+
         dbRef.once('value', (snapshot) => {
             const cardData = snapshot.val();
             if (cardData) {
@@ -859,7 +848,7 @@ function processCardList() {
 
                 };
 
-                // Add the card to the user's collection
+    
                 userCardsRef.add(cardToAdd)
                     .then((docRef) => {
                         console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
@@ -921,7 +910,7 @@ $(document).ready(function() {
         var cardName = getLastClickedCardName();
         console.log('Switch Collector Number:', cardName);
 
-        switchCollector(cardName);
+        switchCollector(cardName, e);
     });
 
     function storeClickedCardInfo(cardName, cardId) {
@@ -956,7 +945,7 @@ $(document).ready(function() {
         window.open(url, '_blank');
     }
 
-    function switchCollector(cardName) {
+    function switchCollector(cardName, event) {
 
         console.log(cardName.name);
         card = cardName.name
@@ -980,7 +969,7 @@ $(document).ready(function() {
                     urls.push(url);
                     if (urls.length === result.items.length) {
                      
-                        displayImagesInTable(urls,card);
+                        displayImagesInTable(urls,card, event);
                     }
                 }).catch(function(error) {
                     console.error('Error getting download URL:', error);
@@ -991,96 +980,144 @@ $(document).ready(function() {
         });
     }
     
-    function displayImagesInTable(imageUrls,card) {
+    function displayImagesInTable(imageUrls, card, event) {
+
         var table = document.createElement('table');
+        
+
+        var mouseX = event.clientX;
+        var mouseY = event.clientY;
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        var popupWidth = 320; 
+        var popupHeight = 150; 
+        var popupOffsetX = 20; 
+        var popupOffsetY = 20; 
+        var popupLeft = Math.min(mouseX + popupOffsetX, viewportWidth - popupWidth); 
+        var popupTop = Math.min(mouseY + popupOffsetY, viewportHeight - popupHeight); 
     
+
+        table.style.position = 'fixed';
+        table.style.left = popupLeft + 'px';
+        table.style.top = popupTop + 'px';
+        table.style.width = popupWidth + 'px';
+        table.style.height = popupHeight + 'px';
+        table.style.backgroundColor = '#f2f2f2'; 
+        table.style.padding = '10px'; 
+        table.style.borderRadius = '5px'; 
+        table.style.overflowY = 'auto';
+    
+    
+        var tbody = document.createElement('tbody');
+
         for (var i = 0; i < imageUrls.length; i += 3) {
-            var row = table.insertRow();
+            var row = tbody.insertRow();
             for (var j = i; j < i + 3 && j < imageUrls.length; j++) {
                 var cell = row.insertCell();
                 var image = document.createElement('img');
                 image.src = imageUrls[j];
                 image.style.width = '100px';
+                image.style.height = '150px'; 
+                image.style.margin = '5px'; 
                 image.style.cursor = 'pointer';
-    
+        
+            
                 image.addEventListener('click', function() {
-                    // Get the image URL by splicing the string, could be better way
-                    var imageUrl = this.src;
-                
-                    var parts = imageUrl.split('%2F');
-                
-                    var imageName = parts[parts.length - 1];
-                
-                    var imageNameWithoutParams = imageName.split('?')[0];
                    
+                    var imageUrl = this.src;
+                    var parts = imageUrl.split('%2F');
+                    var imageName = parts[parts.length - 1];
+                    var imageNameWithoutParams = imageName.split('?')[0];
                     var setAndCollector = imageNameWithoutParams.split('.')[0];
                     var set = setAndCollector.split('_')[0];
                     var collectorNumber = setAndCollector.split('_')[1];
-                    
+        
+                 
                     console.log('Clicked on image:', imageUrl);
                     console.log('Set Name:', set);
                     console.log('Collector Number:', collectorNumber);
-
-                   
-    
+        
+             
                     handleImageClick(card, set, collectorNumber);
-                    
+        
               
                     table.parentNode.removeChild(table);
                 });
-    
+        
+        
                 cell.appendChild(image);
             }
         }
     
+   
+        table.appendChild(tbody);
+    
+
         document.body.appendChild(table);
     }
     
+    
+    
+    
     function handleImageClick(card, set, collectorNumber) {
-
         console.log('Handling Image Click for Set:', set, 'and Collector Number:', collectorNumber);
-        console.log(card)
-        const db = firebase.firestore();
-        const user = firebase.auth().currentUser;
-        console.log(user.uid);
-        const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+        console.log(card);
+    
 
-        const query = userCardsRef.where('name', '==', card);
+        const firstLetter = card.toLowerCase().charAt(0);
+    
+
+        const cardRef = firebase.database().ref(`mtg_names/${firstLetter}/cards/${card}/${set}_${collectorNumber}`);
+    
+
+        cardRef.once('value').then((snapshot) => {
         
-        query.get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                // testing need to change to logic to update the card info slots and update image
-                const cardData = doc.data();
-                const cardId = doc.id;
-                const cardRef = userCardsRef.doc(doc.id);
+            const cardData = snapshot.val();
+    
+            if (cardData) {
+          
+                console.log('Card Data:', cardData);
+    
+          
+                const price = (cardData.prices && cardData.prices.usd) ? cardData.prices.usd : (cardData.prices && cardData.prices.usd_foil) ? cardData.prices.usd_foil : null;
+                console.log('Price:', price);
+    
+        
+                const db = firebase.firestore();
+                const user = firebase.auth().currentUser;
+                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+    
 
-                console.log(set);
-                console.log(collectorNumber);
+                userCardsRef.where('name', '==', card).get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const cardId = doc.id;
+                        const cardRef = userCardsRef.doc(cardId);
                 
-                console.log('Card Name:', cardData.name);
-                console.log('Card ID:', cardId);
+    
+                    
+                        cardRef.update({
+                            set_code: set,
+                            collector_number: collectorNumber,
+                            prices: price
+                        }).then(() => {
+                            console.log('Card info updated successfully.');
 
-                cardRef.update({
-                    set_code: set, 
-                    collector_number: collectorNumber 
-                }).then(() => {
-                    console.log('Card info updated successfully.');
-                    // call to reload the pictures 
-                    getCardsFromFirestore();
+                            getCardsFromFirestore();
+                        }).catch((error) => {
+                            console.error('Error updating card info:', error);
+                        });
+                    });
                 }).catch((error) => {
-                    console.error('Error updating card info:', error);
+                    console.error('Error searching for card:', error);
                 });
-        
-            });
-        
-            if (querySnapshot.empty) {
+            } else {
                 console.log('No card found with the name:', card);
             }
         }).catch((error) => {
-            console.error('Error searching for card:', error);
+            console.error('Error getting card data:', error);
         });
-        
     }
+    
     
     
     
@@ -1091,15 +1128,15 @@ $(document).ready(function() {
     });
 
 });
-// Event listener for hovering over card name cells in cardList
+// event listener for hovering over card name cells in cardList
 document.addEventListener('DOMContentLoaded', function() {
     const cardList = document.getElementById('cardList');
 
-    // Event listener on cardList for mouseover events
+    // event listener on cardList for mouseover events
     cardList.addEventListener('mouseover', function(event) {
         const target = event.target;
 
-        // Check if the mouseover target is a 'td' element inside a 'tr' element
+        // if the mouseover target is a 'td' element inside a 'tr' element
         if (target.tagName === 'TD' && target.parentNode.tagName === 'TR' && target.cellIndex === 1) {
             const cardName = target.textContent.trim();
             displayCardImagePopup(cardName, event);
@@ -1113,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// Initialization Functions
+// initialization Functions
 function initializeEventListeners() {
     const addButton = document.getElementById('addCardForm').querySelector('button');
     addButton.onclick = function() {
@@ -1127,7 +1164,7 @@ function initializeEventListeners() {
 
 
 
-// Call initialize function when the DOM is fully loaded
+// call initialize function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
 
 
