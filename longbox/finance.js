@@ -20,8 +20,13 @@ function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, 
     return row;
 }
 
+
+const popupContainer = document.createElement('div');
+popupContainer.classList.add('popup-container');
+document.body.appendChild(popupContainer);
+
+
 function displayTopWinnersLosers(userId) {
-    
     if (!userId) {
         console.error("User is not authenticated.");
         return;
@@ -30,9 +35,9 @@ function displayTopWinnersLosers(userId) {
     const winnersRef = firebase.database().ref('/Prices/Top50/Positive');
     const losersRef = firebase.database().ref('/Prices/Top50/Negative');
 
-    winnersRef.orderByChild('percentageChange').limitToLast(50).once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            const cardData = childSnapshot.val();
+    winnersRef.orderByChild('percentageChange').limitToLast(50).once('value', (winnersSnapshot) => {
+        winnersSnapshot.forEach((winnerSnapshot) => {
+            const cardData = winnerSnapshot.val();
             const cardName = cardData.card_name;
             const set = cardData.set_code;
             const collectorNumber = cardData.collector_number;
@@ -40,28 +45,30 @@ function displayTopWinnersLosers(userId) {
             const priceType = cardData.price_type;
             const percentageChange = cardData.percentage_change;
             const image = `mtg_names_images/${cardName.toLowerCase().charAt(0)}/${cardName}/${set}_${collectorNumber}.jpg`;
-            
+
             const oldPrice = (priceDiff / (percentageChange / 100)).toFixed(2);
             const newPrice = (parseFloat(oldPrice) + parseFloat(priceDiff)).toFixed(2);
 
             const winnerCard = createFinanceCard(cardName, set, oldPrice, newPrice, parseFloat(percentageChange).toFixed(2), collectorNumber, image);
             winnersList.appendChild(winnerCard);
 
-            // Add event listener for mouseover to show the image of the card
-            winnerCard.addEventListener('mouseover', () => {
-                displayCardImage(winnerCard, image);
+            winnerCard.addEventListener('mouseover', (event) => {
+                displayCardImage(winnerCard, image, event);
             });
 
-            // Add event listener for mouseout to delete old image
             winnerCard.addEventListener('mouseout', () => {
                 hideCardImage();
+            });
+
+            winnerCard.addEventListener('click', () => {
+                navigateToCardDetails(cardName);
             });
         });
     });
 
-    losersRef.orderByChild('percentageChange').limitToLast(50).once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            const cardData = childSnapshot.val();
+    losersRef.orderByChild('percentageChange').limitToLast(50).once('value', (losersSnapshot) => {
+        losersSnapshot.forEach((loserSnapshot) => {
+            const cardData = loserSnapshot.val();
             const cardName = cardData.card_name;
             const set = cardData.set_code;
             const collectorNumber = cardData.collector_number;
@@ -76,14 +83,19 @@ function displayTopWinnersLosers(userId) {
             const loserCard = createFinanceCard(cardName, set, oldPrice, newPrice, parseFloat(percentageChange).toFixed(2), collectorNumber, image);
             losersList.appendChild(loserCard);
 
-            // Add event listener for mouseover to show the card not quite working
-            loserCard.addEventListener('mouseover', () => {
-                displayCardImage(loserCard, image);
+            // Add event listener for mouseover to show the image of the card
+            loserCard.addEventListener('mouseover', (event) => {
+                displayCardImage(loserCard, image, event);
             });
 
             // Add event listener for mouseout to delete but kinda not working
             loserCard.addEventListener('mouseout', () => {
                 hideCardImage();
+            });
+
+            // Add event listener to navigate to card details page when clicked
+            loserCard.addEventListener('click', () => {
+                navigateToCardDetails(cardName);
             });
         });
     });
@@ -152,39 +164,68 @@ function displayTopWinnersLosers(userId) {
     }
 
 
-    function displayCardImage(element, imagePath) {
-        // make sure clear, doesn't seem to work
-        hideCardImage();
-
-
-        const tooltip = document.createElement('div');
-        tooltip.classList.add('card-tooltip');
-        
-  
+    function displayCardImage(element, imagePath, event) {
         const storageRef = firebase.storage().ref();
         const imageRef = storageRef.child(imagePath);
-
-  
+    
         imageRef.getDownloadURL().then((url) => {
             const imgElement = document.createElement('img');
             imgElement.src = url;
-            imgElement.style.width = "50%"; // size because original was far too large
-            tooltip.appendChild(imgElement);
-            element.appendChild(tooltip);
-            currentTooltip = tooltip;
+            imgElement.style.width = "70%"; 
+    
+            //  new container element for each card
+            const newPopupContainer = document.createElement('div');
+            newPopupContainer.classList.add('popup-container');
+            newPopupContainer.appendChild(imgElement);
+    
+            const mouseX = event.clientX + 10; 
+            const mouseY = event.clientY + 10 + window.scrollY; 
+            newPopupContainer.style.left = `${mouseX}px`;
+            newPopupContainer.style.top = `${mouseY}px`;
+    
+            // maybe look at for position
+            document.body.appendChild(newPopupContainer);
+    
+            if (currentTooltip) {
+                currentTooltip.style.display = "none";
+            }
+    
+            currentTooltip = newPopupContainer;
         }).catch((error) => {
             console.error("Error getting image URL:", error);
         });
     }
-
-    // mouse hover off should delete but it needs work
-    function hideCardImage() {
-        if (currentTooltip) {
-            currentTooltip.remove();
-            currentTooltip = null;
-        }
-    }
+    
+    
+function hideCardImage() {
+    popupContainer.innerHTML = ''; 
+    popupContainer.style.display = "none"; 
 }
+}
+
+// buggy something isnt working
+function updatePopupPosition(event) {
+    const containerWidth = popupContainer.offsetWidth;
+    const containerHeight = popupContainer.offsetHeight;
+    const mouseX = event.clientX + 10;
+    const mouseY = event.clientY + 10 + window.scrollY;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const maxTop = viewportHeight - containerHeight;
+    const maxLeft = viewportWidth - containerWidth;
+
+    popupContainer.style.left = `${Math.min(mouseX, maxLeft)}px`;
+
+    popupContainer.style.top = `${Math.min(mouseY, maxTop)}px`;
+}
+
+
+
+window.addEventListener('scroll', () => {
+    if (popupContainer.style.display === "block") {
+        updatePopupPosition(event); 
+    }
+});
 
 function displayPrices(cardName) {
     
@@ -233,6 +274,17 @@ function loadPersonalFinance() {
 function reloadPage() {
     location.reload();
 }
+
+function navigateToCardDetails(cardElement) {
+    console.log(cardElement);
+    const url = `card-details.html?card=${encodeURIComponent(cardElement)}`;
+    window.location.href = url;
+}
+
+// may need to change this as well
+document.addEventListener('mousemove', (event) => {
+    updatePopupPosition(event); 
+});
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {

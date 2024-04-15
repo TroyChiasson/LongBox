@@ -554,7 +554,15 @@ function getCardsFromFirestore() {
             cell1.innerHTML = cardData.name;
             cell2.innerHTML = cardData.colors;
             cell3.innerHTML = cardData.converted_mana_cost;
-            cell4.innerHTML = cardData.prices.usd ? cardData.prices.usd_foil : cardData.prices.usd;
+            if (cardData && cardData.prices) {
+                // Check if usd_foil exists, if not, default to usd
+                const price = cardData.prices.usd ? cardData.prices.usd : cardData.prices.usd_foil;
+                // Update the innerHTML of cell4 with the price
+                cell4.innerHTML = price;
+            } else {
+                // Handle the case where cardData or cardData.prices is null
+                console.error('Error: cardData or cardData.prices is null');
+            }
 
             cell1.addEventListener('click', function() {
                 showPopupMenu(cell1);
@@ -664,6 +672,10 @@ function displaySortedCards(sortBy) {
 
         // Display the sorted cards
         sortedCards.forEach((card) => {
+            console.log("here is card from display sorted")
+            console.log(card);
+
+            // fix the display sorted by making sure cardData.id is defined
             const newRow = tbody.insertRow();
 
             const checkboxCell = newRow.insertCell(0);
@@ -673,7 +685,7 @@ function displaySortedCards(sortBy) {
 
             const cell1 = newRow.insertCell(1);
             cell1.className = 'card-name';
-            cell1.setAttribute('data-card-id', cardData.id);
+            cell1.setAttribute('data-card-id', card.cardData.id);
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);

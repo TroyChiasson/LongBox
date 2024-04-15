@@ -6,15 +6,132 @@
     <title>Card Details</title>
     <link rel="stylesheet" href="longbox.css">
     <style>
-        .card-details {
-            display: inline-block;
-            width: 200px;
-            margin: 10px;
-            text-align: center;
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c7d5cc; /* Set background color to a mix of pastel green and gray */
+            color: #333;
+            line-height: 1.6;
+            padding: 20px; /* Added padding for better spacing */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px; /* Added rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #718d7f; /* Add a border bottom with a darker shade of green */
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #5d7d6c; /* Set title color to a darker shade of green */
+            text-transform: uppercase; /* Transform text to uppercase */
+            letter-spacing: 2px; /* Add letter spacing for a modern look */
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0; /* Removed default margin */
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #89BD9A; /* Set background color to pastel green */
+            transition: background-color 0.3s ease; /* Add transition for smooth color change */
+        }
+
+        nav ul li a:hover {
+            background-color: #5d8e73; /* Darker shade of green on hover */
+        }
+
+        .login-link {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #fff;
+            transition: color 0.3s ease; /* Add transition for smooth color change */
+        }
+
+        .login-link:hover {
+            color: #5d8e73; /* Change text color on hover */
+        }
+
+        /* Adjusted the card details layout */
+        .card-details {
+            width: calc(50% - 20px); /* 50% width minus margin for two cards per row */
+            max-width: 160px; /* Set a maximum width for each card container */
+            height: auto; /* Let the height adjust based on content */
+            position: relative; /* Establish positioning context */
+            background-color: #89BD9A; /* Set background color of cards to pastel green */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: inline-block; /* Display cards inline */
+            vertical-align: top; /* Align cards to the top of the container */
+        }
+
         .card-details img {
-            max-width: 150%;
-            height: auto;
+            width: 100%; /* Make image fill the card container */
+            height: auto; /* Maintain aspect ratio */
+            max-width: none; /* Remove max-width to allow the image to expand */
+            max-height: none; /* Remove max-height to allow the image to expand */
+            border-bottom: 30px solid transparent; /* Allocate space for price and set code */
+            border-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 100%); /* Create a transparent gradient border */
+            border-image-slice: 1; /* Ensure the border is sliced evenly */
+        }
+
+        .price-section {
+            position: absolute; /* Position the price section relative to the container */
+            bottom: 0; /* Align the price section to the bottom of the container */
+            left: 0; /* Align the price section to the left of the container */
+            width: 100%; /* Make price section fill the card container */
+            padding: 5px; /* Add padding for spacing */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for readability */
+        }
+
+        .price-section p {
+            margin-bottom: 5px;
+            font-size: 14px; /* Increased font size for better readability */
+            color: #555; /* Dimmed color for price section */
+        }
+
+        /* Accent color for pastel green */
+        a, button {
+            color: #FFF;
+            background-color: #89BD9A; /* Set pastel green color for links and buttons */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Add transition for smooth color change */
+        }
+
+        a:hover, button:hover {
+            background-color: #5D8E73; /* Darker shade of green on hover */
         }
     </style>
 </head>
@@ -41,9 +158,8 @@
     <script defer src="card-details.js"></script>
 
     <div class="container">
-        <h1>ScrollRack</h1>
-        <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>    
-        <h4>
+        <header>
+            <h1>ScrollRack</h1>
             <nav>
                 <ul>
                     <li><a href="longbox.html">Home</a></li>
@@ -51,9 +167,10 @@
                     <li><a href="download.html">Download</a></li>
                     <li><a href="finance.html">Finance</a></li>
                 </ul>
-            </nav>  
-        </h4>   
-
+            </nav>
+            <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>
+        </header>
+        
         <div id="cardDetailsContainer">
             <!-- Card details will be displayed here -->
         </div>
