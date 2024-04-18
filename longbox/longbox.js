@@ -314,49 +314,51 @@ function addFolder() {
         });
 }
 
-function displayFolderContents(folderName) {
-    folderName = String(folderName);
-    // make _ into " "
-    const formattedFolderName = folderName.replace(/\s+/g, '_');
+// function createCardElement(cardName, cardColor, folderCardList) {
+//     // Create elements
+//     const cardContainer = document.createElement("div");
+//     cardContainer.classList.add("card-details");
+//     const cardNameElement = document.createElement("h3");
+//     cardNameElement.textContent = cardName;
+//     const cardColorElement = document.createElement("p");
+//     cardColorElement.textContent = `Color: ${cardColor}`;
 
-    console.log("Folder name clicked:", formattedFolderName);
+//     // Append elements
+//     cardContainer.appendChild(cardNameElement);
+//     cardContainer.appendChild(cardColorElement);
+//     folderCardList.appendChild(cardContainer);
+// }
 
-    const user = firebase.auth().currentUser;
-    if (!user) {
-        console.log('User not authenticated.');
-        return;
-    }
+// function displayFolderContents(folderName) {
+//     folderName = String(folderName);
+//     const formattedFolderName = folderName.replace(/\s+/g, '_');
+//     console.log("Folder name clicked:", formattedFolderName);
 
-    const db = firebase.firestore();
-    const cardsRef = db.collection(`Users/${user.uid}/folders/${formattedFolderName}/cards`);
+//     const user = firebase.auth().currentUser;
+//     if (!user) {
+//         console.log('User not authenticated.');
+//         return;
+//     }
 
-    cardsRef.get().then((querySnapshot) => {
-        const cardList = $("#folderCardList");
+//     const db = firebase.firestore();
+//     const cardsRef = db.collection(`Users/${user.uid}/folders/${formattedFolderName}/cards`);
 
-        cardList.empty();
+//     cardsRef.get().then((querySnapshot) => {
+//         const cardList = document.getElementById("cardDetailsContainer");
+//         cardList.innerHTML = ""; 
 
-        querySnapshot.forEach((doc) => {
-            const cardData = doc.data();
-            const cardName = cardData.name;
-            const cardColor = cardData.color;
+//         querySnapshot.forEach((doc) => {
+//             const cardData = doc.data();
+//             const cardName = cardData.name;
+//             const cardColor = cardData.color;
+//             createCardElement(cardName, cardColor, cardList);
+//         });
 
-            const newRow = $("<tr>");
-            const checkboxCell = $("<td>").appendTo(newRow);
-            const checkbox = $("<input>").attr("type", "checkbox").attr("name", "selectedCard").val(doc.id);
-            checkbox.appendTo(checkboxCell);
-
-            $("<td>").text(cardName).appendTo(newRow);
-            $("<td>").text(cardColor).appendTo(newRow);
-
-            newRow.appendTo(cardList);
-        });
-
-        console.log("Cards retrieved successfully from folder:", formattedFolderName);
-    }).catch((error) => {
-        console.error("Error getting cards from folder:", formattedFolderName, error);
-    });
-}
-
+//         console.log("Cards retrieved successfully from folder:", formattedFolderName);
+//     }).catch((error) => {
+//         console.error("Error getting cards from folder:", formattedFolderName, error);
+//     });
+// }
 
 function getFolderContents(folderName) {
     const user = firebase.auth().currentUser;
@@ -402,7 +404,7 @@ function getFolderContents(folderName) {
             const cardName = cardData.name;
             const cardColor = cardData.color;
             const cardManaCost = cardData.converted_mana_cost;
-            const cardPrice = cardData.prices.usd ? cardData.prices.usd_foil : cardData.prices.usd;
+            const cardPrice = cardData.prices.usd ? cardData.prices.usd : cardData.prices.usd_foil;
 
             const row = document.createElement('tr');
 
@@ -504,6 +506,17 @@ function addToFolder(){
     });
 }
 
+function openFolderPage(folderName) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const url = `folder-details.html?folder=${encodeURIComponent(folderName)}&uid=${user.uid}`;
+    window.location.href = url;
+}
+
 // maybe make this just take in a folde rname as paramter
 function getCardsFromFirestore() {
     const user = firebase.auth().currentUser;
@@ -587,7 +600,7 @@ function getFoldersFromFirestore() {
 
             folderItem.addEventListener('click', () => {
                 console.log(`Folder "${folderName}" clicked`);
-                displayFolderContents(folderName);
+                openFolderPage(folderName);
             });
             folderList.appendChild(folderItem);
         });
