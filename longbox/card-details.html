@@ -6,7 +6,7 @@
     <title>Card Details</title>
     <link rel="stylesheet" href="longbox.css">
     <style>
-        /* Reset CSS */
+        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,18 +15,18 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #c7d5cc; /* Set background color to a mix of pastel green and gray */
+            background-color: #c7d5cc; 
             color: #333;
             line-height: 1.6;
-            padding: 20px; /* Added padding for better spacing */
+            padding: 20px; 
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            border-radius: 10px; /* Added rounded corners */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
+            border-radius: 10px; /* rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /*  box shadow for depth */
         }
 
         header {
@@ -34,14 +34,14 @@
             justify-content: space-between;
             align-items: center;
             padding-bottom: 20px;
-            border-bottom: 2px solid #718d7f; /* Add a border bottom with a darker shade of green */
+            border-bottom: 2px solid #718d7f; /* border bottom with a darker shade of green */
         }
 
         h1 {
             font-size: 36px;
-            color: #5d7d6c; /* Set title color to a darker shade of green */
-            text-transform: uppercase; /* Transform text to uppercase */
-            letter-spacing: 2px; /* Add letter spacing for a modern look */
+            color: #5d7d6c; /* title color to a darker shade of green */
+            text-transform: uppercase; /* transform text to uppercase */
+            letter-spacing: 2px; /* add letter spacing */
         }
 
         nav ul {
@@ -59,79 +59,79 @@
             color: #fff;
             padding: 10px 20px;
             border-radius: 5px;
-            background-color: #89BD9A; /* Set background color to pastel green */
-            transition: background-color 0.3s ease; /* Add transition for smooth color change */
+            background-color: #89BD9A; /*  background color to pastel green */
+            transition: background-color 0.3s ease; /*  transition for smooth color change */
         }
 
         nav ul li a:hover {
-            background-color: #5d8e73; /* Darker shade of green on hover */
+            background-color: #5d8e73; /*  shade of green on hover */
         }
 
         .login-link {
             cursor: pointer;
             text-decoration: underline;
             color: #fff;
-            transition: color 0.3s ease; /* Add transition for smooth color change */
+            transition: color 0.3s ease; /*  transition for smooth color change */
         }
 
         .login-link:hover {
-            color: #5d8e73; /* Change text color on hover */
+            color: #5d8e73; /*  text color on hover */
         }
 
-        /* Adjusted the card details layout */
+        /* adjusted the card details layout */
         .card-details {
-            width: calc(50% - 20px); /* 50% width minus margin for two cards per row */
-            max-width: 160px; /* Set a maximum width for each card container */
-            height: auto; /* Let the height adjust based on content */
-            position: relative; /* Establish positioning context */
-            background-color: #89BD9A; /* Set background color of cards to pastel green */
+            width: calc(50% - 20px);
+            max-width: 160px; 
+            height: auto; 
+            position: relative; 
+            background-color: #89BD9A; 
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            display: inline-block; /* Display cards inline */
-            vertical-align: top; /* Align cards to the top of the container */
+            display: inline-block;
+            vertical-align: top; 
         }
 
         .card-details img {
-            width: 100%; /* Make image fill the card container */
-            height: auto; /* Maintain aspect ratio */
-            max-width: none; /* Remove max-width to allow the image to expand */
-            max-height: none; /* Remove max-height to allow the image to expand */
-            border-bottom: 30px solid transparent; /* Allocate space for price and set code */
+            width: 100%; 
+            height: auto;
+            max-width: none; 
+            max-height: none; 
+            border-bottom: 30px solid transparent; 
             border-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 100%); /* Create a transparent gradient border */
-            border-image-slice: 1; /* Ensure the border is sliced evenly */
+            border-image-slice: 1; 
         }
 
         .price-section {
-            position: absolute; /* Position the price section relative to the container */
-            bottom: 0; /* Align the price section to the bottom of the container */
-            left: 0; /* Align the price section to the left of the container */
-            width: 100%; /* Make price section fill the card container */
-            padding: 5px; /* Add padding for spacing */
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for readability */
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            padding: 5px; 
+            background-color: rgba(255, 255, 255, 0.8); /* semi-transparent background for readability */
         }
 
         .price-section p {
             margin-bottom: 5px;
-            font-size: 14px; /* Increased font size for better readability */
-            color: #555; /* Dimmed color for price section */
+            font-size: 14px; /*  font size for better readability */
+            color: #555; /* dimmed color for price section */
         }
 
-        /* Accent color for pastel green */
+        /* accent color for pastel green */
         a, button {
             color: #FFF;
-            background-color: #89BD9A; /* Set pastel green color for links and buttons */
+            background-color: #89BD9A; /*  pastel green color for links and buttons */
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.3s ease; /* Add transition for smooth color change */
+            transition: background-color 0.3s ease; /* transition for smooth color change */
         }
 
         a:hover, button:hover {
-            background-color: #5D8E73; /* Darker shade of green on hover */
+            background-color: #5D8E73; /* darker shade of green on hover */
         }
     </style>
 </head>
