@@ -118,7 +118,7 @@ function addCard(selectedCardName) {
 
 
                 const inputBox = document.getElementById('cardName');
-                inputBox.value = ''; // Clear the input box after successful addition
+                inputBox.value = ''; 
 
                 const cardList = document.getElementById('cardList');
                 const newRow = cardList.insertRow();
@@ -163,15 +163,25 @@ function addCard(selectedCardName) {
 }
 
 
-function showPopupMenu(cardNameCell) {
+function showPopupMenu(cardNameCell, event) {
     var $cardName = $(cardNameCell);
     var $popupMenu = $('#cardOptionsMenu');
 
-    // put the popup menu next to the clicked card name
-    var position = $cardName.position();
+    var scrollY = window.scrollY;
+
+    var position = $cardName.offset();
+
+    var adjustedTop = position.top - scrollY + $cardName.outerHeight();
+
+    var clickX = event.clientX;
+    var clickY = event.clientY;
+
+    var topPosition = clickY + scrollY;
+    var leftPosition = clickX;
+
     $popupMenu.css({
-        top: position.top + $cardName.outerHeight(),
-        left: position.left
+        top: topPosition,
+        left: leftPosition
     });
 
     $popupMenu.fadeIn(200);
@@ -181,9 +191,9 @@ function showPopupMenu(cardNameCell) {
             $popupMenu.fadeOut(200);
         }
     });
-
     return false;
 }
+
 
 
 function removeSelectedCards() {
@@ -396,7 +406,6 @@ function getFolderContents(folderName) {
         thead.appendChild(headerRow);
         table.appendChild(thead);
 
-        // Create table body
         const tbody = document.createElement('tbody');
 
         querySnapshot.forEach((doc) => {
@@ -593,7 +602,7 @@ function getFoldersFromFirestore() {
 
         querySnapshot.forEach((doc) => {
 
-            const folderName = doc.id.replace(/_/g, ' '); // Replace underscores with spaces
+            const folderName = doc.id.replace(/_/g, ' '); 
 
             const folderItem = document.createElement('li');
             folderItem.textContent = folderName;
@@ -638,7 +647,6 @@ function displaySortedCards(sortBy) {
         return;
     }
 
-    // Create tbody if it doesn't exist
     let tbody = cardList.querySelector('tbody');
     if (!tbody) {
         tbody = document.createElement('tbody');
@@ -676,7 +684,7 @@ function displaySortedCards(sortBy) {
             console.log("here is card from display sorted")
             console.log(card);
 
-            // fix the display sorted by making sure cardData.id is defined
+            
             const newRow = tbody.insertRow();
 
             const checkboxCell = newRow.insertCell(0);
@@ -748,14 +756,17 @@ function displayCardImagePopup(cardName, event) {
                 popupContent.src = imageUrl;
             }
 
-
             var popup = document.getElementById('cardImagePopup');
             if (popup) {
-                // position of the popup relative to the mouse position - could change
-                popup.style.top = (event.clientY + 10) + 'px';
-                popup.style.left = (event.clientX + 10) + 'px';
+            
+                const mouseX = event.clientX + window.scrollX;
+                const mouseY = event.clientY + window.scrollY;
 
-                // Show the popup
+            
+                popup.style.top = (mouseY + 10) + 'px';
+                popup.style.left = (mouseX + 10) + 'px';
+
+
                 popup.style.display = 'block';
             }
         })
@@ -842,10 +853,10 @@ function processCardList() {
                 }
 
                 const dbF = firebase.firestore();
-                // Reference to the Firestore collection
+
                 const userCardsRef = dbF.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-                // error handling before adding
+            
                 const cardToAdd = {
                     name: cardData.name,
                     set_code: cardData.set_code,
@@ -855,7 +866,7 @@ function processCardList() {
                     converted_mana_cost: cardData.converted_mana_cost || null,
                     id: cardData.id || null,
                     mana_cost: cardData.mana_cost || null,
-                    prices: cardData.prices || null,
+                    prices: (cardData.prices && cardData.prices.usd) ? cardData.prices.usd : (cardData.prices && cardData.prices.usd_foil) ? cardData.prices.usd_foil : null,
                     type_of_card: cardData.type_of_card || null,
 
                 };
@@ -869,7 +880,7 @@ function processCardList() {
                         console.error('Error adding card to Firestore:', error);
                     })
                     .finally(() => {
-                        // After all cards are processed and added, call getCardsFromFirestore()
+                        
                         getCardsFromFirestore();
                     });
             } else {
@@ -973,7 +984,7 @@ $(document).ready(function() {
 
         console.log("folder locat", imagesRef);
     
-        // Fetch all the images in the folder
+
         imagesRef.listAll().then(function(result) {
             var urls = [];
             result.items.forEach(function(itemRef) {

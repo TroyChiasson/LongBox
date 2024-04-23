@@ -218,7 +218,7 @@
                     cardDetailsList.push(cardData);
 
                 
-                    cardDetailsContainer.innerHTML += `<h2>${formattedCardName}</h2>`;
+                    // cardDetailsContainer.innerHTML += `<h2>${formattedCardName}</h2>`;
                 });
 
                 grabImages(cardDetailsList);
@@ -262,29 +262,45 @@
         const imageUrl = imgurl.replace("/cards","");
 
         try {
-            const url = await storageRef.child(imageUrl).getDownloadURL();
-            const cardElement = `
-                <div class="card-details">
-                    <h2>${cardDetails.name}</h2> <!-- Display card name -->
-                    <img src="${url}" alt="${setName} - ${collectorNumber}">
-                    <div class="price-section">
-                        <p>Price: ${price}</p>
-                        <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
-                    </div>
-                </div>`;
-            $("#cardDetailsContainer").append(cardElement);
-        } catch (error) {
-            console.error("Error fetching image:", error);
-            const cardElement = `
-                <div class="card-details">
-                    <p>Error fetching image for ${setName} - ${collectorNumber}</p>
-                    <div class="price-section">
-                        <p>Price: ${price}</p>
-                        <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
-                    </div>
-                </div>`;
-            $("#cardDetailsContainer").append(cardElement);
-        }
+    const url = await storageRef.child(imageUrl).getDownloadURL();
+    const cardElement = `
+        <div class="card-details">
+            <img src="${url}" alt="${setName} - ${collectorNumber}">
+            <div class="price-section">
+                <p>Price: ${price}</p>
+                <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+            </div>
+        </div>`;
+    $("#cardDetailsContainer").append(cardElement);
+} catch (error) {
+    console.error("Error fetching image:", error);
+    const defaultImageRef = storageRef.child("mtg_names_images/default/defaultImg.jpeg"); // Reference to default image
+    try {
+        const defaultImageUrl = await defaultImageRef.getDownloadURL();
+        const cardElement = `
+            <div class="card-details">
+                <img src="${defaultImageUrl}" alt="${cardDetails.name}">
+                <div class="price-section">
+                    <p>Currently no image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
+                    <p>Price: ${price}</p>
+                    <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+                </div>
+            </div>`;
+        $("#cardDetailsContainer").append(cardElement);
+    } catch (defaultError) {
+        console.error("Error fetching default image:", defaultError);
+        const cardElement = `
+            <div class="card-details">
+                <p>Error fetching default image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
+                <div class="price-section">
+                    <p>Price: ${price}</p>
+                    <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+                </div>
+            </div>`;
+        $("#cardDetailsContainer").append(cardElement);
+    }
+}
+
     }
 }
 
