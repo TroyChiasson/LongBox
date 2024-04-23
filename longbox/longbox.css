@@ -59,14 +59,10 @@ img {
     background: #f0f0f0;
 }
 
+
 body {
     font-family: 'Magic', sans-serif;
-    /* background: radial-gradient(circle, #5fab77, #7bdb99, #9336a1 65%); */
-    background-color: rgb(182, 182, 182);
-    color: black;
     margin: 0;
-    padding: 70px;
-    padding-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,65 +70,60 @@ body {
     min-height: 100vh;
 }
 
+h2 {
+    padding-bottom: 150px;
+    text-align: center;
+}
+
+h3 {
+    padding-bottom: 50px;
+    padding-top: 40px;
+    font-size: 40px;
+}
+
+h4 {
+    font-size: larger;
+    font-weight: normal;
+    color:#F4DBA6
+}
+
+h5 {
+    font-size: 30px;
+    text-align: center;
+}
+
 .site-header {
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 50px; 
+    padding: 20px; 
     width: 100%;
     top: 0;
     left: 0;
-    margin-left: 50px;
-    z-index: 1000;
+    padding-left: 80px;
+    padding-right: 80px;
+    z-index: 1000px;
     box-sizing: border-box;
-    color:#000;
+    color:#EAC67A;
     font-size: 35px;
-    background-color:#89BD9A;
+    background-color: #48483A;
 }
 
 .site-header .title {
     margin: 0; 
-    font-size: 200px; 
+    font-size: 200px;
 }
-
-/* h1 {
-    font-family: 'Magic', sans-serif;
-    background-color:#457e48;
-    color: black;
-    margin: 0px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    text-align:left;
-    font-size: 350%;   
-} */
-
-/* 
-h4 {
-    font-family: 'Magic', sans-serif;
-    background-color: #A47257;
-    color: #412A21;
-    padding: 0px;
-    margin-top: -0px;
-
-} */
 
 .container {
     display: block;
     width: 100%;
-    /* max-width: 1200px;  */
     margin: 0 auto;
-    padding: 20px; 
 }
 
 .columns{
     width: 100%; 
     display: block; 
-    padding: 20px 0;
-}
-
-#addCardSection, #cardListSection, #folderSection {
-    margin-bottom: 20px; 
 }
 
 #cardTable input[type="checkbox"] {
@@ -147,11 +138,27 @@ h4 {
 }
 
 #addCardSection, #cardListSection, #folderSection {
-    margin: 10px;
-    padding: 20px;
-    background-color: #89BD9A;
-    /* border: 1px solid #000000; */
-    border-radius: 5px;
+    padding-top: 25px;
+    padding-bottom: 350px;
+    text-align: center;
+    width: 100%;
+    margin-left: 0px;
+    color: #F4DBA6;
+    font-size: xx-large;
+}
+
+#addCardSection {
+    background-color: #A28F9D;
+}
+
+#cardListSection {
+    background-color: #74776B;
+    padding-top: 25px;
+    padding-bottom: 225px;
+}
+
+#folderSection {
+    background-color: #595C4F;
 }
 
 input[type=text], button {
@@ -162,15 +169,16 @@ input[type=text], button {
 
 button {
     font-family: 'Magic', sans-serif;
-    background-color: #004a04;
+    background-color: #EAC67A;;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: large;
 }
 
 button:hover {
-    background-color: #002802;
+    background-color: #bb9f62;
 }
 
 #cardTable th {
@@ -188,14 +196,16 @@ button:hover {
 }
 
 footer {
-    background-color: #89BD9A;
-    color: white;
-    padding: 10px;
+    background-color: #48483A;
+    color: #F4DBA6;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: large;
     text-align: center;
-    width: 120%;
+    width: 100%;
 }
 
-nav ul {
+nav {
     display: flex;
     list-style-type: none;
     padding: 0;
@@ -203,12 +213,16 @@ nav ul {
     font-size: 80%;
 }
 
-nav ul li {
-    margin-left: 20px; 
+nav li a{
+    color:#F4DBA6
+}
+
+nav li {
+    margin-left: 20px;
 }
 
 nav a:hover {
-    color: #003002; 
+    color: #3C1642; 
 }
 
 #folderList {
@@ -299,6 +313,28 @@ select#color {
     overflow-y: auto;
 }
 
+.button-container {
+    display: inline;
+    align-items: center;
+}
+
+.button-container button {
+    width: 150px;  
+    height: 50px;   
+    flex-grow: 0;  
+    flex-shrink: 0; 
+    margin: 20px;
+}
+
+.finance-top {
+    background-color: #A28F9D;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
 .finance-table {
     width: 100%;
     border-collapse: collapse;
@@ -317,6 +353,7 @@ select#color {
     font-weight: bold;
 }
 
+/* may not need */
 .finance-container {
     display: flex;
     justify-content: center;
@@ -344,6 +381,7 @@ select#color {
 
 .finance-column h2 {
     text-align: center;
+    font-size: x-large;
 }
 
 .finance-card {
@@ -357,6 +395,22 @@ select#color {
     margin: 5px 0;
 }
 
+.winners-section {
+    background-color: #74776B;
+    width: 100%;
+    /* padding-top: 10px; */
+    padding-bottom: 50px;
+    color:#F4DBA6;
+}
+
+.losers-section {
+    background-color: #595C4F;
+    width: 100%;
+    /* padding-top: 10px; */
+    padding-bottom: 50px;
+    color:#F4DBA6;
+}
+
 .card-tooltip {
     position: absolute;
     background-color: #fff;
@@ -367,18 +421,24 @@ select#color {
 
 #about-section {
     text-align: center;
+    background-color: #A28F9D;
+    padding-top: 20px;
+    padding-bottom: 75px;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 25px;
+    color:#F4DBA6;
+}
+
+#about-section nav li a{
+    color:#F4DBA6;
 }
 
 #about-section a {
-    color: #004a04;
+    color: #3C1642;
     text-decoration: underline;
 }
 
-#download-section {
-    text-align: center;
-}
-
-#download-section a {
-    color: #004a04;
-    text-decoration: underline;
+#about-section a:hover {
+    color: #3C1642;
 }

@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Magic', sans-serif;
-            background: radial-gradient(circle, #294b34,#447a55, #3C1642 65% );
+            background: radial-gradient(circle, #595C4F,#74776B, #A28F9D 65%);
             color: #EFF2F1;
             margin: 0;
             padding: 0;
@@ -22,7 +22,7 @@
         h1 {
             font-family: 'Magic', sans-serif;
             /* background-color: #A47257; */
-            color: #3C1642;
+            color: #F4DBA6;
             margin: 0px;
             padding-top: 25px;
             text-align: center;
@@ -45,19 +45,22 @@
         }
 
         button {
-            background-color: #3C1642;
-            color: #F4B942;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
             font-family: 'Magic', sans-serif;
-            font-size: 20px;
+            background-color: #EAC67A;;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: large;
+            width: 100px;  
+            height: 50px;   
+            flex-grow: 0;  
+            flex-shrink: 0; 
+            margin: 20px;
         }
 
         button:hover {
-            background-color: #785440;
+            background-color: #bb9f62;
         }
 
         form {
@@ -80,10 +83,10 @@
 
         .reset-link {
             float: right;
-            color: #F4B942;
+            color: #F4DBA6;
             text-decoration: underline;
             cursor: pointer;
-            font-size: 14px; /* Adjust the font size as needed */
+            font-size: 20px;
         }
 
         .reset-link:hover {
@@ -109,7 +112,7 @@
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <div class="container">
         <img id="logo" src="logo.jpg" alt="Logo">
-        <h1>Scroll Rack</h1>
+        <h1>ScrollRack</h1>
         <button onclick="showLoginForm()">Log In</button>
         <button onclick="showSignupForm()">Sign Up</button>
 
@@ -133,11 +136,9 @@
             <button type="submit">Reset</button>
         </form>
     </div>
-    <div style="padding:10px;">
-        <footer>
-            <span class="reset-link" onclick="showResetPassword()">Forgot Password?</span>
-        </footer>
-    </div>
+    <footer>
+        <span class="reset-link" onclick="showResetPassword()">Forgot Password?</span>
+    </footer>
     
     <script>
         function showResetPassword() {
