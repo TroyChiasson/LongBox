@@ -2,6 +2,7 @@ const winnersList = document.getElementById('winnersList');
 const losersList = document.getElementById('losersList');
 
 let currentTooltip = null; 
+let tooltipTimeout;
 
 function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, collectorNumber, image) {
     const row = document.createElement('tr');
@@ -21,9 +22,7 @@ function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, 
 }
 
 
-const popupContainer = document.createElement('div');
-popupContainer.classList.add('popup-container');
-document.body.appendChild(popupContainer);
+
 
 
 function displayTopWinnersLosers(userId) {
@@ -83,24 +82,24 @@ function displayTopWinnersLosers(userId) {
             const loserCard = createFinanceCard(cardName, set, oldPrice, newPrice, parseFloat(percentageChange).toFixed(2), collectorNumber, image);
             losersList.appendChild(loserCard);
 
-            // Add event listener for mouseover to show the image of the card
+         
             loserCard.addEventListener('mouseover', (event) => {
                 displayCardImage(loserCard, image, event);
             });
 
-            // Add event listener for mouseout to delete but kinda not working
+  
             loserCard.addEventListener('mouseout', () => {
                 hideCardImage();
             });
 
-            // Add event listener to navigate to card details page when clicked
+          
             loserCard.addEventListener('click', () => {
                 navigateToCardDetails(cardName);
             });
         });
     });
 
-    // Sorting functions
+
     function sortByHighestPriceDescending(cards) {
         cards.sort((a, b) => parseFloat(b.querySelector('td:nth-child(3)').textContent) - parseFloat(a.querySelector('td:nth-child(3)').textContent));
     }
@@ -165,58 +164,113 @@ function displayTopWinnersLosers(userId) {
 
 
     function displayCardImage(element, imagePath, event) {
-        const storageRef = firebase.storage().ref();
-        const imageRef = storageRef.child(imagePath);
+        clearTimeout(tooltipTimeout); 
     
-        imageRef.getDownloadURL().then((url) => {
-            const imgElement = document.createElement('img');
-            imgElement.src = url;
-            imgElement.style.width = "70%"; 
     
-            //  new container element for each card
-            const newPopupContainer = document.createElement('div');
-            newPopupContainer.classList.add('popup-container');
-            newPopupContainer.appendChild(imgElement);
+        tooltipTimeout = setTimeout(() => {
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+        
+            const storageRef = firebase.storage().ref();
+            const imageRef = storageRef.child(imagePath);
+        
+            imageRef.getDownloadURL().then((url) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = url;
+
+                const imageSize = '225px';
+                const imageHeight = '250px'; 
+                imgElement.style.width = imageSize;
+                imgElement.style.height = imageHeight;
+            
+                            
+                const tooltip = document.createElement('div');
+                tooltip.classList.add('card-tooltip');
     
-            const mouseX = event.clientX + 10; 
-            const mouseY = event.clientY + 10 + window.scrollY; 
-            newPopupContainer.style.left = `${mouseX}px`;
-            newPopupContainer.style.top = `${mouseY}px`;
+
+                tooltip.style.width = imageSize;
     
-            // maybe look at for position
-            document.body.appendChild(newPopupContainer);
+       
+                tooltip.style.padding = '5px';
     
-            if (currentTooltip) {
-                currentTooltip.style.display = "none";
-            }
-    
-            currentTooltip = newPopupContainer;
-        }).catch((error) => {
-            console.error("Error getting image URL:", error);
-        });
+           
+                tooltip.appendChild(imgElement);
+        
+                // depricated need to find alternative
+                const scrollX = window.pageXOffset;
+                const scrollY = window.pageYOffset;
+                const tooltipX = mouseX + scrollX + 10;
+                const tooltipY = mouseY + scrollY + 10;
+        
+       
+                tooltip.style.left = `${tooltipX}px`;
+                tooltip.style.top = `${tooltipY}px`;
+        
+         
+                document.body.appendChild(tooltip);
+        
+        
+                currentTooltip = tooltip;
+            }).catch((error) => {
+                console.error("Error getting image URL:", error);
+            });
+        }, 200);
     }
     
     
-function hideCardImage() {
-    popupContainer.innerHTML = ''; 
-    popupContainer.style.display = "none"; 
-}
+    function hideCardImage() {
+       
+        const tooltips = document.querySelectorAll('.card-tooltip');
+        tooltips.forEach(tooltip => {
+            tooltip.remove();
+        });
+        currentTooltip = null;
+    }
+    
+
 }
 
-// buggy something isnt working
+// // buggy something isnt working
+// function updatePopupPosition(event) {
+//     const containerWidth = popupContainer.offsetWidth;
+//     const containerHeight = popupContainer.offsetHeight;
+//     const mouseX = event.clientX + 10;
+//     const mouseY = event.clientY + 10 + window.scrollY;
+//     const viewportWidth = window.innerWidth;
+//     const viewportHeight = window.innerHeight;
+//     const maxTop = viewportHeight - containerHeight;
+//     const maxLeft = viewportWidth - containerWidth;
+
+//     popupContainer.style.left = `${Math.min(mouseX, maxLeft)}px`;
+
+//     popupContainer.style.top = `${Math.min(mouseY, maxTop)}px`;
+// }
+
 function updatePopupPosition(event) {
-    const containerWidth = popupContainer.offsetWidth;
-    const containerHeight = popupContainer.offsetHeight;
-    const mouseX = event.clientX + 10;
-    const mouseY = event.clientY + 10 + window.scrollY;
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const maxTop = viewportHeight - containerHeight;
-    const maxLeft = viewportWidth - containerWidth;
 
-    popupContainer.style.left = `${Math.min(mouseX, maxLeft)}px`;
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
 
-    popupContainer.style.top = `${Math.min(mouseY, maxTop)}px`;
+
+    const scrollX = window.pageXOffset;
+    const scrollY = window.pageYOffset;
+
+
+    const popupContainers = document.querySelectorAll('.popup-container');
+    popupContainers.forEach(container => {
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const maxTop = viewportHeight - containerHeight;
+        const maxLeft = viewportWidth - containerWidth;
+
+        const popupX = mouseX + scrollX + 10; 
+        const popupY = mouseY + scrollY + 10; 
+
+        container.style.left = `${Math.min(popupX, maxLeft)}px`;
+        container.style.top = `${Math.min(popupY, maxTop)}px`;
+    });
 }
 
 
