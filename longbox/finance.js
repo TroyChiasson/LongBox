@@ -315,8 +315,11 @@ function loadPersonalFinance() {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             console.log(data);
-            const { cardName, set, oldPrice, newPrice, percentageChange, collectorNumber, image } = data;
-            const prices = data.prices.usd ? data.prices.usd : data.prices.usd_foil
+            const { cardName, set, oldPrice, percentageChange, collectorNumber, image } = data;
+            const newPrice = 0;
+            console.log(newPrice);
+            console.log(percentageChange);
+            const prices = (data.prices.usd || data.prices.usd_foil || data.prices)
             const card = createFinanceCard(data.name, data.set_code, prices, newPrice, percentageChange, data.collector_number, image);
             winnersList.appendChild(card);
         });

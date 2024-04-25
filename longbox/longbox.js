@@ -144,8 +144,8 @@ function addCard(selectedCardName) {
                 cell4.innerHTML = firstChildData.prices.usd ? firstChildData.prices.usd : firstChildData.prices.usd_foil;
 
                 // Add event listener to the card name cell for the popup menu
-                cardNameCell.addEventListener('click', function() {
-                    showPopupMenu(cardNameCell);
+                cardNameCell.addEventListener('click', function(event) {
+                    showPopupMenu(cardNameCell, event);
                 });
 
             })
@@ -324,52 +324,6 @@ function addFolder() {
         });
 }
 
-// function createCardElement(cardName, cardColor, folderCardList) {
-//     // Create elements
-//     const cardContainer = document.createElement("div");
-//     cardContainer.classList.add("card-details");
-//     const cardNameElement = document.createElement("h3");
-//     cardNameElement.textContent = cardName;
-//     const cardColorElement = document.createElement("p");
-//     cardColorElement.textContent = `Color: ${cardColor}`;
-
-//     // Append elements
-//     cardContainer.appendChild(cardNameElement);
-//     cardContainer.appendChild(cardColorElement);
-//     folderCardList.appendChild(cardContainer);
-// }
-
-// function displayFolderContents(folderName) {
-//     folderName = String(folderName);
-//     const formattedFolderName = folderName.replace(/\s+/g, '_');
-//     console.log("Folder name clicked:", formattedFolderName);
-
-//     const user = firebase.auth().currentUser;
-//     if (!user) {
-//         console.log('User not authenticated.');
-//         return;
-//     }
-
-//     const db = firebase.firestore();
-//     const cardsRef = db.collection(`Users/${user.uid}/folders/${formattedFolderName}/cards`);
-
-//     cardsRef.get().then((querySnapshot) => {
-//         const cardList = document.getElementById("cardDetailsContainer");
-//         cardList.innerHTML = ""; 
-
-//         querySnapshot.forEach((doc) => {
-//             const cardData = doc.data();
-//             const cardName = cardData.name;
-//             const cardColor = cardData.color;
-//             createCardElement(cardName, cardColor, cardList);
-//         });
-
-//         console.log("Cards retrieved successfully from folder:", formattedFolderName);
-//     }).catch((error) => {
-//         console.error("Error getting cards from folder:", formattedFolderName, error);
-//     });
-// }
-
 function getFolderContents(folderName) {
     const user = firebase.auth().currentUser;
 
@@ -413,7 +367,7 @@ function getFolderContents(folderName) {
             const cardName = cardData.name;
             const cardColor = cardData.color;
             const cardManaCost = cardData.converted_mana_cost;
-            const cardPrice = cardData.prices.usd ? cardData.prices.usd : cardData.prices.usd_foil;
+            const cardPrice = cardData.prices.usd || cardData.prices || cardData.prices.usd_foil;
 
             const row = document.createElement('tr');
 
@@ -439,7 +393,7 @@ function getFolderContents(folderName) {
         table.appendChild(tbody);
         folderCardList.appendChild(table);
 
-        // wrap table in a div to make it scrollable
+        // wrap table in a div to make it scrollable doesn't work
         const tableWrapper = document.createElement('div');
         tableWrapper.classList.add('table-wrapper');
         tableWrapper.appendChild(table);
@@ -454,62 +408,105 @@ function getFolderContents(folderName) {
 }
 
 
-
-
-
-// Need to fix add to folder
-function addToFolder(){
-    const cardName = document.getElementById('cardName').value;
+function displayFolderOptions() {
     const folderList = document.getElementById('folderList');
-    const folderCheckboxes = document.querySelectorAll("#folderList input[type='checkbox']:checked");
-    const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
 
-    if (folderCheckboxes.length === 0) {
-        // alert('Please select at least one folder.');
-        return;
-    }
-
-    if (cardsChecked.length === 0) {
-        // alert('Please select at least one card to add to the folder(s).');
-        return;
-    }
-
+   
     const db = firebase.firestore();
     const user = firebase.auth().currentUser;
 
     if (!user) {
-        // alert('User not authenticated.');
+        console.error('User not authenticated.');
         return;
     }
 
-    // may need to fix route
     const foldersRef = db.collection(`Users/${user.uid}/folders`);
 
-    folderCheckboxes.forEach(function(folderCheckbox) {
-        const folderName = folderCheckbox.closest("tr").querySelector("td:nth-child(2)").textContent;
+    foldersRef.get().then(querySnapshot => {
+        folderList.innerHTML = ''; 
 
-        const folderDocRef = foldersRef.doc(folderName);
+        console.log("Folders retrieved:");
+        querySnapshot.forEach(doc => {
+            const folderName = doc.id.replace(/_/g, ' '); 
+            console.log(folderName); 
 
-        cardsChecked.forEach(function(cardChecked) {
-            const cardName = cardChecked.closest("tr").querySelector("td:nth-child(2)").textContent;
 
-            
-            const folderCardsRef = folderDocRef.collection("cards");
+            const folderItem = document.createElement('li');
+            folderItem.textContent = folderName;
+            folderItem.classList.add('folder-item'); 
 
-            // need to maybe fix so that it grabs the info from the rtdb then inserts
-            folderCardsRef.add({
-                cardName: cardName
-            })
-            .then((docRef) => {
-                console.log("Card added to folder:", folderName, "Card Name:", cardName);
-            })
-            .catch(error => {
-                console.error('Error adding card to folder:', error);
-                // alert('Failed to add card to folder.');
+            folderItem.addEventListener('click', function() {
+                
+                const folderName = this.textContent;
+                addCardsToFolder(folderName);
+                uncheckAllCards();
             });
-        });
-    });
 
+            folderList.appendChild(folderItem);
+        });
+    }).catch(error => {
+        console.error('Error getting folders:', error);
+    });
+}
+
+
+async function addCardsToFolder(folderName) {
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        console.error('User not authenticated.');
+        return;
+    }
+
+    const foldersRef = db.collection(`Users/${user.uid}/folders`);
+    const folderDocRef = foldersRef.doc(folderName);
+
+   
+    const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+    const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
+
+    for (const cardChecked of cardsChecked) {
+        const cardName = cardChecked.closest("tr").querySelector("td:nth-child(2)").textContent;
+
+        try {
+           
+            const cardQuerySnapshot = await userCardsRef.where('name', '==', cardName).get();
+
+            if (!cardQuerySnapshot.empty) {
+               
+                const cardData = cardQuerySnapshot.docs[0].data(); 
+                const folderCardsRef = folderDocRef.collection("cards");
+
+                await folderCardsRef.add({
+                    name: cardData.name,
+                    set_code: cardData.set_code,
+                    collector_number: cardData.collector_number,
+                    color_identity: cardData.color_identity,
+                    colors: cardData.colors,
+                    converted_mana_cost: cardData.converted_mana_cost,
+                    id: cardData.id,
+                    mana_cost: cardData.mana_cost,
+                    prices: cardData.prices,
+                    type_of_card: cardData.type_of_card
+                });
+
+                console.log("Card added to folder:", folderName, "Card Name:", cardName);
+            } else {
+                console.error(`Card "${cardName}" not found in user's folder "All_Cards".`);
+            }
+        } catch (error) {
+            console.error('Error adding card to folder:', error);
+        }
+    }
+}
+
+
+
+
+function uncheckAllCards() {
+    const cardsChecked = document.querySelectorAll("#cardList input[type='checkbox']:checked");
     cardsChecked.forEach(function(cardChecked) {
         cardChecked.checked = false;
     });
@@ -567,15 +564,17 @@ function getCardsFromFirestore() {
             const cell2 = newRow.insertCell(2);
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
+            console.log(cardData);
 
             cell1.innerHTML = cardData.name;
             cell2.innerHTML = cardData.colors;
             cell3.innerHTML = cardData.converted_mana_cost;
-            cell4.innerHTML = cardData.prices;
+            cell4.innerHTML = cardData.prices.usd || cardData.prices.usd_foil || cardData.prices;
 
 
-            cell1.addEventListener('click', function() {
-                showPopupMenu(cell1);
+
+            cell1.addEventListener('click', function(event) {
+                showPopupMenu(cell1, event);
             });
 
         });
@@ -637,7 +636,7 @@ function displaySortedCards(sortBy) {
     } else if (sortBy === 'lowestMana') {
         query = userCardsRef.orderBy('converted_mana_cost', 'asc');
     } else {
-        // Default sorting by name
+        
         query = userCardsRef.orderBy('name');
     }
 
@@ -661,7 +660,7 @@ function displaySortedCards(sortBy) {
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
 
-            // Calculate the price to display (the higher of usd and usd_foil)
+            
             let displayPrice = 'N/A';
             if (cardData.prices && (cardData.prices.usd || cardData.prices.usd_foil)) {
                 const usd = parseFloat(cardData.prices.usd) || 0;
@@ -796,7 +795,7 @@ function processCardList() {
     importedCardsArray = importedCardsArray.filter(card => card.trim() !== '');
 
     importedCardsArray.forEach((importedCard) => {
-        // split string
+        
         const [amount, ...rest] = importedCard.trim().split(' ');
 
         const collectorNumber = rest.pop();
@@ -820,9 +819,11 @@ function processCardList() {
             .replace("/", "-")
             .replace("#", "-");
 
-        const capitalizeFirstLetter = (string) => {
-            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-        };
+            const capitalizeFirstLetter = (string) => {
+                return string.split('-').map(part => {
+                    return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                }).join('-');
+            };
 
         
         const fixedName = formattedCardName
@@ -835,7 +836,7 @@ function processCardList() {
             .join(' ');
 
         console.log("format name", fixedName);
-
+        
         const db = firebase.database();
         const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${fixedName}/${finalSetCode}_${collectorNumber}`);
 
@@ -866,7 +867,7 @@ function processCardList() {
                     converted_mana_cost: cardData.converted_mana_cost || null,
                     id: cardData.id || null,
                     mana_cost: cardData.mana_cost || null,
-                    prices: (cardData.prices && cardData.prices.usd) ? cardData.prices.usd : (cardData.prices && cardData.prices.usd_foil) ? cardData.prices.usd_foil : null,
+                    prices: cardData.prices.usd || cardData.prices.usd_foil || cardData.prices || null,
                     type_of_card: cardData.type_of_card || null,
 
                 };
@@ -1181,7 +1182,7 @@ function initializeEventListeners() {
     };
 
     document.getElementById('removeCardsButton').onclick = removeSelectedCards;
-    document.getElementById('addToFolderButton').onclick = addToFolder;
+    document.getElementById('addToFolderButton').onclick = displayFolderOptions;
 
 }
 

@@ -180,17 +180,22 @@
 
         async function fetchCardDetails() {
             const urlParams = new URLSearchParams(window.location.search);
-            const folderName = urlParams.get('folder');
+            let folderName = urlParams.get('folder');
+            console.log(folderName);
             const uid = urlParams.get('uid');
-            const hardcode = 'All_Cards'; 
-
+            console.log(uid);
+            if (folderName == "All Cards"){
+                console.log("does it see it as All Cards");
+                folderName = "All_Cards";
+            }
+            console.log(folderName, "after checking for All_cards");
             if (!folderName || !uid) {
                 console.error('Folder name or UID not found in URL.');
                 return;
             }
 
             const db = firebase.firestore();
-            const folderRef = db.collection('Users').doc(uid).collection('folders').doc(hardcode).collection('cards');
+            const folderRef = db.collection('Users').doc(uid).collection('folders').doc(folderName).collection('cards');
 
             try {
                 const querySnapshot = await folderRef.get();
@@ -205,6 +210,7 @@
                 querySnapshot.forEach(doc => {
                     const cardData = doc.data();
                     const cardName = cardData.name; 
+                    console.log(cardName)
                     const formattedCardName = formatCardName(cardName); 
                     console.log("Formatted Card Name:", formattedCardName);
 
