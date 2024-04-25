@@ -326,7 +326,7 @@ select#color {
 .options-menu-content a {
     /* color: #F4DBA6 */
     /* padding: 5px; */
-    /* display: block; */
+    display: block;
     text-align: left;
 }
 
