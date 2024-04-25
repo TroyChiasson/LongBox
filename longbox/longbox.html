@@ -43,9 +43,9 @@
     <script src="longbox.js"></script>
 
     <div class="container">    
-        <div class="spacer" style="height: 205px;"></div>        
+        <div class="spacer" style="height: 125px;"></div>        
         <div id="addCardSection">
-            <h2>Add a New Card</h2>
+            <h6>Add a New Card</h6>
             <form id="addCardForm" action="/addcard" method="post">
                 <input type="text" id="cardName" name="cardName" placeholder="Card Name" required>
                 <button type="button" onclick="addCard()">Add Card</button>
@@ -65,26 +65,23 @@
             </div>
             <table id="cardTable">
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th>Card Name</th>
-                        <button id="exportCardsButton" onclick="exportSelectedCards()">Export Cards</button>
-                        <th>Color</th>
-                        <th class="options-menu">
-                            <div class="options-button">Mana Cost</div>
-                            <div class="options-menu-content">
-                                <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
-                                <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
-                            </div>
-                        </th>
-                        <th class="options-menu">
-                            <div class="options-button">Price</div>
-                            <div class="options-menu-content">
-                                <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
-                                <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
-                            </div>
-                        </th>
-                    </tr>
+                    <th>Card Name</th>
+                    <button id="exportCardsButton" onclick="exportSelectedCards()">Export Cards</button>
+                    <th>Color</th>
+                    <th class="options-menu">
+                        <div class="options-button">Mana Cost</div>
+                        <div class="options-menu-content">
+                            <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
+                            <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
+                        </div>
+                    </th>
+                    <th class="options-menu">
+                        <div class="options-button">Price</div>
+                        <div class="options-menu-content">
+                            <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
+                            <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
+                        </div>
+                    </th>
                 </thead>
                 <tbody id="cardList">
                     <tr>

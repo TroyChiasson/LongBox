@@ -111,6 +111,10 @@ h5 {
     text-align: center;
 }
 
+h6 {
+    font-size: 50px;
+}
+
 .site-header {
     position: absolute;
     display: flex;
@@ -168,12 +172,15 @@ h5 {
 
 #addCardSection {
     background-color: #A28F9D;
+    padding-bottom: 25px;
+    padding-top: 5px;
+    margin-top: 0;
 }
 
 #cardListSection {
     background-color: #74776B;
-    padding-top: 25px;
     padding-bottom: 225px;
+    overflow: auto;
 }
 
 #folderSection {
@@ -184,6 +191,8 @@ input[type=text], button {
     margin: 10px 0;
     padding: 10px;
     width: 200px;
+    font-size: large;
+    font-family: 'Magic', sans-serif;
 }
 
 button {
@@ -295,11 +304,12 @@ select#color {
     position: relative;
     display: inline-block;
     cursor: pointer;
+    color: #F4DBA6
 }
 
 .options-button {
-    background-color: #f1f1f1;
-    color: black;
+    /* color: #F4DBA6; */
+    text-decoration: underline;
     border: none;
     padding: 5px 10px;
 }
@@ -307,28 +317,30 @@ select#color {
 .options-menu-content {
     display: none;
     position: absolute;
-    background-color: #fff;
+    /* color: #F4DBA6 */
     min-width: 80px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
     z-index: 1;
 }
 
 .options-menu-content a {
-    color: black;
-    padding: 5px;
-    display: block;
+    /* color: #F4DBA6 */
+    /* padding: 5px; */
+    /* display: block; */
     text-align: left;
 }
 
 .options-menu-content a:hover {
-    background-color: #f0f0f0;
+    color: #EAC67A;
 }
 
 .options-menu:hover .options-menu-content {
     display: block;
 }
+
+/* not sure where this is for */
 .scrollable-table {
-    max-height: 500px; /* Adjust the height here to fit page */
+    max-height: 500px;
     overflow-y: auto;
 }
 
@@ -459,5 +471,5 @@ select#color {
 }
 
 #about-section a:hover {
-    color: #3C1642;
+    color: #EAC67A;
 }
