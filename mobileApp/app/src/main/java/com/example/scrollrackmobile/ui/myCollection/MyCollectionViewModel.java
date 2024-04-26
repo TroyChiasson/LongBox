@@ -27,7 +27,7 @@ public class MyCollectionViewModel extends ViewModel {
 //        mText.setValue("This is where a user's collection would be accessed");
 
 //        db.collection("Users/GURJcHSTqGTNgj2kAKTh0pZwiwu2/folders/All_Cards/cards/LLjWcyS8KHPQpKALcV1R")
-        DocumentReference docRef = db.collection("Users").document("/SuyA7vmjvdWSSgeunFmMPcPwqaG3/folders/All_Cards/cards/6jK9nx7DafFUcVnqbAfZ");
+        DocumentReference docRef = db.collection("Users").document("/gblI2zpH9USDA9dan4cBUERPRxr1/folders/All_Cards/cards/KMM5Z6Kw40y8S90Gj84s");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
