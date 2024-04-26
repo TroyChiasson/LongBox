@@ -2,12 +2,15 @@
     <string name="app_name">ScrollRack Mobile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Jace Belarin</string>
-    <string name="nav_header_subtitle">blue.rules@mtg.com</string>
+    <string name="nav_header_title">Stella</string>
+    <string name="nav_header_subtitle">Stella@izzet.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Logout</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">My Collection</string>
     <string name="menu_slideshow">My Decks</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>

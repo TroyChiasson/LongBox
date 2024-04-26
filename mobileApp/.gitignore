@@ -67,3 +67,4 @@ build/
 /local.properties
 /.externalNativeBuild
 
+/app/src/google-services.json

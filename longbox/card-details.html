@@ -6,7 +6,7 @@
     <title>Card Details</title>
     <link rel="stylesheet" href="longbox.css">
     <style>
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,9 +14,9 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #c7d5cc; 
-            color: #333;
+            font-family: 'Magic', sans-serif;
+            background-color: #74776B;
+            color: #F4DBA6;
             line-height: 1.6;
             padding: 20px; 
         }
@@ -29,53 +29,49 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /*  box shadow for depth */
         }
 
-        header {
+        .site-header {
+            position: absolute;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #718d7f; /* border bottom with a darker shade of green */
+            justify-content: space-between;
+            padding: 20px; 
+            width: 100%;
+            top: 0;
+            left: 0;
+            padding-left: 80px;
+            padding-right: 80px;
+            z-index: 1000px;
+            box-sizing: border-box;
+            color:#EAC67A;
+            font-size: 35px;
+            background-color: #48483A;
         }
 
-        h1 {
+        /* h1 {
             font-size: 36px;
-            color: #5d7d6c; /* title color to a darker shade of green */
-            text-transform: uppercase; /* transform text to uppercase */
-            letter-spacing: 2px; /* add letter spacing */
-        }
+            color:#EAC67A; 
+            text-transform: uppercase;
+            letter-spacing: 2px; 
+        } */
 
-        nav ul {
-            list-style-type: none;
-            margin: 0; /* Removed default margin */
+        nav {
             display: flex;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 80%;
         }
 
-        nav ul li {
-            margin-right: 20px;
+        nav li a{
+            color:#F4DBA6
         }
 
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            background-color: #89BD9A; /*  background color to pastel green */
-            transition: background-color 0.3s ease; /*  transition for smooth color change */
+        nav li {
+            margin-left: 20px;
         }
 
-        nav ul li a:hover {
-            background-color: #5d8e73; /*  shade of green on hover */
-        }
-
-        .login-link {
-            cursor: pointer;
-            text-decoration: underline;
-            color: #fff;
-            transition: color 0.3s ease; /*  transition for smooth color change */
-        }
-
-        .login-link:hover {
-            color: #5d8e73; /*  text color on hover */
+        nav a:hover {
+            color: #3C1642; 
         }
 
         /* adjusted the card details layout */
@@ -84,7 +80,8 @@
             max-width: 160px; 
             height: auto; 
             position: relative; 
-            background-color: #89BD9A; 
+            background-color: #A28F9D; 
+            color: #F4DBA6;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -109,30 +106,29 @@
             left: 0; 
             width: 100%; 
             padding: 5px; 
-            background-color: rgba(255, 255, 255, 0.8); /* semi-transparent background for readability */
+            color: #F4DBA6;
+            background-color: #74776B;
         }
 
         .price-section p {
             margin-bottom: 5px;
-            font-size: 14px; /*  font size for better readability */
-            color: #555; /* dimmed color for price section */
+            font-size: 14px;
+            color: #F4DBA6;        
         }
 
-        /* accent color for pastel green */
         a, button {
-            color: #FFF;
-            background-color: #89BD9A; /*  pastel green color for links and buttons */
+            font-family: 'Magic', sans-serif;
+            background-color: #EAC67A;;
+            color: white;
             border: none;
-            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s ease; /* transition for smooth color change */
+            font-size: large;
+            padding: 10px 20px;
         }
 
         a:hover, button:hover {
-            background-color: #5D8E73; /* darker shade of green on hover */
-        }
+            background-color: #bb9f62;        }
     </style>
 </head>
 <body>
@@ -158,17 +154,14 @@
     <script defer src="card-details.js"></script>
 
     <div class="container">
-        <header>
+        <header class="site-header">
             <h1>ScrollRack</h1>
             <nav>
-                <ul>
-                    <li><a href="longbox.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="download.html">Download</a></li>
-                    <li><a href="finance.html">Finance</a></li>
-                </ul>
+                <li><a href="longbox.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="finance.html">Finance</a></li>
+                <li><a href="index.html">Login</a></li> 
             </nav>
-            <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>
         </header>
         
         <div id="cardDetailsContainer">
