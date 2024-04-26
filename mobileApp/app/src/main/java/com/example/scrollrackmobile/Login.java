@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -90,15 +89,4 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
         }
     }
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null) {
-//            reload();
-//        }
-//    }
-
-
 }
