@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance</title>
+    <title>Folder Details</title>
     <link rel="stylesheet" href="longbox.css">
     <style>
 
@@ -167,74 +167,75 @@
                     <li><a href="about.html">About</a></li>
                     <li><a href="download.html">Download</a></li>
                     <li><a href="finance.html">Finance</a></li>
+                    
                 </ul>
             </nav>
             <h3><span class="login-link" onclick="showLoginForm()">Login</span></h3>
         </header>
-        
+        <button id="exportCardsButton" onclick="exportSelectedCards()">Export Cards</button>
         <div id="cardDetailsContainer">
             <!-- Card details will be displayed here -->
         </div>
-
+        
         <script>
+            const cardNamesForExport = [];
 
-        async function fetchCardDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let folderName = urlParams.get('folder');
-            console.log(folderName);
-            const uid = urlParams.get('uid');
-            console.log(uid);
-            if (folderName == "All Cards"){
-                console.log("does it see it as All Cards");
-                folderName = "All_Cards";
-            }
-            console.log(folderName, "after checking for All_cards");
-            if (!folderName || !uid) {
-                console.error('Folder name or UID not found in URL.');
-                return;
-            }
-
-            const db = firebase.firestore();
-            const folderRef = db.collection('Users').doc(uid).collection('folders').doc(folderName).collection('cards');
-
-            try {
-                const querySnapshot = await folderRef.get();
-
-                if (querySnapshot.empty) {
-                    console.error('No cards found in the folder.');
+            async function fetchCardDetails() {
+                const urlParams = new URLSearchParams(window.location.search);
+                let folderName = urlParams.get('folder');
+                console.log(folderName);
+                const uid = urlParams.get('uid');
+                console.log(uid);
+                if (folderName == "All Cards"){
+                    console.log("does it see it as All Cards");
+                    folderName = "All_Cards";
+                }
+                console.log(folderName, "after checking for All_cards");
+                if (!folderName || !uid) {
+                    console.error('Folder name or UID not found in URL.');
                     return;
                 }
-                const cardDetailsList = [];
 
-                const cardDetailsContainer = document.getElementById('cardDetailsContainer');
-                querySnapshot.forEach(doc => {
-                    const cardData = doc.data();
-                    const cardName = cardData.name; 
-                    console.log(cardName)
-                    const formattedCardName = formatCardName(cardName); 
-                    console.log("Formatted Card Name:", formattedCardName);
+                const db = firebase.firestore();
+                const folderRef = db.collection('Users').doc(uid).collection('folders').doc(folderName).collection('cards');
 
-                    const firstLetter = formattedCardName.charAt(0).toLowerCase();
-                    const dbPath = `mtg_names/${firstLetter}/cards/${formattedCardName}`;
-                    console.log("Database Path:", dbPath);
+                try {
+                    const querySnapshot = await folderRef.get();
 
-            
-                    cardData.dbPath = dbPath;
+                    if (querySnapshot.empty) {
+                        console.error('No cards found in the folder.');
+                        return;
+                    }
+                    const cardDetailsList = [];
 
-                    cardDetailsList.push(cardData);
+                    const cardDetailsContainer = document.getElementById('cardDetailsContainer');
+                    querySnapshot.forEach(doc => {
+                        const cardData = doc.data();
+                        const cardName = cardData.name; 
+                        console.log(cardName)
+                        const formattedCardName = formatCardName(cardName); 
+                        console.log("Formatted Card Name:", formattedCardName);
+
+                        const firstLetter = formattedCardName.charAt(0).toLowerCase();
+                        const dbPath = `mtg_names/${firstLetter}/cards/${formattedCardName}`;
+                        console.log("Database Path:", dbPath);
 
                 
-                    // cardDetailsContainer.innerHTML += `<h2>${formattedCardName}</h2>`;
-                });
+                        cardData.dbPath = dbPath;
 
-                grabImages(cardDetailsList);
+                        cardDetailsList.push(cardData);
 
-            } catch (error) {
-                console.error('Error getting documents: ', error);
-                $("#cardDetailsContainer").append("<p>Error fetching card details.</p>");
+                    
+                        // cardDetailsContainer.innerHTML += `<h2>${formattedCardName}</h2>`;
+                    });
+
+                    grabImages(cardDetailsList);
+
+                } catch (error) {
+                    console.error('Error getting documents: ', error);
+                    $("#cardDetailsContainer").append("<p>Error fetching card details.</p>");
+                }
             }
-        }
-
 
             function formatCardName(cardName) {
                 const articleWords = ["a", "an", "the", "of", "and", "but", "or", "for", "nor", "on", "at", "to", "from", "by"];
@@ -246,71 +247,87 @@
                         words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
                     }
                 }
-
                 return words.join(" ");
             }
 
             window.onload = fetchCardDetails;
 
             async function grabImages(cardDetailsList) {
-    const storage = firebase.storage();
-    const storageRef = storage.ref();
+                const storage = firebase.storage();
+                const storageRef = storage.ref();
 
-    for (const cardDetails of cardDetailsList) {
-        const setName = cardDetails.set_code;
-        const collectorNumber = cardDetails.collector_number;
-        const price = cardDetails.prices && (cardDetails.prices.usd || cardDetails.prices.usd_foil) ? 
-            (cardDetails.prices.usd || cardDetails.prices.usd_foil) : "N/A";
+                for (const cardDetails of cardDetailsList) {
+                    const setName = cardDetails.set_code;
+                    const collectorNumber = cardDetails.collector_number;
+                    const price = cardDetails.prices && (cardDetails.prices.usd || cardDetails.prices.usd_foil) ? 
+                        (cardDetails.prices.usd || cardDetails.prices.usd_foil) : "N/A";
 
-        const img_url = `${cardDetails.dbPath}/${setName}_${collectorNumber}.jpg`;
+                    const img_url = `${cardDetails.dbPath}/${setName}_${collectorNumber}.jpg`;
 
-        const imgurl = img_url.replace("mtg_names","mtg_names_images");
-        const imageUrl = imgurl.replace("/cards","");
+                    const imgurl = img_url.replace("mtg_names","mtg_names_images");
+                    const imageUrl = imgurl.replace("/cards","");
 
-        try {
-    const url = await storageRef.child(imageUrl).getDownloadURL();
-    const cardElement = `
-        <div class="card-details">
-            <img src="${url}" alt="${setName} - ${collectorNumber}">
-            <div class="price-section">
-                <p>Price: ${price}</p>
-                <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
-            </div>
-        </div>`;
-    $("#cardDetailsContainer").append(cardElement);
-} catch (error) {
-    console.error("Error fetching image:", error);
-    const defaultImageRef = storageRef.child("mtg_names_images/default/defaultImg.jpeg"); // Reference to default image
-    try {
-        const defaultImageUrl = await defaultImageRef.getDownloadURL();
-        const cardElement = `
-            <div class="card-details">
-                <img src="${defaultImageUrl}" alt="${cardDetails.name}">
-                <div class="price-section">
-                    <p>Currently no image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
-                    <p>Price: ${price}</p>
-                    <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
-                </div>
-            </div>`;
-        $("#cardDetailsContainer").append(cardElement);
-    } catch (defaultError) {
-        console.error("Error fetching default image:", defaultError);
-        const cardElement = `
-            <div class="card-details">
-                <p>Error fetching default image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
-                <div class="price-section">
-                    <p>Price: ${price}</p>
-                    <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
-                </div>
-            </div>`;
-        $("#cardDetailsContainer").append(cardElement);
-    }
-}
+                    try {
+                        const url = await storageRef.child(imageUrl).getDownloadURL();
+                        const cardElement = `
+                            <div class="card-details">
+                                <img src="${url}" alt="${setName} - ${collectorNumber}">
+                                <div class="price-section">
+                                    <p>Price: ${price}</p>
+                                    <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+                                </div>
+                            </div>`;
+                        $("#cardDetailsContainer").append(cardElement);
+                    } catch (error) {
+                        console.error("Error fetching image:", error);
+                        const defaultImageRef = storageRef.child("mtg_names_images/default/defaultImg.jpeg"); // Reference to default image
+                        try {
+                            const defaultImageUrl = await defaultImageRef.getDownloadURL();
+                            const cardElement = `
+                                <div class="card-details">
+                                    <img src="${defaultImageUrl}" alt="${cardDetails.name}">
+                                    <div class="price-section">
+                                        <p>Currently no image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
+                                        <p>Price: ${price}</p>
+                                        <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+                                    </div>
+                                </div>`;
+                            $("#cardDetailsContainer").append(cardElement);
+                        } catch (defaultError) {
+                            console.error("Error fetching default image:", defaultError);
+                            const cardElement = `
+                                <div class="card-details">
+                                    <p>Error fetching default image for ${cardDetails.name}: ${setName} - ${collectorNumber}</p>
+                                    <div class="price-section">
+                                        <p>Price: ${price}</p>
+                                        <p>Set Code: ${cardDetails.set_code}</p> <!-- Include set code here -->
+                                    </div>
+                                </div>`;
+                            $("#cardDetailsContainer").append(cardElement);
+                        }
+                    }
+                }
+            }
 
-    }
-}
+            function exportSelectedCards() {
+                exportCardsPopup(cardNamesForExport);
+            }
 
-    </script>
+            function exportCardsPopup(cardList) {
+                sortedList = structuredClone(cardList).sort();
+                var count = 1;
+                var cardExport = "";
+                for (var i=0; i<sortedList.length; i++) {
+                    if (sortedList[i] == sortedList[i+1]) {
+                        count +=1;
+                    } else {
+                        cardExport += count + " " + sortedList[i] + "\n";
+                        count = 1;
+                    } 
+                }
+                alert('Copy/paste this list into a marketplace or deckbuilder of your choice!\n'+cardExport);
+            }
+        </script>
     </div>
 </body>
 </html>
