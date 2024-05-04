@@ -218,22 +218,21 @@ function removeSelectedCards() {
         const cardName = checkbox.closest("tr").querySelector("td:nth-child(2)").textContent;
         
         const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
-        console.log('cardname: '+ cardName);
-        console.log('user ref: '+ userCardsRef);
 
         userCardsRef.where("name", "==", cardName)
             .get()
             .then(querySnapshot => {
-                console.log("entering loop for each card.");
-                querySnapshot.forEach(doc => {
-                    console.log("document to be removed: " + doc);
-                    doc.ref.delete().then(() => {
+                //querySnapshot.forEach(doc => {
+                for(let i=0; i<querySnapshot.size; i++) {
+                    querySnapshot.docs[i].ref.delete().then(() => {
                         console.log("Card successfully deleted from Firestore!");
                     }).catch(error => {
                         console.error("Error removing card from Firestore: ", error);
                         // alert('Failed to remove card from Firestore.');
                     });
-                });
+                    break;
+                }
+               //});
             })
             .catch(error => {
                 console.error("Error querying card for deletion: ", error);
