@@ -222,17 +222,20 @@ function removeSelectedCards() {
         userCardsRef.where("name", "==", cardName)
             .get()
             .then(querySnapshot => {
-                //querySnapshot.forEach(doc => {
-                for(let i=0; i<querySnapshot.size; i++) {
-                    querySnapshot.docs[i].ref.delete().then(() => {
-                        console.log("Card successfully deleted from Firestore!");
+                querySnapshot.forEach(doc => {
+                    doc.ref.delete().then(() => {
+                        console.log(doc.id +" successfully deleted from Firestore!");
                     }).catch(error => {
                         console.error("Error removing card from Firestore: ", error);
                         // alert('Failed to remove card from Firestore.');
                     });
-                    break;
-                }
-               //});
+               });
+                /* querySnapshot.docs[0].ref.delete().then(() => {
+                    console.log("Card successfully deleted from Firestore!");
+                }).catch(error => {
+                    console.error("Error removing card from Firestore: ", error);
+                    // alert('Failed to remove card from Firestore.');
+                }); */
             })
             .catch(error => {
                 console.error("Error querying card for deletion: ", error);
@@ -837,7 +840,7 @@ function processCardList() {
             })
             .join(' ');
 
-        console.log("format name", fixedName);
+        console.log("formatted name", fixedName);
         
         const db = firebase.database();
         const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${fixedName}/${finalSetCode}_${collectorNumber}`);
@@ -874,18 +877,19 @@ function processCardList() {
 
                 };
 
-    
-                userCardsRef.add(cardToAdd)
-                    .then((docRef) => {
-                        console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
-                    })
-                    .catch((error) => {
-                        console.error('Error adding card to Firestore:', error);
-                    })
-                    .finally(() => {
-                        
-                        getCardsFromFirestore();
-                    });
+                for (let i=0; i<amount; i++) {
+                    userCardsRef.add(cardToAdd)
+                        .then((docRef) => {
+                            console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
+                        })
+                        .catch((error) => {
+                            console.error('Error adding card to Firestore:', error);
+                        })
+                        .finally(() => {
+                            
+                            getCardsFromFirestore();
+                        });
+                }
             } else {
                 console.error(`Card "${cardName}" not found in the Realtime Database.`);
             }
