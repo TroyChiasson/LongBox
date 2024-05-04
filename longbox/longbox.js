@@ -210,7 +210,7 @@ function removeSelectedCards() {
 
     // Check if user is authenticated
     if (!user) {
-        // alert('User not authenticated.');
+        console.log('User not authenticated.');
         return;
     }
 
@@ -218,12 +218,15 @@ function removeSelectedCards() {
         const cardName = checkbox.closest("tr").querySelector("td:nth-child(2)").textContent;
         
         const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+        console.log('cardname: '+ cardName);
+        console.log('user ref: '+ userCardsRef);
 
-        userCardsRef.where("cardName", "==", cardName)
+        userCardsRef.where("name", "==", cardName)
             .get()
             .then(querySnapshot => {
+                console.log("entering loop for each card.");
                 querySnapshot.forEach(doc => {
-    
+                    console.log("document to be removed: " + doc);
                     doc.ref.delete().then(() => {
                         console.log("Card successfully deleted from Firestore!");
                     }).catch(error => {
