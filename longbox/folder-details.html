@@ -144,6 +144,7 @@
                         console.log(cardName)
                         const formattedCardName = formatCardName(cardName); 
                         console.log("Formatted Card Name:", formattedCardName);
+                        cardNamesForExport.push(formattedCardName);
 
                         const firstLetter = formattedCardName.charAt(0).toLowerCase();
                         const dbPath = `mtg_names/${firstLetter}/cards/${formattedCardName}`;
@@ -239,11 +240,7 @@
             }
 
             function exportSelectedCards() {
-                exportCardsPopup(cardNamesForExport);
-            }
-
-            function exportCardsPopup(cardList) {
-                sortedList = structuredClone(cardList).sort();
+                sortedList = structuredClone(cardNamesForExport).sort();
                 var count = 1;
                 var cardExport = "";
                 for (var i=0; i<sortedList.length; i++) {
