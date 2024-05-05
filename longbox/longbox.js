@@ -210,7 +210,7 @@ function removeSelectedCards() {
 
     // Check if user is authenticated
     if (!user) {
-        // alert('User not authenticated.');
+        console.log('User not authenticated.');
         return;
     }
 
@@ -219,18 +219,23 @@ function removeSelectedCards() {
         
         const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-        userCardsRef.where("cardName", "==", cardName)
+        userCardsRef.where("name", "==", cardName)
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach(doc => {
-    
                     doc.ref.delete().then(() => {
-                        console.log("Card successfully deleted from Firestore!");
+                        console.log(doc.id +" successfully deleted from Firestore!");
                     }).catch(error => {
                         console.error("Error removing card from Firestore: ", error);
                         // alert('Failed to remove card from Firestore.');
                     });
-                });
+               });
+                /* querySnapshot.docs[0].ref.delete().then(() => {
+                    console.log("Card successfully deleted from Firestore!");
+                }).catch(error => {
+                    console.error("Error removing card from Firestore: ", error);
+                    // alert('Failed to remove card from Firestore.');
+                }); */
             })
             .catch(error => {
                 console.error("Error querying card for deletion: ", error);
@@ -838,7 +843,7 @@ function processCardList() {
             })
             .join(' ');
 
-        console.log("format name", fixedName);
+        console.log("formatted name", fixedName);
         
         const db = firebase.database();
         const dbRef = db.ref(`/mtg_names/${firstLetter}/cards/${fixedName}/${finalSetCode}_${collectorNumber}`);
@@ -875,18 +880,19 @@ function processCardList() {
 
                 };
 
-    
-                userCardsRef.add(cardToAdd)
-                    .then((docRef) => {
-                        console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
-                    })
-                    .catch((error) => {
-                        console.error('Error adding card to Firestore:', error);
-                    })
-                    .finally(() => {
-                        
-                        getCardsFromFirestore();
-                    });
+                for (let i=0; i<amount; i++) {
+                    userCardsRef.add(cardToAdd)
+                        .then((docRef) => {
+                            console.log(`Card "${cardData.name}" added to Firestore with ID: ${docRef.id}`);
+                        })
+                        .catch((error) => {
+                            console.error('Error adding card to Firestore:', error);
+                        })
+                        .finally(() => {
+                            
+                            getCardsFromFirestore();
+                        });
+                }
             } else {
                 console.error(`Card "${cardName}" not found in the Realtime Database.`);
             }

@@ -198,7 +198,7 @@ input[type=text], button {
 button {
     font-family: 'Magic', sans-serif;
     background-color: #EAC67A;;
-    color: white;
+    color: #48483A;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -288,7 +288,7 @@ select#color {
     position: absolute;
     width: 100%;
     background-color: #fff;
-    color: #000;
+    color: #48483A;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
