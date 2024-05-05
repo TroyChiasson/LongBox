@@ -252,9 +252,8 @@
                 for (const cardDetails of cardDetailsList) {
                     const setName = cardDetails.set_code;
                     const collectorNumber = cardDetails.collector_number;
-                    const price = cardDetails.prices && (cardDetails.prices.usd || cardDetails.prices.usd_foil) ? 
-                        (cardDetails.prices.usd || cardDetails.prices.usd_foil) : "N/A";
-
+                    const price = cardDetails.prices.usd || cardDetails.prices.usd_foil || cardDetails.prices;
+                    console.log(cardDetails);
                     const img_url = `${cardDetails.dbPath}/${setName}_${collectorNumber}.jpg`;
 
                     const imgurl = img_url.replace("mtg_names","mtg_names_images");

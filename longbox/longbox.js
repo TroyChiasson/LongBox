@@ -440,6 +440,7 @@ function displayFolderOptions() {
                 const folderName = this.textContent;
                 addCardsToFolder(folderName);
                 uncheckAllCards();
+                getFoldersFromFirestore();
             });
 
             folderList.appendChild(folderItem);
@@ -662,17 +663,19 @@ function displaySortedCards(sortBy) {
 
             
             let displayPrice = 'N/A';
-            if (cardData.prices && (cardData.prices.usd || cardData.prices.usd_foil)) {
-                const usd = parseFloat(cardData.prices.usd) || 0;
-                const usdFoil = parseFloat(cardData.prices.usd_foil) || 0;
-                displayPrice = Math.max(usd, usdFoil).toFixed(2);
+            if (cardData.prices) {
+                // const usd = parseFloat(cardData.prices.usd) || 0;
+                // const usdFoil = parseFloat(cardData.prices.usd_foil) || 0;
+                // displayPrice = usd.toFixed(2) || usdFoil.toFixed(2);
+                displayPrice = cardData.prices
             }
 
             sortedCards.push({ cardData, displayPrice });
         });
 
-    
+        
         if (sortBy === 'highestPrice') {
+            console.log(sortedCards.displayPrice);
             sortedCards.sort((a, b) => parseFloat(b.displayPrice) - parseFloat(a.displayPrice));
         } else if (sortBy === 'lowestPrice') {
             sortedCards.sort((a, b) => parseFloat(a.displayPrice) - parseFloat(b.displayPrice));
@@ -994,6 +997,7 @@ $(document).ready(function() {
                     if (urls.length === result.items.length) {
                      
                         displayImagesInTable(urls,card, event);
+                        
                     }
                 }).catch(function(error) {
                     console.error('Error getting download URL:', error);
@@ -1021,7 +1025,7 @@ $(document).ready(function() {
         var popupTop = Math.min(mouseY + popupOffsetY, viewportHeight - popupHeight); 
     
 
-        table.style.position = 'fixed';
+        table.style.position = '';
         table.style.left = popupLeft + 'px';
         table.style.top = popupTop + 'px';
         table.style.width = popupWidth + 'px';
