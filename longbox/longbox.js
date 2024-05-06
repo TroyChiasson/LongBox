@@ -163,38 +163,28 @@ function addCard(selectedCardName) {
 }
 
 
-function showPopupMenu(cardNameCell, event) {
-    var $cardName = $(cardNameCell);
-    var $popupMenu = $('#cardOptionsMenu');
-
-    var scrollY = window.scrollY;
-
-    var position = $cardName.offset();
-
-    var adjustedTop = position.top - scrollY + $cardName.outerHeight();
-
-    var clickX = event.clientX;
-    var clickY = event.clientY;
-
-    var topPosition = clickY + scrollY;
-    var leftPosition = clickX;
-
-    $popupMenu.css({
-        top: topPosition,
-        left: leftPosition
-    });
-
-    $popupMenu.fadeIn(200);
-
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#cardOptionsMenu, .card-name').length) {
-            $popupMenu.fadeOut(200);
-        }
-    });
-    return false;
-}
-
-
+ function showPopupMenu(cardNameCell, event) {
+     var $cardName = $(cardNameCell);
+     var $popupMenu = $('#cardOptionsMenu');
+     var scrollY = window.scrollY;
+     var position = $cardName.offset();
+     var adjustedTop = position.top - scrollY + $cardName.outerHeight();
+     var clickX = event.clientX;
+     var clickY = event.clientY;
+     var topPosition = clickY + scrollY;
+     var leftPosition = clickX;
+     $popupMenu.css({
+         top: topPosition,
+         left: leftPosition
+     });
+     $popupMenu.fadeIn(200);
+     $(document).on('click', function(event) {
+         if (!$(event.target).closest('#cardOptionsMenu, .card-name').length) {
+             $popupMenu.fadeOut(200);
+         }
+     });
+     return false;
+ }
 
 function removeSelectedCards() {
     const checkboxes = document.querySelectorAll("#cardList input[type='checkbox']:checked");
@@ -623,7 +613,81 @@ function getFoldersFromFirestore() {
     });
 }
 
+function toggleDropdown(button) {
+    var dropdown = button.nextElementSibling;
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 
+    // Hide other open dropdowns
+    document.querySelectorAll(".options-menu-content").forEach(function (content) {
+        if (content !== dropdown) {
+            content.style.display = 'none';
+        }
+    });
+}
+
+function displaySortedCards(sortBy) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User not authenticated.');
+        return;
+    }
+
+    const db = firebase.firestore();
+    const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+
+    let query;
+    if (sortBy === 'highestMana') {
+        query = userCardsRef.orderBy('converted_mana_cost', 'desc');
+    } else if (sortBy === 'lowestMana') {
+        query = userCardsRef.orderBy('converted_mana_cost', 'asc');
+    } else if (sortBy === 'highestPrice') {
+        query = userCardsRef.orderBy('prices.usd', 'desc');
+    } else if (sortBy === 'lowestPrice') {
+        query = userCardsRef.orderBy('prices.usd', 'asc');
+    } else {
+        query = userCardsRef.orderBy('name');
+    }
+
+    query.get().then((querySnapshot) => {
+        const sortedCards = [];
+        querySnapshot.forEach((doc) => {
+            const cardData = doc.data();
+            let displayPrice = cardData.prices.usd || cardData.prices.usd_foil || cardData.prices;
+
+            sortedCards.push({ cardData, displayPrice });
+        });
+
+        const tbody = document.querySelector('#cardTable tbody');
+        tbody.innerHTML = '';
+
+        sortedCards.forEach((card) => {
+            const newRow = tbody.insertRow();
+
+            const checkboxCell = newRow.insertCell(0);
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkboxCell.appendChild(checkbox);
+
+            const cell1 = newRow.insertCell(1);
+            cell1.className = 'card-name';
+            cell1.setAttribute('data-card-id', card.cardData.id);
+            const cell2 = newRow.insertCell(2);
+            const cell3 = newRow.insertCell(3);
+            const cell4 = newRow.insertCell(4);
+
+            cell1.innerHTML = card.cardData.name;
+            cell2.innerHTML = card.cardData.colors;
+            cell3.innerHTML = card.cardData.converted_mana_cost;
+            cell4.innerHTML = card.displayPrice;
+
+            cell1.addEventListener('click', function(event) {
+                showPopupMenu(cell1, event);
+            });
+        });
+    }).catch((error) => {
+        console.error("Error getting sorted cards: ", error);
+    });
+}
 
 
 function displaySortedCards(sortBy) {
@@ -641,57 +705,27 @@ function displaySortedCards(sortBy) {
         query = userCardsRef.orderBy('converted_mana_cost', 'desc');
     } else if (sortBy === 'lowestMana') {
         query = userCardsRef.orderBy('converted_mana_cost', 'asc');
+    } else if (sortBy === 'highestPrice') {
+        query = userCardsRef.orderBy('prices.usd', 'desc');
+    } else if (sortBy === 'lowestPrice') {
+        query = userCardsRef.orderBy('prices.usd', 'asc');
     } else {
-        
         query = userCardsRef.orderBy('name');
-    }
-
-    const cardList = document.getElementById('cardTable');
-    if (!cardList) {
-        console.log('Card list element not found.');
-        return;
-    }
-
-    let tbody = cardList.querySelector('tbody');
-    if (!tbody) {
-        tbody = document.createElement('tbody');
-        cardList.appendChild(tbody);
-    } else {
-        
-        tbody.innerHTML = '';
     }
 
     query.get().then((querySnapshot) => {
         const sortedCards = [];
         querySnapshot.forEach((doc) => {
             const cardData = doc.data();
-
-            
-            let displayPrice = 'N/A';
-            if (cardData.prices) {
-                // const usd = parseFloat(cardData.prices.usd) || 0;
-                // const usdFoil = parseFloat(cardData.prices.usd_foil) || 0;
-                // displayPrice = usd.toFixed(2) || usdFoil.toFixed(2);
-                displayPrice = cardData.prices
-            }
+            let displayPrice = cardData.prices.usd || cardData.prices.usd_foil || cardData.prices;
 
             sortedCards.push({ cardData, displayPrice });
         });
 
-        
-        if (sortBy === 'highestPrice') {
-            console.log(sortedCards.displayPrice);
-            sortedCards.sort((a, b) => parseFloat(b.displayPrice) - parseFloat(a.displayPrice));
-        } else if (sortBy === 'lowestPrice') {
-            sortedCards.sort((a, b) => parseFloat(a.displayPrice) - parseFloat(b.displayPrice));
-        }
+        const tbody = document.querySelector('#cardTable tbody');
+        tbody.innerHTML = '';
 
-        
         sortedCards.forEach((card) => {
-            console.log("here is card from display sorted")
-            console.log(card);
-
-            
             const newRow = tbody.insertRow();
 
             const checkboxCell = newRow.insertCell(0);
@@ -979,31 +1013,22 @@ $(document).ready(function() {
     }
 
     function switchCollector(cardName, event) {
-
         console.log(cardName.name);
-        card = cardName.name
-        id = cardName.id
+        const card = cardName.name;
+        const id = cardName.id;
         const firstLetter = card.toLowerCase().charAt(0);
         console.log(firstLetter);
-        
-        
+    
         var storageRef = firebase.storage().ref();
         var imagesRef = storageRef.child('mtg_names_images/' + firstLetter + '/' + card);
-        
-        
-
-        console.log("folder locat", imagesRef);
     
-
         imagesRef.listAll().then(function(result) {
             var urls = [];
             result.items.forEach(function(itemRef) {
                 itemRef.getDownloadURL().then(function(url) {
                     urls.push(url);
                     if (urls.length === result.items.length) {
-                     
-                        displayImagesInTable(urls,card, event);
-                        
+                        displayImagesInPopup(urls, cardName, event);
                     }
                 }).catch(function(error) {
                     console.error('Error getting download URL:', error);
@@ -1012,38 +1037,18 @@ $(document).ready(function() {
         }).catch(function(error) {
             console.error('Error listing images:', error);
         });
+        showPopupMenu(event.target, event);
     }
     
-    function displayImagesInTable(imageUrls, card, event) {
-
+    function displayImagesInPopup(imageUrls, cardName, event) {
+        // Close any existing pop-up menu
+        closePopupMenu();
+    
+        // Create a table element
         var table = document.createElement('table');
-        
-
-        var mouseX = event.clientX;
-        var mouseY = event.clientY;
-        var viewportWidth = window.innerWidth;
-        var viewportHeight = window.innerHeight;
-        var popupWidth = 320; 
-        var popupHeight = 150; 
-        var popupOffsetX = 20; 
-        var popupOffsetY = 20; 
-        var popupLeft = Math.min(mouseX + popupOffsetX, viewportWidth - popupWidth); 
-        var popupTop = Math.min(mouseY + popupOffsetY, viewportHeight - popupHeight); 
-    
-
-        table.style.position = '';
-        table.style.left = popupLeft + 'px';
-        table.style.top = popupTop + 'px';
-        table.style.width = popupWidth + 'px';
-        table.style.height = popupHeight + 'px';
-        table.style.backgroundColor = '#f2f2f2'; 
-        table.style.padding = '10px'; 
-        table.style.borderRadius = '5px'; 
-        table.style.overflowY = 'auto';
-    
-    
         var tbody = document.createElement('tbody');
-
+    
+        // Populate the table with images
         for (var i = 0; i < imageUrls.length; i += 3) {
             var row = tbody.insertRow();
             for (var j = i; j < i + 3 && j < imageUrls.length; j++) {
@@ -1051,91 +1056,118 @@ $(document).ready(function() {
                 var image = document.createElement('img');
                 image.src = imageUrls[j];
                 image.style.width = '100px';
-                image.style.height = '150px'; 
-                image.style.margin = '5px'; 
+                image.style.height = '150px';
                 image.style.cursor = 'pointer';
-        
-            
+    
                 image.addEventListener('click', function() {
-                   
-                    var imageUrl = this.src;
-                    var parts = imageUrl.split('%2F');
-                    var imageName = parts[parts.length - 1];
-                    var imageNameWithoutParams = imageName.split('?')[0];
-                    var setAndCollector = imageNameWithoutParams.split('.')[0];
-                    var set = setAndCollector.split('_')[0];
-                    var collectorNumber = setAndCollector.split('_')[1];
-        
-                 
-                    console.log('Clicked on image:', imageUrl);
-                    console.log('Set Name:', set);
-                    console.log('Collector Number:', collectorNumber);
-        
-             
-                    handleImageClick(card, set, collectorNumber);
-        
-              
-                    table.parentNode.removeChild(table);
+                    // Extract set and collector number from image URL
+                    const imageUrl = this.src;
+                    const parts = imageUrl.split('%2F');
+                    const imageName = parts[parts.length - 1];
+                    const imageNameWithoutParams = imageName.split('?')[0];
+                    const setAndCollector = imageNameWithoutParams.split('.')[0];
+                    const set = setAndCollector.split('_')[0];
+                    const collectorNumber = setAndCollector.split('_')[1];
+    
+                    // Call the handleImageClick function
+                    handleImageClick(cardName.name, set, collectorNumber);
+    
+                    // Close the pop-up
+                    closePopupMenu();
                 });
-        
-        
+    
                 cell.appendChild(image);
             }
         }
     
-   
         table.appendChild(tbody);
     
+        // Position the pop-up
+        var popup = document.getElementById('cardOptionsPopup');
+        popup.innerHTML = '';
+        popup.appendChild(table);
+    
+        // Set the position relative to the clicked element
+        var rect = event.target.getBoundingClientRect();
+        popup.style.top = (rect.bottom + window.scrollY) + 'px';
+        popup.style.left = (rect.left + window.scrollX) + 'px';
+    
+        popup.style.display = 'block';
+    
+        // Event to hide the pop-up when clicking outside
+        document.addEventListener('click', function hidePopup(e) {
+            if (!popup.contains(e.target) && !event.target.contains(e.target)) {
+                closePopupMenu();
+                document.removeEventListener('click', hidePopup);
+            }
+        });
+    }
 
-        document.body.appendChild(table);
+    function showPopupMenu(cardNameCell, event) {
+        var $cardName = $(cardNameCell);
+        var $popupMenu = $('#cardOptionsPopup');
+    
+        // Calculate the position
+        var position = $cardName.offset();
+        var adjustedTop = position.top + $cardName.outerHeight();
+        var adjustedLeft = position.left;
+    
+        // Set the pop-up's position
+        $popupMenu.css({
+            top: adjustedTop,
+            left: adjustedLeft
+        });
+    
+        // Show the pop-up with fadeIn
+        $popupMenu.fadeIn(200);
+    
+        // Hide the pop-up when clicking outside
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('#cardOptionsPopup, .card-name').length) {
+                $popupMenu.fadeOut(200);
+                $(document).off('click');
+            }
+        });
     }
     
     
-    
+    function closePopupMenu() {
+        var popup = document.getElementById('cardOptionsPopup');
+        popup.style.display = 'none';
+    }
     
     function handleImageClick(card, set, collectorNumber) {
         console.log('Handling Image Click for Set:', set, 'and Collector Number:', collectorNumber);
         console.log(card);
     
-
         const firstLetter = card.toLowerCase().charAt(0);
     
-
         const cardRef = firebase.database().ref(`mtg_names/${firstLetter}/cards/${card}/${set}_${collectorNumber}`);
     
-
-        cardRef.once('value').then((snapshot) => {
-        
+        cardRef.once('value'). then((snapshot) => {
             const cardData = snapshot.val();
     
             if (cardData) {
-          
                 console.log('Card Data:', cardData);
     
-          
                 const price = (cardData.prices && cardData.prices.usd) ? cardData.prices.usd : (cardData.prices && cardData.prices.usd_foil) ? cardData.prices.usd_foil : null;
                 console.log('Price:', price);
     
-        
                 const db = firebase.firestore();
                 const user = firebase.auth().currentUser;
-                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+                const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards"). collection("cards");
     
-
                 userCardsRef.where('name', '==', card).get().then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         const cardId = doc.id;
                         const cardRef = userCardsRef.doc(cardId);
-                
     
-                    
                         cardRef.update({
                             set_code: set,
                             collector_number: collectorNumber,
                             prices: price
                         }).then(() => {
                             console.log('Card info updated successfully.');
-
                             getCardsFromFirestore();
                         }).catch((error) => {
                             console.error('Error updating card info:', error);
@@ -1152,16 +1184,13 @@ $(document).ready(function() {
         });
     }
     
-    
-    
-    
-    // Listen for the custom event 'displayCardImage'
     document.addEventListener('displayCardImage', function(event) {
         const cardName = event.detail;
         displayCardImagePopup(cardName);
     });
 
 });
+
 // event listener for hovering over card name cells in cardList
 document.addEventListener('DOMContentLoaded', function() {
     const cardList = document.getElementById('cardList');
@@ -1200,8 +1229,3 @@ function initializeEventListeners() {
 
 // call initialize function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeEventListeners);
-
-
-
-
-
