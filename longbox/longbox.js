@@ -1050,8 +1050,8 @@ $(document).ready(function() {
                 var cell = row.insertCell();
                 var image = document.createElement('img');
                 image.src = imageUrls[j];
-                image.style.width = '100px';
-                image.style.height = '150px'; 
+                image.style.width = '175px';
+                image.style.height = '225px'; 
                 image.style.margin = '5px'; 
                 image.style.cursor = 'pointer';
         

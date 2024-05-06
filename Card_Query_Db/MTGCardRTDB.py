@@ -97,16 +97,16 @@ def print_extracted_data(card):
         "usd_etched": card.get("prices", {}).get("usd_etched", None)
     }
 
-    # print(f"Card Name: {card_name}")
-    # print(f"Colors: {colors}")
-    # print(f"Mana Cost: {mana_cost}")
-    # print(f"Converted Mana Cost: {converted_mana_cost}")
-    # print(f"Type of Card: {type_line}")
-    # print(f"Card ID: {card_id}")
-    # print(f"Set Code: {set_code}")
-    # print(f"Color identity: {color_identity}")
-    # print(f"Prices: {prices}")
-    # print("-" * 30)
+    print(f"Card Name: {card_name}")
+    print(f"Colors: {colors}")
+    print(f"Mana Cost: {mana_cost}")
+    print(f"Converted Mana Cost: {converted_mana_cost}")
+    print(f"Type of Card: {type_line}")
+    print(f"Card ID: {card_id}")
+    print(f"Set Code: {set_code}")
+    print(f"Color identity: {color_identity}")
+    print(f"Prices: {prices}")
+    print("-" * 30)
 
 def upload_to_firestore(card):
 

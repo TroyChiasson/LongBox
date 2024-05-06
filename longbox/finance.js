@@ -31,8 +31,8 @@ function displayTopWinnersLosers(userId) {
         return;
     }
 
-    const winnersRef = firebase.database().ref('/Prices/Top50/Positive');
-    const losersRef = firebase.database().ref('/Prices/Top50/Negative');
+    const winnersRef = firebase.database().ref('/Prices/Top50/Positive_Foil');
+    const losersRef = firebase.database().ref('/Prices/Top50/Negative_Foil');
 
     winnersRef.orderByChild('percentageChange').limitToLast(50).once('value', (winnersSnapshot) => {
         winnersSnapshot.forEach((winnerSnapshot) => {
