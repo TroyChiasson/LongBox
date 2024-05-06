@@ -9,12 +9,14 @@
     <script src="longbox.js" defer></script>
 
     <header class="site-header">
-        <h1>ScrollRack</h1>
+        <h1><a href="longbox.html" style="color: #F4DBA6; text-decoration: none;">ScrollRack</a></h1>
         <nav>
-            <li><a href="longbox.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="finance.html">Finance</a></li>
-            <li><a href="index.html">Login</a></li> 
+            <li>
+                <a href="longbox.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="finance.html">Finance</a>
+                <a href="index.html">Login</a>
+            </li> 
         </nav>
     </header>
 </head>
@@ -34,16 +36,14 @@
 
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-    <!-- Include jQuery from a CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Include jQuery UI from a CDN -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <!-- Include your longbox.js script -->
+
     <script defer src="longbox.js"></script>
-    <script src="longbox.js"></script>
 
     <div class="container">    
-        <div class="spacer" style="height: 125px;"></div>        
+        <div class="spacer" style="height: 150px;"></div>        
         <div id="addCardSection">
             <h6>Add a New Card</h6>
             <form id="addCardForm" action="/addcard" method="post">
@@ -51,6 +51,7 @@
                 <button type="button" onclick="addCard()">Add Card</button>
             </form>
         </div>
+
         <div id="cardListSection">
             <div id="cardImagePopup" class="card-image-popup">
                 <img id="cardImagePopupContent" src="" alt="Card Image">
@@ -62,51 +63,50 @@
                     <textarea id="importedList" rows="4" placeholder="Paste or type your card list here"></textarea>
                     <button onclick="processCardList()">Enter</button>
                 </div>
+                <button id="exportCardsButton" onclick="exportSelectedCards()">Export Cards</button>
+                <button id="addToFolderButton" onclick="addToFolder()">Add to Deck</button>
             </div>
             <table id="cardTable">
                 <thead>
-                    <th>Card Name</th>
-                    <button id="exportCardsButton" onclick="exportSelectedCards()">Export Cards</button>
-                    <th>Color</th>
+                    <th style="width: 5%;">Select</th>
+                    <th style="width: 35%;">Card Name</th>
+                    <th style="width: 10%;">Color</th>
                     <th class="options-menu">
-                        <div class="options-button">Mana Cost</div>
+                        <div class="options-button" onclick="toggleDropdown(this)">Mana Cost</div>
                         <div class="options-menu-content">
-                            <a href="#" onclick="displaySortedCards('highestMana')">Highest</a>
-                            <a href="#" onclick="displaySortedCards('lowestMana')">Lowest</a>
+                            <a href="#" onclick="displaySortedCards('highestMana')" style="color: #F4DBA6;">Highest</a>
+                            <a href="#" onclick="displaySortedCards('lowestMana')" style="color: #F4DBA6;">Lowest</a>
                         </div>
                     </th>
                     <th class="options-menu">
-                        <div class="options-button">Price</div>
+                        <div class="options-button" onclick="toggleDropdown(this)">Price</div>
                         <div class="options-menu-content">
-                            <a href="#" onclick="displaySortedCards('highestPrice')">Highest</a>
-                            <a href="#" onclick="displaySortedCards('lowestPrice')">Lowest</a>
+                            <a href="#" onclick="displaySortedCards('highestPrice')" style="color: #F4DBA6;">Highest</a>
+                            <a href="#" onclick="displaySortedCards('lowestPrice')" style="color: #F4DBA6;">Lowest</a>
                         </div>
-                    </th>
+                    </th>                                         
                 </thead>
                 <tbody id="cardList">
-                    <tr>
-                        <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
-                            <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
-                            <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
-                            <a href="#" class="switch-collector">Switch Collector Number</a>
-                        </div>                         
-                    </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="folderSection">
-            <h2>Folders</h2>
-            <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>
-            <button id="addToFolderButton" onclick="addToFolder()">Add to Folder</button>    
-            <button onclick="addFolder()">Create Folder</button>
-            <input type="text" id="folderName" placeholder="Folder Name">
-            <ul id="folderList" onclick="getFolderContents(event)"></ul>
-        </div>
-        <!-- Isnt quite working section -->
-        <div id="folderCardList" class="card-list">
-            <!-- The scrollable list of cards should be here/end section might not need -->
+
+            <div id="cardOptionsMenu" class="card-options-menu" style="display: none;">
+                <a href="#" class="buy-tcgplayer">Buy on TCG Player</a>
+                <a href="#" class="buy-cardkingdom">Buy on Card Kingdom</a>
+                <a href="#" class="switch-collector">Switch Art Style</a>
+            </div>    
+            <div id="cardOptionsPopup" class="card-options-menu"></div>                     
         </div>
 
+        <div id="folderSection">
+            <h2>Decks</h2>
+            <button id="removeCardsButton" onclick="removeSelectedCards()">Remove Cards</button>    
+            <button onclick="addFolder()">Create Deck</button>
+            <input type="text" id="folderName" placeholder="Deck Name">
+            <ul id="folderList" onclick="getFolderContents(event)">
+            </ul>
+            
+        </div>
     </div>
     <script>
         // uses Jquery function/UI to display autosuggestions and pull from RTDB
@@ -156,6 +156,7 @@
         });
     </script>
 </body>
+
 <footer>
     <div>ScrollRack</div>
     <div>Magic: The Gathering is a trademark and copyright of Wizards of the Coast, Inc, a subsidiary of Hasbro, Inc. All rights reserved. This site is unaffiliated with these entities.</div>
