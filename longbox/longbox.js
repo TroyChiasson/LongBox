@@ -101,13 +101,13 @@ function addCard(selectedCardName) {
             
             const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-  
+            const color_identity = firstChildData.color_identity || "C";
             userCardsRef.add({
                 name: firstChildData.name,
                 set_code: firstChildData.set_code,
                 collector_number: firstChildData.collector_number,
-                color_identity: firstChildData.color_identity,
-                colors: firstChildData.colors,
+                color_identity: firstChildData.color_identity || "C",
+                colors: firstChildData.colors || ["C"],
                 converted_mana_cost: firstChildData.converted_mana_cost,
                 id: firstChildData.id,
                 mana_cost: firstChildData.mana_cost,
@@ -116,7 +116,10 @@ function addCard(selectedCardName) {
             })
             .then((docRef) => {
 
-
+                console.log(firstChildData.converted_mana_cost);
+                console.log(firstChildData.prices);
+                console.log(firstChildData.mana_cost);
+                console.log(firstChildData.color_identity);
                 const inputBox = document.getElementById('cardName');
                 inputBox.value = ''; 
 
@@ -139,7 +142,8 @@ function addCard(selectedCardName) {
                 const cell3 = newRow.insertCell(3);
                 const cell4 = newRow.insertCell(4);
 
-                cell2.innerHTML = firstChildData.color_identity.join(', '); 
+                cell2.innerHTML = Array.isArray(color_identity) ? color_identity.join(', ') : color_identity;
+
                 cell3.innerHTML = firstChildData.converted_mana_cost;
                 cell4.innerHTML = firstChildData.prices.usd ? firstChildData.prices.usd : firstChildData.prices.usd_foil;
 
@@ -641,13 +645,14 @@ function displaySortedCards(sortBy) {
     } else if (sortBy === 'lowestMana') {
         query = userCardsRef.orderBy('converted_mana_cost', 'asc');
     } else if (sortBy === 'highestPrice') {
-        query = userCardsRef.orderBy('prices.usd', 'desc');
+        query = userCardsRef.orderBy('prices', 'desc');
     } else if (sortBy === 'lowestPrice') {
-        query = userCardsRef.orderBy('prices.usd', 'asc');
+        query = userCardsRef.orderBy('prices', 'asc');
     } else {
         query = userCardsRef.orderBy('name');
     }
-
+    console.log(query);
+    console.log(sortBy);
     query.get().then((querySnapshot) => {
         const sortedCards = [];
         querySnapshot.forEach((doc) => {
@@ -675,6 +680,10 @@ function displaySortedCards(sortBy) {
             const cell3 = newRow.insertCell(3);
             const cell4 = newRow.insertCell(4);
 
+            console.log(card.cardData.name);
+            console.log(card.cardData.colors);
+            console.log(card.cardData.converted_mana_cost);
+            console.log(card.displayPrice);
             cell1.innerHTML = card.cardData.name;
             cell2.innerHTML = card.cardData.colors;
             cell3.innerHTML = card.cardData.converted_mana_cost;
@@ -690,65 +699,65 @@ function displaySortedCards(sortBy) {
 }
 
 
-function displaySortedCards(sortBy) {
-    const user = firebase.auth().currentUser;
-    if (!user) {
-        console.log('User not authenticated.');
-        return;
-    }
+// function displaySortedCards(sortBy) {
+//     const user = firebase.auth().currentUser;
+//     if (!user) {
+//         console.log('User not authenticated.');
+//         return;
+//     }
 
-    const db = firebase.firestore();
-    const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
+//     const db = firebase.firestore();
+//     const userCardsRef = db.collection(`Users/${user.uid}/folders`).doc("All_Cards").collection("cards");
 
-    let query;
-    if (sortBy === 'highestMana') {
-        query = userCardsRef.orderBy('converted_mana_cost', 'desc');
-    } else if (sortBy === 'lowestMana') {
-        query = userCardsRef.orderBy('converted_mana_cost', 'asc');
-    } else if (sortBy === 'highestPrice') {
-        query = userCardsRef.orderBy('prices.usd', 'desc');
-    } else if (sortBy === 'lowestPrice') {
-        query = userCardsRef.orderBy('prices.usd', 'asc');
-    } else {
-        query = userCardsRef.orderBy('name');
-    }
+//     let query;
+//     if (sortBy === 'highestMana') {
+//         query = userCardsRef.orderBy('converted_mana_cost', 'desc');
+//     } else if (sortBy === 'lowestMana') {
+//         query = userCardsRef.orderBy('converted_mana_cost', 'asc');
+//     } else if (sortBy === 'highestPrice') {
+//         query = userCardsRef.orderBy('prices.usd', 'desc');
+//     } else if (sortBy === 'lowestPrice') {
+//         query = userCardsRef.orderBy('prices.usd', 'asc');
+//     } else {
+//         query = userCardsRef.orderBy('name');
+//     }
 
-    query.get().then((querySnapshot) => {
-        const sortedCards = [];
-        querySnapshot.forEach((doc) => {
-            const cardData = doc.data();
-            let displayPrice = cardData.prices.usd || cardData.prices.usd_foil || cardData.prices;
+//     query.get().then((querySnapshot) => {
+//         const sortedCards = [];
+//         querySnapshot.forEach((doc) => {
+//             const cardData = doc.data();
+//             let displayPrice = cardData.prices.usd || cardData.prices.usd_foil || cardData.prices;
 
-            sortedCards.push({ cardData, displayPrice });
-        });
+//             sortedCards.push({ cardData, displayPrice });
+//         });
 
-        const tbody = document.querySelector('#cardTable tbody');
-        tbody.innerHTML = '';
+//         const tbody = document.querySelector('#cardTable tbody');
+//         tbody.innerHTML = '';
 
-        sortedCards.forEach((card) => {
-            const newRow = tbody.insertRow();
+//         sortedCards.forEach((card) => {
+//             const newRow = tbody.insertRow();
 
-            const checkboxCell = newRow.insertCell(0);
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkboxCell.appendChild(checkbox);
+//             const checkboxCell = newRow.insertCell(0);
+//             const checkbox = document.createElement('input');
+//             checkbox.type = 'checkbox';
+//             checkboxCell.appendChild(checkbox);
 
-            const cell1 = newRow.insertCell(1);
-            cell1.className = 'card-name';
-            cell1.setAttribute('data-card-id', card.cardData.id);
-            const cell2 = newRow.insertCell(2);
-            const cell3 = newRow.insertCell(3);
-            const cell4 = newRow.insertCell(4);
+//             const cell1 = newRow.insertCell(1);
+//             cell1.className = 'card-name';
+//             cell1.setAttribute('data-card-id', card.cardData.id);
+//             const cell2 = newRow.insertCell(2);
+//             const cell3 = newRow.insertCell(3);
+//             const cell4 = newRow.insertCell(4);
 
-            cell1.innerHTML = card.cardData.name;
-            cell2.innerHTML = card.cardData.colors;
-            cell3.innerHTML = card.cardData.converted_mana_cost;
-            cell4.innerHTML = card.displayPrice;
-        });
-    }).catch((error) => {
-        console.error("Error getting sorted cards: ", error);
-    });
-}
+//             cell1.innerHTML = card.cardData.name;
+//             cell2.innerHTML = card.cardData.colors;
+//             cell3.innerHTML = card.cardData.converted_mana_cost;
+//             cell4.innerHTML = card.displayPrice;
+//         });
+//     }).catch((error) => {
+//         console.error("Error getting sorted cards: ", error);
+//     });
+// }
 
 function getCardImageUrlFromStorage(cardName) {
     const currentUser = firebase.auth().currentUser;
