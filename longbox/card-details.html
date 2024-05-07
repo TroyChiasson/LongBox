@@ -38,7 +38,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- Include jQuery UI from a CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script defer src="card-details.js"></script>
     
 
     <div class="spacer" style="height: 225px;"></div>
@@ -46,6 +45,9 @@
         <!-- Card details will be displayed here -->
     </div>
     <div class="spacer" style="height: 175px;"></div>
+
+
+
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -62,7 +64,9 @@
                     if (cardDetails) {
                         console.log(cardDetails)
                         const cardDetailsContainer = $("#cardDetailsContainer");
-                        cardDetailsContainer.append(`<h2>${cardName}</h2>`);
+                        // cardDetailsContainer.append(`
+                        // <h2>${cardName}</h2>
+                        // <div class="spacer" style="height: 200px;"></div>`);
                         const cardDetailsList = [];
                         Object.keys(cardDetails).forEach(index => {
                             const card = cardDetails[index];
@@ -140,7 +144,8 @@
                                 <p>Price: ${price}</p>
                                 <p>Set Code: ${setCode}</p> <!-- Include set code here -->
                             </div>
-                        </div>`;
+                        </div>
+                        <div class="spacer" style="height: 100px;"></div>`;
                     
                     $("#cardDetailsContainer").append(cardElement);
                 }).catch(error => {
@@ -151,4 +156,8 @@
         }
     </script>
 </body>
+<footer>
+    <div>ScrollRack</div>
+    <div>Magic: The Gathering is a trademark and copyright of Wizards of the Coast, Inc, a subsidiary of Hasbro, Inc. All rights reserved. This site is unaffiliated with these entities.</div>
+</footer>
 </html>
