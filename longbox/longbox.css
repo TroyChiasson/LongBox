@@ -304,7 +304,7 @@ select#color {
 
 .options-menu {
     position: relative;
-    display: inline-block;
+    /* display: inline-block; */
     cursor: pointer;
     color: #F4DBA6
 }
@@ -319,9 +319,11 @@ select#color {
 .options-menu-content {
     display: none;
     position: absolute;
+    left: 30%;
+    right: 30%;
     color: #F4DBA6;
-    min-width: 80px;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+    /* min-width: 80px; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
