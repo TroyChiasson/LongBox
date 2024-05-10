@@ -9,6 +9,10 @@ function createFinanceCard(cardName, set, oldPrice, newPrice, percentageChange, 
     row.setAttribute('id', `${cardName}-${collectorNumber}`);
     row.setAttribute('data-image', image);
 
+    if (newPrice == 0) {
+        percentageChange = 0;
+    }
+
     const rowData = `
         <td class="card-name">${cardName} ${collectorNumber}</td>
         <td>${set}</td>
